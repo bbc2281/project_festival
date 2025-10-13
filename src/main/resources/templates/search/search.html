@@ -10,57 +10,66 @@
 <script defer th:src="@{js/app.js}"></script>
 
 </head>
-<body class="bg-gradient-festive">
+<body>
 <!-- 상단 네비바 -->
 <div th:replace="~{common/header :: header}"></div>
 
 
-<header class="container py-4">
-  <div id="heroCarousel" class="carousel slide shadow rounded-4 overflow-hidden">
-    <div class="carousel-inner" id="heroInner">
-      <!-- slides injected by app.js -->
-    </div>
-    <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
-      <span class="carousel-control-prev-icon"></span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
-      <span class="carousel-control-next-icon"></span>
-    </button>
-  </div>
-</header>
-
-<main class="container pb-5">
-  <section class="row g-4 align-items-stretch">
-    <div class="col-lg-8">
-      <div class="card shadow-sm h-100">
-        <div class="card-header bg-white">
-          <div class="d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">📢 공지사항</h5>
-            <a class="btn btn-sm btn-outline-secondary" href="board.html">더보기</a>
+<main class="container my-4">
+  <div class="row g-4">
+    <aside class="col-lg-3">
+      <div class="card shadow-sm">
+        <div class="card-header bg-white"><strong>필터</strong></div>
+        <div class="card-body vstack gap-3">
+          <div>
+            <label class="form-label">키워드</label>
+            <input id="q" class="form-control" placeholder="축제명, 지역...">
           </div>
+          <div>
+            <label class="form-label">카테고리</label>
+            <select id="cat" class="form-select"></select>
+          </div>
+          <div>
+            <label class="form-label">지역</label>
+            <select id="region" class="form-select"></select>
+          </div>
+          <div class="row g-2">
+            <div class="col">
+              <label class="form-label">시작일</label>
+              <input type="date" id="from" class="form-control">
+            </div>
+            <div class="col">
+              <label class="form-label">종료일</label>
+              <input type="date" id="to" class="form-control">
+            </div>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="free">
+            <label class="form-check-label" for="free">무료</label>
+          </div>
+          <button class="btn btn-primary w-100" id="btnSearch">검색</button>
+          <button class="btn btn-outline-secondary w-100" id="btnReset">초기화</button>
         </div>
-        <ul class="list-group list-group-flush" id="noticeList"></ul>
       </div>
-    </div>
-    <div class="col-lg-4">
-      <div class="card shadow-sm h-100">
-        <div class="card-header bg-white">
-          <h5 class="mb-0">📰 축제 뉴스</h5>
-        </div>
-        <div class="card-body">
-          <div class="news-scroller" id="newsList"></div>
-        </div>
-      </div>
-    </div>
-  </section>
+    </aside>
 
-  <section class="mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-2">
-      <h5 class="mb-0">추천 축제</h5>
-      <a class="btn btn-sm btn-primary" href="search.html">전체보기</a>
-    </div>
-    <div class="row g-3" id="homeGrid"></div>
-  </section>
+    <section class="col-lg-9">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <div><strong id="count">0</strong> 개 결과</div>
+        <div>
+          <select id="sort" class="form-select form-select-sm">
+            <option value="recommended">추천순</option>
+            <option value="new">최신순</option>
+            <option value="near">개최 임박순</option>
+          </select>
+        </div>
+      </div>
+      <div class="row g-3" id="resultGrid"></div>
+      <nav class="mt-3" aria-label="pagination">
+        <ul class="pagination" id="pager"></ul>
+      </nav>
+    </section>
+  </div>
 </main>
 
 

@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FesLite × FesPick — 축제 플랫폼 (통합)</title>
+  <style>
+    :root{
+      --bg:#ffffff;
+      --surface:#f8fafc;
+      --card:#ffffff;
+      --text:#0f172a;
+      --muted:#64748b;
+      --brand:#2563eb;
+      --brand-2:#22c55e;
+      --warn:#f59e0b;
+      --danger:#ef4444;
+      --border:#e2e8f0;
+      --chip:#f1f5f9;
+      --shadow:0 6px 20px rgba(15,23,42,.08);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Inter,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic","맑은 고딕",sans-serif;
+      background:linear-gradient(180deg,#ffffff 0%, #f6f8fb 100%);
+      color:var(--text);
+    }
+    a{color:inherit;text-decoration:none}
+    .container{max-width:1140px;margin:0 auto;padding:20px}
+    header{
+      position:sticky;top:0;z-index:50;backdrop-filter:saturate(140%) blur(8px);
+      background:rgba(255,255,255,.8);border-bottom:1px solid var(--border)
+    }
+    .nav{display:flex;align-items:center;gap:14px;padding:12px 20px}
+    .logo{font-weight:800;letter-spacing:.2px}
+    .pill{padding:8px 12px;border:1px solid var(--border);border-radius:999px;background:#fff}
+    .spacer{flex:1}
+    .btn{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--border);background:#fff;padding:10px 14px;border-radius:12px;cursor:pointer;box-shadow:var(--shadow);transition:.15s transform,.15s filter}
+    .btn:hover{filter:brightness(1.04);transform:translateY(-1px)}
+    .btn.brand{background:linear-gradient(180deg,#3b82f6,#2563eb);border-color:#2563eb;color:#fff}
+    .btn.ghost{background:transparent;box-shadow:none}
+    .btn.ok{background:linear-gradient(180deg,#16a34a,#22c55e);border-color:#22c55e;color:#fff}
+    .btn.danger{background:linear-gradient(180deg,#ef4444,#dc2626);border-color:#ef4444;color:#fff}
+
+    .grid{display:grid;gap:16px}
+    .g-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .g-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+    @media(max-width:980px){.g-3{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:640px){.g-3,.g-2{grid-template-columns:1fr}}
+
+    .card{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;box-shadow:var(--shadow)}
+    .card .body{padding:14px 16px}
+    .tag{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;background:rgba(2,6,23,.04);border:1px solid var(--border);font-size:12px;color:var(--muted)}
+    .row{display:flex;gap:10px;align-items:center}
+    .row-between{display:flex;justify-content:space-between;align-items:center}
+    .muted{color:var(--muted)}
+    .h1{font-size:28px;font-weight:800}
+    .h2{font-size:20px;font-weight:700}
+    .h3{font-size:16px;font-weight:700}
+    .section{margin:28px 0}
+    .chip{display:inline-flex;align-items:center;gap:6px;background:var(--chip);border:1px solid var(--border);border-radius:9px;padding:6px 10px;color:#334155;font-size:12px}
+    .hr{height:1px;background:var(--border);margin:14px 0}
+
+    /* page switcher */
+    .page{display:none}
+    .page.active{display:block}
+
+    /* table */
+    table{width:100%;border-collapse:collapse}
+    th,td{padding:10px;border-bottom:1px solid var(--border);text-align:left}
+    th{color:#334155;font-size:12px;text-transform:uppercase;letter-spacing:.04em;background:#f8fafc}
+
+    /* modal */
+    .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;padding:20px}
+    .modal{width:min(720px,100%);background:#fff;border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow);overflow:hidden}
+    .modal-head{padding:16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+    .modal-body{padding:16px}
+
+    /* form */
+    .field{display:grid;gap:6px;margin-bottom:12px}
+    .field label{font-size:12px;color:#475569}
+    input[type="text"],input[type="date"],input[type="password"],textarea,select{
+      width:100%;padding:10px 12px;border-radius:12px;border:1px solid var(--border);
+      background:#fff;color:var(--text);outline:none
+    }
+    textarea{min-height:100px}
+
+    .avatar{width:32px;height:32px;border-radius:50%;background:#eef2ff;border:1px solid var(--border)}
+
+    /* chat */
+    .chat{height:240px;overflow:auto;padding:10px;border:1px solid var(--border);border-radius:12px;background:#fff}
+    .bubble{max-width:80%;margin:6px 0;padding:10px;border-radius:12px;}
+    .bubble.me{margin-left:auto;background:#e2e8f0}
+    .bubble.other{background:#f1f5f9}
+
+    /* toast */
+    .toast{position:fixed;right:12px;bottom:12px;background:#111827;color:#fff;border:1px solid #0b1227;padding:12px 14px;border-radius:12px;display:none;box-shadow:var(--shadow)}
+  </style>
+</head>
+<body>
+  <header>
+    <nav class="nav container">
+      <a class="logo h2" href="#" data-link="home">🎉 FesPick</a>
+      <a class="pill" href="#" data-link="list">축제</a>
+      <a class="pill" href="#" data-link="board">게시판</a>
+      <a class="pill" href="#" data-link="register">축제 등록</a>
+
+      <div class="spacer"></div>
+      <input id="globalSearch" placeholder="축제/지역 검색" class="pill" style="min-width:220px" />
+      <button class="btn" id="btnSearch">검색</button>
+
+      <!-- 우측 상단: 로그인/회원가입/관리자 -->
+      <button class="btn ghost" id="btnLogin">로그인</button>
+      <button class="btn ghost" id="btnSignup">회원가입</button>
+      <button class="btn brand" id="btnAdmin">관리자</button>
+
+      <!-- 로그인 후 -->
+      <div id="meBox" class="row" style="display:none">
+        <div class="avatar"></div>
+        <span class="muted">마이페이지</span>
+        <button class="btn ghost" id="btnLogout">로그아웃</button>
+      </div>
+    </nav>
+  </header>
+
+  <main class="container">
+    <!-- HOME -->
+    <section id="page-home" class="page active">
+      <div class="section">
+        <div class="card">
+          <div class="body">
+            <div class="row-between">
+              <div>
+                <div class="h1">지역 축제를 한 눈에 🎡</div>
+                <div class="muted" style="margin-top:6px">카테고리/지역/날씨 정보, 후기, 댓글, 축제 등록 및 관리자 승인까지 한 곳에서</div>
+                <div style="margin-top:12px" class="row">
+                  <span class="chip">인기순</span>
+                  <span class="chip">다가오는 축제</span>
+                  <span class="chip">지역별</span>
+                </div>
+              </div>
+              <button class="btn brand" data-link="list">지금 인기 축제 보기</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="row-between">
+          <div class="h2">이번 주 추천</div>
+          <a class="muted" href="#" data-link="list">전체 보기 →</a>
+        </div>
+        <div class="grid g-3" id="homeGrid"></div>
+      </div>
+    </section>
+
+    <!-- LIST -->
+    <section id="page-list" class="page">
+      <div class="row-between section">
+        <div class="h2">축제 목록</div>
+        <div class="row">
+          <select id="filterRegion">
+            <option value="">전체 지역</option>
+          </select>
+          <select id="filterSort">
+            <option value="popular">인기순</option>
+            <option value="latest">최신순</option>
+            <option value="near">가까운순(모의)</option>
+          </select>
+        </div>
+      </div>
+      <div class="grid g-3" id="listGrid"></div>
+    </section>
+
+    <!-- DETAIL -->
+    <section id="page-detail" class="page">
+      <div class="section" id="detailWrap"></div>
+    </section>
+
+    <!-- BOARD & PAYMENT -->
+    <section id="page-board" class="page">
+      <div class="section">
+        <div class="row-between"><div class="h2">공지 / 이벤트</div><span class="muted">관리자 작성</span></div>
+        <div class="card"><div class="body">
+          <div class="row" style="margin-bottom:10px">
+            <input id="noticeTitle" class="pill" placeholder="제목" style="flex:1">
+            <button class="btn brand" id="btnPostNotice">작성</button>
+          </div>
+          <textarea id="noticeBody" placeholder="내용"></textarea>
+        </div></div>
+        <div class="card" style="margin-top:12px"><div class="body">
+          <table id="noticeTable">
+            <thead><tr><th>제목</th><th>작성자</th><th>날짜</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div></div>
+      </div>
+
+      <div class="section">
+        <div class="row-between"><div class="h2">축제 리뷰</div><span class="muted">리뷰에 댓글 가능</span></div>
+        <div class="card"><div class="body">
+          <div class="row" style="margin-bottom:10px">
+            <input id="reviewUser" class="pill" placeholder="닉네임">
+            <input id="reviewText" class="pill" placeholder="리뷰 내용" style="flex:1">
+            <button class="btn" id="btnAddReview">등록</button>
+          </div>
+          <div id="reviewList"></div>
+        </div></div>
+      </div>
+
+      <div class="section">
+        <div class="row-between"><div class="h2">결제(모의)</div><span class="muted">승인 후 유료 부스/스폰서 결제</span></div>
+        <div class="card"><div class="body row-between">
+          <div>
+            <div class="h3">스폰서 패키지 A</div>
+            <div class="muted">메인 배너 노출 + 부스 1개</div>
+          </div>
+          <div class="row" style="gap:12px">
+            <div class="h2">₩ 500,000</div>
+            <button class="btn ok" id="btnPay">결제하기</button>
+          </div>
+        </div></div>
+      </div>
+    </section>
+
+    <!-- REGISTER (기안서 → 축제 등록) -->
+    <section id="page-register" class="page">
+      <div class="section">
+        <div class="h2">축제 등록</div>
+        <div class="card"><div class="body">
+          <div class="grid g-2">
+            <div class="field"><label>주최 유형</label>
+              <select id="orgType"><option value="PERSON">일반</option><option value="COMPANY">기업</option></select>
+            </div>
+            <div class="field"><label>담당자 연락처</label><input id="contact" type="text" placeholder="010-0000-0000"></div>
+            <div class="field"><label>축제명</label><input id="pName" type="text" placeholder="예) 부산 불꽃축제"></div>
+            <div class="field"><label>지역</label><input id="pRegion" type="text" placeholder="부산"></div>
+            <div class="field"><label>주소</label><input id="pAddress" type="text" placeholder="상세 주소"></div>
+            <div class="field"><label>기간</label>
+              <div class="row"><input id="pStart" type="date"><input id="pEnd" type="date"></div>
+            </div>
+            <div class="field" style="grid-column:1/-1"><label>설명</label><textarea id="pDesc" placeholder="행사 상세 설명"></textarea></div>
+          </div>
+          <div class="row" style="justify-content:flex-end;margin-top:10px">
+            <button class="btn" id="btnPreviewProposal">미리보기</button>
+            <button class="btn brand" id="btnSubmitProposal">제출</button>
+          </div>
+        </div></div>
+      </div>
+    </section>
+
+    <!-- ADMIN -->
+    <section id="page-admin" class="page">
+      <div class="section">
+        <div class="row-between"><div class="h2">관리자 페이지</div><span class="muted">공지/리뷰/축제 승인</span></div>
+        <div class="grid g-2">
+          <div class="card"><div class="body">
+            <div class="h3">승인 대기 등록</div>
+            <table id="tblProposals"><thead><tr><th>축제명</th><th>주최</th><th>기간</th><th>승인</th></tr></thead><tbody></tbody></table>
+          </div></div>
+          <div class="card"><div class="body">
+            <div class="h3">축제 정보 관리</div>
+            <table id="tblFestivals"><thead><tr><th>이름</th><th>지역</th><th>기간</th><th>관리</th></tr></thead><tbody></tbody></table>
+          </div></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Signup Choice Modal -->
+  <div class="modal-backdrop" id="modalSignupChoice">
+    <div class="modal">
+      <div class="modal-head"><div class="h3">회원가입 유형 선택</div><button class="btn ghost" data-close="modalSignupChoice">닫기</button></div>
+      <div class="modal-body">
+        <div class="grid g-2">
+          <div class="card">
+            <div class="body">
+              <div class="h3">👤 일반회원</div>
+              <p class="muted">리뷰/댓글/찜 기능 이용</p>
+              <button class="btn brand" id="goSignupUser">일반회원 가입</button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="body">
+              <div class="h3">🏢 기업회원</div>
+              <p class="muted">축제 등록/부스/스폰서 관리</p>
+              <button class="btn brand" id="goSignupCompany">기업회원 가입</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Signup Form Modal (shared) -->
+  <div class="modal-backdrop" id="modalSignupForm">
+    <div class="modal">
+      <div class="modal-head"><div class="h3" id="signupTitle">회원가입</div><button class="btn ghost" data-close="modalSignupForm">닫기</button></div>
+      <div class="modal-body">
+        <div class="grid g-2">
+          <div class="field"><label>이름</label><input id="suName" type="text" placeholder="홍길동"></div>
+          <div class="field"><label>이메일</label><input id="suEmail" type="text" placeholder="you@example.com"></div>
+          <div class="field"><label>비밀번호</label><input id="suPass" type="password" placeholder="••••••••"></div>
+          <div class="field"><label>연락처</label><input id="suPhone" type="text" placeholder="010-0000-0000"></div>
+          <div class="field company-only" style="display:none"><label>회사명</label><input id="suCompany" type="text" placeholder="페스픽 주식회사"></div>
+          <div class="field company-only" style="display:none"><label>사업자번호</label><input id="suBiz" type="text" placeholder="000-00-00000"></div>
+        </div>
+        <div class="row" style="justify-content:flex-end;margin-top:10px">
+          <button class="btn brand" id="btnDoSignup">가입하기</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Login Modal -->
+  <div class="modal-backdrop" id="modalLogin">
+    <div class="modal">
+      <div class="modal-head"><div class="h3">로그인</div><button class="btn ghost" data-close="modalLogin">닫기</button></div>
+      <div class="modal-body">
+        <div class="grid g-2">
+          <div class="field" style="grid-column:1/-1"><label>이메일</label><input id="lgEmail" type="text" placeholder="you@example.com"></div>
+          <div class="field" style="grid-column:1/-1"><label>비밀번호</label><input id="lgPass" type="password" placeholder="••••••••"></div>
+        </div>
+        <div class="row" style="justify-content:flex-end;margin-top:10px">
+          <button class="btn brand" id="btnDoLogin">로그인</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Proposal Preview Modal -->
+  <div class="modal-backdrop" id="modalPreview">
+    <div class="modal">
+      <div class="modal-head"><div class="h3">축제 등록 미리보기</div><button class="btn ghost" data-close="modalPreview">닫기</button></div>
+      <div class="modal-body" id="previewBody"></div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="toast"></div>
+
+  <script>
+    // ===== Mock Data =====
+    const mockFestivals=[
+      {id:'fes1',name:'부산 불꽃축제',region:'부산',city:'부산',start:'2025-10-10',end:'2025-10-12',
+       tags:['불꽃','바다'],likes:1204,thumbnail:'https://images.unsplash.com/photo-1506104489822-562ca25152fe?q=80&w=1200&auto=format&fit=crop',
+       desc:'광안리 해변에서 펼쳐지는 초대형 불꽃 공연. 푸드트럭과 공연이 함께합니다.',
+       weather:[{date:'2025-10-10',min:17,max:23,summary:'맑음'},{date:'2025-10-11',min:18,max:22,summary:'구름 조금'}],
+       nearby:[{type:'food',name:'광안리밀면',address:'부산 수영구',distanceMeter:280},{type:'hotel',name:'비치호텔',address:'수영구',distanceMeter:520},{type:'cafe',name:'라떼라떼',address:'남구',distanceMeter:430}]
+      },
+      {id:'fes2',name:'진주 남강유등축제',region:'경남',city:'진주',start:'2025-10-01',end:'2025-10-14',
+       tags:['유등','야경'],likes:888,thumbnail:'https://images.unsplash.com/photo-1541542684-4a66f114f297?q=80&w=1200&auto=format&fit=crop',
+       desc:'남강 위를 밝히는 수천 개의 유등과 퍼레이드.',
+       weather:[{date:'2025-10-02',min:15,max:22,summary:'맑음'},{date:'2025-10-03',min:14,max:21,summary:'맑음'}],
+       nearby:[{type:'food',name:'진주냉면',address:'진주시',distanceMeter:310},{type:'hotel',name:'남강호텔',address:'진주시',distanceMeter:660}]
+      },
+      {id:'fes3',name:'서울 불빛정원',region:'서울',city:'중구',start:'2025-12-05',end:'2026-01-10',
+       tags:['イルミ','겨울'],likes:502,thumbnail:'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=1200&auto=format&fit=crop',
+       desc:'겨울 시즌 야간 라이트업 & 마켓',
+       weather:[{date:'2025-12-06',min:-2,max:4,summary:'눈'}],
+       nearby:[{type:'cafe',name:'루미카페',address:'명동',distanceMeter:220}]
+      }
+    ];
+
+    const state={
+      page:'home',
+      user:null,
+      notices:[],
+      reviews:[],
+      proposals:[],
+      chat:{},
+      signupType:'USER' // or COMPANY
+    };
+
+    // ===== Helpers =====
+    const $=sel=>document.querySelector(sel);
+    const $$=sel=>document.querySelectorAll(sel);
+    const showToast=(msg)=>{const t=$('#toast'); t.textContent=msg; t.style.display='block'; setTimeout(()=>t.style.display='none',1800)}
+    const fmtDate=(d)=> new Date(d).toLocaleDateString('ko-KR');
+
+    function setPage(id){
+      state.page=id;
+      $$('.page').forEach(p=>p.classList.remove('active'));
+      $('#page-'+id).classList.add('active');
+      if(id==='list') renderList();
+      if(id==='home') renderHome();
+    }
+
+    // ===== Home/List/Detail =====
+    function renderHome(){
+      const grid=$('#homeGrid');
+      grid.innerHTML=mockFestivals.slice(0,3).map(cardHtml).join('');
+      grid.querySelectorAll('[data-open]').forEach(el=>el.addEventListener('click',()=>openDetail(el.dataset.open)))
+    }
+
+    function cardHtml(f){
+      return `<div class="card">
+        <div style="aspect-ratio:16/9;background:url('${f.thumbnail}') center/cover"></div>
+        <div class="body">
+          <div class="row-between">
+            <div class="h3">${f.name}</div>
+            <div class="tag">❤ ${f.likes}</div>
+          </div>
+          <div class="muted">${f.region} · ${fmtDate(f.start)} ~ ${fmtDate(f.end)}</div>
+          <div class="row" style="margin-top:8px">${f.tags.map(t=>`<span class='chip'>#${t}</span>`).join('')}</div>
+          <div class="row" style="margin-top:12px;justify-content:flex-end">
+            <button class="btn" data-open="${f.id}">자세히</button>
+          </div>
+        </div>
+      </div>`
+    }
+
+    function renderList(){
+      const regions=[...new Set(mockFestivals.map(f=>f.region))];
+      const sel=$('#filterRegion');
+      if(sel.options.length<=1){ regions.forEach(r=>{const o=document.createElement('option');o.value=r;o.textContent=r; sel.appendChild(o)}) }
+      const query=$('#globalSearch').value.trim().toLowerCase();
+      const region=sel.value;
+      const sort=$('#filterSort').value;
+      let list=mockFestivals.filter(f=>{
+        const hit=query? (f.name+f.region+f.city+f.tags.join(' ')).toLowerCase().includes(query):true;
+        const reg=region? f.region===region : true;
+        return hit && reg;
+      });
+      if(sort==='popular') list.sort((a,b)=>b.likes-a.likes);
+      if(sort==='latest') list.sort((a,b)=> new Date(b.start)-new Date(a.start));
+      const grid=$('#listGrid');
+      grid.innerHTML=list.map(cardHtml).join('');
+      grid.querySelectorAll('[data-open]').forEach(el=>el.addEventListener('click',()=>openDetail(el.dataset.open)))
+    }
+
+    function openDetail(id){
+      const f=mockFestivals.find(x=>x.id===id);
+      if(!f) return;
+      const wrap=$('#detailWrap');
+      setPage('detail');
+      wrap.innerHTML=`
+        <div class="row" style="gap:16px;align-items:stretch">
+          <div class="card" style="flex:2">
+            <div style="aspect-ratio:16/9;background:url('${f.thumbnail}') center/cover"></div>
+            <div class="body">
+              <div class="row-between">
+                <div>
+                  <div class="h1">${f.name}</div>
+                  <div class="muted">${f.region} ${f.city} · ${fmtDate(f.start)} ~ ${fmtDate(f.end)}</div>
+                </div>
+                <div class="row" style="gap:10px"><span class="tag">❤ ${f.likes}</span><span class="tag">리뷰 가능</span></div>
+              </div>
+              <div class="hr"></div>
+              <p>${f.desc}</p>
+              <div class="section">
+                <div class="h3">지도 / 길찾기(임시)</div>
+                <div style="height:220px;border:1px dashed var(--border);border-radius:12px;display:flex;align-items:center;justify-content:center" class="muted">네이버 길찾기 API 자리</div>
+              </div>
+              <div class="section">
+                <div class="h3">날씨(목데이터)</div>
+                <div class="grid g-3">${f.weather.map(w=>`<div class='card'><div class='body'><div class='h3'>${fmtDate(w.date)}</div><div class='muted'>${w.summary}</div><div class='row' style='gap:10px;margin-top:6px'><span class='chip'>최저 ${w.min}°</span><span class='chip'>최고 ${w.max}°</span></div></div></div>`).join('')}</div>
+              </div>
+              <div class="section">
+                <div class="h3">주변 즐길거리</div>
+                <div class="grid g-3">${f.nearby.map(n=>`<div class='card'><div class='body'><div class='h3'>${n.name}</div><div class='muted'>${n.type} · ${n.address}</div><div class='chip' style='margin-top:6px'>${n.distanceMeter} m</div></div></div>`).join('')}</div>
+              </div>
+            </div>
+          </div>
+          <div style="flex:1" class="grid" >
+            <div class="card">
+              <div class="body">
+                <div class="h3">리뷰</div>
+                <div id="detailReviews"></div>
+                <div class="row" style="margin-top:10px">
+                  <input id="detailReviewUser" placeholder="닉네임" class="pill">
+                  <input id="detailReviewText" placeholder="한줄 리뷰" class="pill" style="flex:1">
+                  <button class="btn" id="btnDetailAddReview">등록</button>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="body">
+                <div class="h3">축제 채팅방 <span class="muted">(축제당 1개)</span></div>
+                <div id="chatBox" class="chat"></div>
+                <div class="row" style="margin-top:8px">
+                  <input id="chatInput" class="pill" placeholder="메시지">
+                  <button class="btn" id="btnSendChat">보내기</button>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="body row-between">
+                <div>
+                  <div class="h3">부스 예약(모의)</div>
+                  <div class="muted">주최측 승인 후 결제 진행</div>
+                </div>
+                <button class="btn ok" id="btnDetailPay">결제</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+      renderReviewsFor(id,$('#detailReviews'));
+      $('#btnDetailAddReview').onclick=()=>{
+        const u=$('#detailReviewUser').value||'익명';
+        const t=$('#detailReviewText').value.trim();
+        if(!t) return;
+        state.reviews.push({festivalId:id,user:u,text:t,createdAt:Date.now(),replies:[]});
+        renderReviewsFor(id,$('#detailReviews'));
+        $('#detailReviewText').value='';
+      }
+      const chat=state.chat[id]||(state.chat[id]=[]);
+      const chatBox=$('#chatBox');
+      function renderChat(){
+        chatBox.innerHTML=chat.map(m=>`<div class="bubble ${m.me?'me':'other'}">${m.msg}<div class='muted' style='font-size:10px;margin-top:4px'>${new Date(m.ts).toLocaleTimeString('ko-KR')}</div></div>`).join('');
+        chatBox.scrollTop=chatBox.scrollHeight;
+      }
+      renderChat();
+      $('#btnSendChat').onclick=()=>{
+        const input=$('#chatInput');
+        const msg=input.value.trim(); if(!msg) return;
+        chat.push({me:true,msg,ts:Date.now()});
+        renderChat(); input.value='';
+        setTimeout(()=>{chat.push({me:false,msg:'관리자: 문의 감사합니다!',ts:Date.now()}); renderChat();},600)
+      }
+      $('#btnDetailPay').onclick=()=>{showToast('결제 모듈 연결 전: 테스트 결제 완료 처리');}
+    }
+
+    function renderReviewsFor(festivalId,wrap){
+      const items=state.reviews.filter(r=>r.festivalId===festivalId);
+      wrap.innerHTML= items.length? items.map((r,i)=>`<div class='card' style='margin:8px 0'>
+          <div class='body'>
+            <div class='row-between'><div class='h3'>${r.user}</div><span class='muted'>${new Date(r.createdAt).toLocaleString('ko-KR')}</span></div>
+            <p>${r.text}</p>
+            <div class='row' style='gap:6px'>
+              <input placeholder='댓글' class='pill' id='reply-${i}'>
+              <button class='btn ghost' data-reply='${i}'>달기</button>
+            </div>
+            <div style='margin-top:6px'>${(r.replies||[]).map(a=>`<div class='chip'>${a}</div>`).join('')}</div>
+          </div>
+        </div>`).join('') : `<div class='muted'>아직 리뷰가 없어요.</div>`;
+      wrap.querySelectorAll('[data-reply]').forEach(btn=>btn.addEventListener('click',()=>{
+        const i=parseInt(btn.dataset.reply); const input=wrap.querySelector('#reply-'+i);
+        const val=input.value.trim(); if(!val) return; (state.reviews.filter(r=>r.festivalId===festivalId)[i].replies ||= []).push(val); renderReviewsFor(festivalId,wrap);
+      }));
+    }
+
+    function renderBoard(){
+      const tbody=$('#noticeTable tbody');
+      tbody.innerHTML=state.notices.map(n=>`<tr><td>${n.title}</td><td>${n.user}</td><td>${new Date(n.ts).toLocaleDateString('ko-KR')}</td></tr>`).join('');
+      const list=$('#reviewList');
+      list.innerHTML=state.reviews.map(r=>`<div class='card' style='margin:8px 0'><div class='body'><div class='row-between'><div class='h3'>${r.user}</div><span class='muted'>${new Date(r.createdAt).toLocaleString('ko-KR')}</span></div><p>${r.text}</p><div>${(r.replies||[]).map(a=>`<span class='chip'>${a}</span>`).join('')}</div></div></div>`).join('');
+    }
+
+    function renderAdmin(){
+      const tp=$('#tblProposals tbody');
+      tp.innerHTML=state.proposals.filter(p=>!p.approved).map((p,i)=>`<tr><td>${p.name}</td><td>${p.orgType}</td><td>${fmtDate(p.start)}~${fmtDate(p.end)}</td><td><button class='btn ok' data-approve='${i}'>승인</button></td></tr>`).join('');
+      tp.querySelectorAll('[data-approve]').forEach(btn=>btn.addEventListener('click',()=>{
+        const idx=parseInt(btn.dataset.approve);
+        const p=state.proposals.filter(x=>!x.approved)[idx]; p.approved=true; showToast('승인되었습니다'); renderAdmin(); renderFestivalsTable();
+      }))
+      renderFestivalsTable();
+    }
+
+    function renderFestivalsTable(){
+      const tf=$('#tblFestivals tbody');
+      const dataset=[...mockFestivals, ...state.proposals.filter(p=>p.approved).map(p=>({id:'p-'+Math.random().toString(36).slice(2,7),name:p.name,region:p.region,city:'',start:p.start,end:p.end,tags:[],likes:0,thumbnail:'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=1200&auto=format&fit=crop',desc:p.desc,weather:[],nearby:[]}))];
+      tf.innerHTML=dataset.map(f=>`<tr><td>${f.name}</td><td>${f.region}</td><td>${fmtDate(f.start)}~${fmtDate(f.end)}</td><td><button class='btn' data-open='${f.id}'>보기</button></td></tr>`).join('');
+      tf.querySelectorAll('[data-open]').forEach(b=>b.addEventListener('click',()=>openDetail(b.dataset.open)))
+    }
+
+    // ===== Modals =====
+    const openModal=id=>{$('#'+id).style.display='flex'}
+    const closeModal=id=>{$('#'+id).style.display='none'}
+    $$('[data-close]').forEach(b=>b.addEventListener('click',()=>closeModal(b.dataset.close)))
+
+    // ===== Nav Links =====
+    $$('[data-link]').forEach(a=>a.addEventListener('click',e=>{e.preventDefault(); setPage(a.dataset.link); if(a.dataset.link==='board') renderBoard(); if(a.dataset.link==='admin') renderAdmin();}))
+
+    // ===== Header Buttons =====
+    $('#btnSearch').onclick=()=>{ setPage('list'); renderList(); }
+
+    // 로그인/로그아웃
+    $('#btnLogin').onclick=()=>{ openModal('modalLogin'); }
+    $('#btnDoLogin').onclick=()=>{
+      state.user={name:'사용자',role:'USER'};
+      $('#btnLogin').style.display='none';
+      $('#btnSignup').style.display='none';
+      $('#btnAdmin').style.display='none';
+      $('#meBox').style.display='flex';
+      closeModal('modalLogin');
+      showToast('로그인되었습니다');
+    }
+    $('#btnLogout').onclick=()=>{
+      state.user=null;
+      $('#btnLogin').style.display='inline-flex';
+      $('#btnSignup').style.display='inline-flex';
+      $('#btnAdmin').style.display='inline-flex';
+      $('#meBox').style.display='none';
+      showToast('로그아웃되었습니다')
+    }
+
+    // 회원가입 플로우
+    $('#btnSignup').onclick=()=>openModal('modalSignupChoice');
+    $('#goSignupUser').onclick=()=>{
+      state.signupType='USER';
+      $('#signupTitle').textContent='일반회원 가입';
+      $$('.company-only').forEach(el=>el.style.display='none');
+      openModal('modalSignupForm');
+    };
+    $('#goSignupCompany').onclick=()=>{
+      state.signupType='COMPANY';
+      $('#signupTitle').textContent='기업회원 가입';
+      $$('.company-only').forEach(el=>el.style.display='grid');
+      openModal('modalSignupForm');
+    };
+    $('#btnDoSignup').onclick=()=>{
+      const name=$('#suName').value.trim();
+      const email=$('#suEmail').value.trim();
+      if(!name||!email) return showToast('이름/이메일은 필수입니다');
+      closeModal('modalSignupForm'); closeModal('modalSignupChoice');
+      showToast((state.signupType==='COMPANY'?'기업':'일반')+' 회원가입 완료!');
+    };
+
+    // 관리자 버튼 (우상단)
+    $('#btnAdmin').onclick=()=>{ setPage('admin'); renderAdmin(); }
+
+    // 게시판: 공지/리뷰/결제
+    $('#btnPostNotice').onclick=()=>{
+      const title=$('#noticeTitle').value.trim(); const body=$('#noticeBody').value.trim();
+      if(!title||!body) return showToast('제목/내용을 입력하세요');
+      state.notices.unshift({title,body,user:(state.user?state.user.name:'관리자'),ts:Date.now()});
+      $('#noticeTitle').value=''; $('#noticeBody').value=''; renderBoard(); showToast('등록되었습니다');
+    }
+    $('#btnAddReview').onclick=()=>{
+      const user=$('#reviewUser').value||'익명'; const text=$('#reviewText').value.trim(); if(!text) return;
+      state.reviews.unshift({festivalId:'global',user,text,createdAt:Date.now(),replies:[]});
+      $('#reviewText').value=''; renderBoard();
+    }
+    $('#btnPay').onclick=()=>showToast('결제 테스트: 완료 처리');
+
+    // 축제 등록 페이지
+    $('#btnPreviewProposal').onclick=()=>{
+      const data=getProposalForm();
+      $('#previewBody').innerHTML=`<div class='grid g-2'>
+        <div><div class='muted'>주최</div><div class='h3'>${data.orgType}</div></div>
+        <div><div class='muted'>연락처</div><div class='h3'>${data.contact}</div></div>
+        <div style='grid-column:1/-1'><div class='muted'>축제명</div><div class='h2'>${data.name}</div></div>
+        <div><div class='muted'>지역</div><div class='h3'>${data.region}</div></div>
+        <div><div class='muted'>기간</div><div class='h3'>${fmtDate(data.start)} ~ ${fmtDate(data.end)}</div></div>
+        <div style='grid-column:1/-1'><div class='muted'>설명</div><p>${data.desc}</p></div>
+      `;
+      openModal('modalPreview');
+    }
+    $('#btnSubmitProposal').onclick=()=>{
+      const data=getProposalForm();
+      if(!data.name||!data.region) return showToast('축제명/지역은 필수입니다');
+      state.proposals.unshift({...data,approved:false}); showToast('제출 완료! 관리자 승인 대기');
+      ['pName','pRegion','pAddress','pDesc','contact'].forEach(id=>$('#'+id).value='');
+    }
+    function getProposalForm(){
+      return {orgType:$('#orgType').value, contact:$('#contact').value, name:$('#pName').value, region:$('#pRegion').value, address:$('#pAddress').value, start:$('#pStart').value, end:$('#pEnd').value, desc:$('#pDesc').value}
+    }
+
+    // Init
+    renderHome();
+  </script>
+</body>
+</html>

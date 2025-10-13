@@ -1,0 +1,32 @@
+
+/* Festive gradient background */
+.bg-gradient-festive {
+  background: linear-gradient(135deg,#ffdee9 0%,#b5fffc 100%);
+}
+
+/* News scroller */
+.news-scroller {
+  display: grid;
+  gap: 10px;
+  max-height: 260px;
+  overflow: auto;
+}
+.news-item a { text-decoration: none; }
+
+.card-fes:hover {
+  transform: translateY(-2px);
+  transition: .2s ease;
+  box-shadow: 0 0.5rem 1rem rgba(0,0,0,.1);
+}
+
+.badge-free {
+  background: #22c55e;
+}
+
+.badge-paid {
+  background: #6b7280;
+}
+
+.footer {
+  border-top: 1px solid rgba(255,255,255,.1);
+}
