@@ -36,7 +36,7 @@
         <div class="card-header bg-white">
           <div class="d-flex justify-content-between align-items-center">
             <h5 class="mb-0">📢 공지사항</h5>
-            <a class="btn btn-sm btn-outline-secondary" href="board.html">더보기</a>
+            <a class="btn btn-sm btn-outline-secondary" th:href="@{/board}">더보기</a>
           </div>
         </div>
         <ul class="list-group list-group-flush" id="noticeList"></ul>
@@ -57,7 +57,7 @@
   <section class="mt-4">
     <div class="d-flex justify-content-between align-items-center mb-2">
       <h5 class="mb-0">추천 축제</h5>
-      <a class="btn btn-sm btn-primary" href="search.html">전체보기</a>
+      <a class="btn btn-sm btn-primary" th:href="@{/search}">전체보기</a>
     </div>
     <div class="row g-3" id="homeGrid"></div>
   </section>
