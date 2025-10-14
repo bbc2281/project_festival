@@ -252,14 +252,3 @@ function renderBoard(){
   });
 }
 
-// Forms (mock submit)
-function bindAuthForms(){
-  ['loginForm','userSignup','companySignup'].forEach(id=>{
-    const form = document.getElementById(id);
-    if (!form) return;
-    form.addEventListener('submit', (e)=>{
-      e.preventDefault();
-      alert('제출되었습니다. (데모)');
-    });
-  });
-}
