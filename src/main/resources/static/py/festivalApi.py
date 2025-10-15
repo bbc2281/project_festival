@@ -25,7 +25,9 @@ mapping = {
     'PROGRAM': 'festival_info',
     'MAIN_IMG': 'festival_img_path',
     'ORG_LINK': 'festival_link',
-    'PLACE': 'festival_address'
+    'PLACE': 'festival_address',
+    'LAT': 'festival_lat',
+    'LOT': 'festival_lot'
 }
 df = df.rename(columns=mapping)
 
@@ -33,12 +35,18 @@ df = df.rename(columns=mapping)
 df['festival_category_name'] = df['festival_category_name'].str.replace('축제-', '', regex=False)
 df['festival_fee'] = df['festival_fee'].str.replace('없음', '무료', regex=False)
 df.loc[df['festival_fee'] == '', 'festival_fee'] = '무료'
+df.loc[df['festival_info'] == '', 'festival_info'] = '상세내용은 공식 사이트를 참조해 주세요'
+df['festival_lat'] = df['festival_lat'].str.replace('~.*', '', regex=True)
+df['festival_lot'] = df['festival_lot'].str.replace('~.*', '', regex=True)
+df['festival_lat'] = pd.to_numeric(df['festival_lat'], errors='coerce')
+df['festival_lot'] = pd.to_numeric(df['festival_lot'], errors='coerce')
 
 #사용할 컬럼만 필터링
 db_cols = [
     'festival_category_name', 'region_name', 'festival_name', 'festival_fee',
     'festival_begin_date', 'festival_end_date', 'festival_host',
-    'festival_info', 'festival_img_path', 'festival_link', 'festival_address'
+    'festival_info', 'festival_img_path', 'festival_link', 'festival_address',
+    'festival_lat', 'festival_lot'
 ]
 for col in db_cols:
     if col not in df.columns:
@@ -80,7 +88,8 @@ df = df.merge(region, left_on='region_name', right_on='region_name', how='left')
 final_cols = [
     'festival_category_idx', 'region_idx', 'festival_name', 'festival_fee',
     'festival_begin_date', 'festival_end_date', 'festival_host',
-    'festival_info', 'festival_img_path', 'festival_link', 'festival_address'
+    'festival_info', 'festival_img_path', 'festival_link', 'festival_address',
+    'festival_lat', 'festival_lot'
 ]
 df = df[final_cols]
 
