@@ -157,7 +157,7 @@ function applyFilters(list){
     if (q && !(f.name.toLowerCase().includes(q) || f.city.toLowerCase().includes(q) || f.region.toLowerCase().includes(q))) return false;
     if (cat && cat!=='전체' && f.category!==cat) return false;
     if (region && region!=='전체' && f.city!==region) return false;
-    if (isFree && f.fee!==0) return false;
+    if (isFree && f.fee!=='무료') return false;
     if (from && f.end < from) return false; // festival ends before range
     if (to && f.begin > to) return false;   // festival begins after range
     return true;
