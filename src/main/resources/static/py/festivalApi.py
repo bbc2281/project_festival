@@ -36,10 +36,14 @@ df['festival_category_name'] = df['festival_category_name'].str.replace('축제-
 df['festival_fee'] = df['festival_fee'].str.replace('없음', '무료', regex=False)
 df.loc[df['festival_fee'] == '', 'festival_fee'] = '무료'
 df.loc[df['festival_info'] == '', 'festival_info'] = '상세내용은 공식 사이트를 참조해 주세요'
+df.loc[df['region_name'] == '', 'region_name'] = '기타'
 df['festival_lat'] = df['festival_lat'].str.replace('~.*', '', regex=True)
 df['festival_lot'] = df['festival_lot'].str.replace('~.*', '', regex=True)
 df['festival_lat'] = pd.to_numeric(df['festival_lat'], errors='coerce')
 df['festival_lot'] = pd.to_numeric(df['festival_lot'], errors='coerce')
+df['is_etc'] = (df['region_name'] == '기타').astype(int)
+df = df.sort_values(by='is_etc', ascending=True)
+df = df.drop(columns='is_etc')
 
 #사용할 컬럼만 필터링
 db_cols = [
@@ -48,6 +52,7 @@ db_cols = [
     'festival_info', 'festival_img_path', 'festival_link', 'festival_address',
     'festival_lat', 'festival_lot'
 ]
+
 for col in db_cols:
     if col not in df.columns:
         df[col] = None  # 누락된 컬럼은 None으로
@@ -94,7 +99,7 @@ final_cols = [
 df = df[final_cols]
 
 #df['festival_category_idx'] = df['festival_category_idx'].fillna(2)
-df['region_idx'] = df['region_idx'].fillna(25)
+df['region_idx'] = df['region_idx'].fillna(26)
 
 #기존 데이터 조회
 existing_df = pd.read_sql('SELECT festival_name FROM festival', engine) 
