@@ -22,4 +22,12 @@ public class FestivalDAO {
     public FestivalDTO getFestival(int id){
         return festivalMapper.selectFestival(id);
     }//getFestival
+
+    public List<String> getCategory(){
+        return festivalMapper.selectAllCategory();
+    }//getCategory
+
+    public List<String> getRegion(){
+        return festivalMapper.selectAllRegion();
+    }
 }
