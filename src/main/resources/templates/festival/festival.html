@@ -17,8 +17,13 @@
 <main class="container my-4" id="festivalDetail">
   <div class="row g-4">
     <div class="col-lg-7">
-      <img class="rounded-4 shadow w-100 object-fit-cover" th:src="${festival.festival_img_path}" style="height:380px">
-    </div>
+  <div class="text-center">
+    <img th:src="${festival.festival_img_path}" 
+         class="img-fluid rounded-4 shadow" 
+         style="max-height: 600px; object-fit: contain;" 
+         alt="축제 포스터">
+  </div>
+</div>
     <div class="col-lg-5">
       <h3 class="fw-bold" th:text="${festival.festival_name}"></h3>
       <div class="mb-1" >일정 : <span th:text="${festival.festival_begin_date}"></span> ~ <span th:text="${festival.festival_end_date}"></span></div>
@@ -26,7 +31,7 @@
       <div class="mb-1">주최: <span th:text="${festival.festival_host}"></span></div>
       <div class="mb-2">주소: <span th:text="${festival.festival_address}"></span></div>
       <div class="d-flex gap-2">
-        <!-- <a class="btn btn-primary" th:href="https://map.naver.com/p/search/${festival.festival_address}" target="_blank">네이버 길찾기</a> -->
+        <a class="btn btn-primary" href="https://map.naver.com/" target="_blank">네이버 길찾기</a>
         <a class="btn btn-outline-secondary" th:href="@{/}">목록으로</a>
       </div>
       <div class="alert alert-light border mt-3">💬 이 축제의 전용 채팅방은 1개로 고정됩니다. (모의)</div>
