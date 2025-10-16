@@ -22,6 +22,14 @@ public class FestivalService {
 
     public FestivalDTO getFestival(int id){
         return festivalDAO.getFestival(id);
+    } //getFestival
+
+    public List<String> getCategory(){
+        return festivalDAO.getCategory();
+    } //getCategory
+
+    public List<String> getRegion(){
+        return festivalDAO.getRegion();
     }
 
 }

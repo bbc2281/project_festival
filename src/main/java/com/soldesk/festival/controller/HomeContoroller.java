@@ -23,7 +23,7 @@ public class HomeContoroller {
 
         List<FestivalDTO> festivals = festivalService.AllFestivals();
         model.addAttribute("festivals", festivals);
-        System.out.println(festivals);
+        
         return "index";
     }
 

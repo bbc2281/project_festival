@@ -19,5 +19,9 @@ public class FestivalDTO {
     String festival_img_path;
     String festival_address;
     String festival_link;
+    double festival_lat;
+    double festival_lot;
 
+    String festival_category_name;
+    String region_name;
 }

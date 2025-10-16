@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", function(){
   .then(res => res.json())
   .then(festivals =>{
     festivals.forEach(festival =>{
-      console.log(festival)
+      
       const formattedFestival = {
         id: festival.festival_idx,
         name: festival.festival_name || '이름 없음',
@@ -26,16 +26,19 @@ document.addEventListener("DOMContentLoaded", function(){
         like: 0,
       };
       FESTIVALS.push(formattedFestival);
-      console.log(formattedFestival);
+      
     })
     if (qs('#heroInner')) renderHome();
+    if (qs('#resultGrid')) initSearchPage();
+    if (qs('#festivalDetail')) renderFestivalDetail();
+    if (qs('#postList')) renderBoard();
+  bindAuthForms();
   })
   .catch(err =>{
     console.log(err);
   })
 
 });
-
 
 const NOTICES = [
   {title:"서버 점검 안내", date:"2025-10-05"},
@@ -55,13 +58,13 @@ const qs = (s,doc=document)=>doc.querySelector(s);
 const qsa = (s,doc=document)=>Array.from(doc.querySelectorAll(s));
 
 // Render functions for each page
-document.addEventListener('DOMContentLoaded', ()=>{
-  if (qs('#heroInner')) renderHome();
-  if (qs('#resultGrid')) initSearchPage();
-  if (qs('#festivalDetail')) renderFestivalDetail();
-  if (qs('#postList')) renderBoard();
-  bindAuthForms();
-});
+// document.addEventListener('DOMContentLoaded', ()=>{
+//   if (qs('#heroInner')) renderHome();
+//   if (qs('#resultGrid')) initSearchPage();
+//   if (qs('#festivalDetail')) renderFestivalDetail();
+//   if (qs('#postList')) renderBoard();
+//   bindAuthForms();
+// });
 
 function renderHome(){
   // Hero slides
@@ -123,7 +126,7 @@ function festivalCard(f){
 function initSearchPage(){
   // Populate selects
   const cats = [...new Set(FESTIVALS.map(f=>f.category))];
-  const regions = [...new Set(FESTIVALS.map(f=>f.region))];
+  const regions = [...new Set(FESTIVALS.map(f=>f.city))];
   fillOptions(qs('#cat'), ['전체', ...cats]);
   fillOptions(qs('#region'), ['전체', ...regions]);
 
@@ -135,6 +138,7 @@ function initSearchPage(){
   });
   qs('#sort').addEventListener('change', ()=>renderSearch(1));
   renderSearch(1);
+  
 }
 
 function fillOptions(sel, arr){
@@ -148,11 +152,11 @@ function applyFilters(list){
   const from = qs('#from').value;
   const to = qs('#to').value;
   const isFree = qs('#free').checked;
-
+  
   return list.filter(f=>{
     if (q && !(f.name.toLowerCase().includes(q) || f.city.toLowerCase().includes(q) || f.region.toLowerCase().includes(q))) return false;
     if (cat && cat!=='전체' && f.category!==cat) return false;
-    if (region && region!=='전체' && f.region!==region) return false;
+    if (region && region!=='전체' && f.city!==region) return false;
     if (isFree && f.fee!==0) return false;
     if (from && f.end < from) return false; // festival ends before range
     if (to && f.begin > to) return false;   // festival begins after range
@@ -168,6 +172,7 @@ function sortList(list){
   return list.slice().sort((a,b)=>b.like-a.like); // recommended by like
 }
 
+
 function renderSearch(page=1){
   const PAGE = 6;
   const filtered = sortList(applyFilters(FESTIVALS));
@@ -179,15 +184,50 @@ function renderSearch(page=1){
   renderPager(filtered.length, PAGE, page);
 }
 
-function renderPager(total, size, page){
-  const pages = Math.ceil(total/size)||1;
-  const ul = qs('#pager'); ul.innerHTML='';
-  for (let p=1;p<=pages;p++){
+function renderPager(total, size, page) {
+  const pages = Math.ceil(total / size) || 1;
+  const ul = document.querySelector('#pager');
+  ul.innerHTML = '';
+
+  const groupSize = 10;
+  const currentGroup = Math.ceil(page / groupSize);
+  const startPage = (currentGroup - 1) * groupSize + 1;
+  const endPage = Math.min(startPage + groupSize - 1, pages);
+
+  // 이전 버튼
+  if (startPage > 1) {
+    const prevLi = document.createElement('li');
+    prevLi.className = 'page-item';
+    prevLi.innerHTML = `<a class="page-link" href="#">«</a>`;
+    prevLi.addEventListener('click', (e) => {
+      e.preventDefault();
+      renderSearch(startPage - 1);
+    });
+    ul.appendChild(prevLi);
+  }
+
+  // 페이지 번호
+  for (let p = startPage; p <= endPage; p++) {
     const li = document.createElement('li');
-    li.className = `page-item ${p===page?'active':''}`;
+    li.className = `page-item ${p === page ? 'active' : ''}`;
     li.innerHTML = `<a class="page-link" href="#">${p}</a>`;
-    li.addEventListener('click', (e)=>{e.preventDefault(); renderSearch(p);});
+    li.addEventListener('click', (e) => {
+      e.preventDefault();
+      renderSearch(p);
+    });
     ul.appendChild(li);
+  }
+
+  // 다음 버튼
+  if (endPage < pages) {
+    const nextLi = document.createElement('li');
+    nextLi.className = 'page-item';
+    nextLi.innerHTML = `<a class="page-link" href="#">»</a>`;
+    nextLi.addEventListener('click', (e) => {
+      e.preventDefault();
+      renderSearch(endPage + 1);
+    });
+    ul.appendChild(nextLi);
   }
 }
 

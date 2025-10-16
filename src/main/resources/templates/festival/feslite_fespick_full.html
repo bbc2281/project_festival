@@ -343,26 +343,41 @@
 
   <script>
     // ===== Mock Data =====
-    const mockFestivals=[
-      {id:'fes1',name:'부산 불꽃축제',region:'부산',city:'부산',start:'2025-10-10',end:'2025-10-12',
-       tags:['불꽃','바다'],likes:1204,thumbnail:'https://images.unsplash.com/photo-1506104489822-562ca25152fe?q=80&w=1200&auto=format&fit=crop',
-       desc:'광안리 해변에서 펼쳐지는 초대형 불꽃 공연. 푸드트럭과 공연이 함께합니다.',
-       weather:[{date:'2025-10-10',min:17,max:23,summary:'맑음'},{date:'2025-10-11',min:18,max:22,summary:'구름 조금'}],
-       nearby:[{type:'food',name:'광안리밀면',address:'부산 수영구',distanceMeter:280},{type:'hotel',name:'비치호텔',address:'수영구',distanceMeter:520},{type:'cafe',name:'라떼라떼',address:'남구',distanceMeter:430}]
-      },
-      {id:'fes2',name:'진주 남강유등축제',region:'경남',city:'진주',start:'2025-10-01',end:'2025-10-14',
-       tags:['유등','야경'],likes:888,thumbnail:'https://images.unsplash.com/photo-1541542684-4a66f114f297?q=80&w=1200&auto=format&fit=crop',
-       desc:'남강 위를 밝히는 수천 개의 유등과 퍼레이드.',
-       weather:[{date:'2025-10-02',min:15,max:22,summary:'맑음'},{date:'2025-10-03',min:14,max:21,summary:'맑음'}],
-       nearby:[{type:'food',name:'진주냉면',address:'진주시',distanceMeter:310},{type:'hotel',name:'남강호텔',address:'진주시',distanceMeter:660}]
-      },
-      {id:'fes3',name:'서울 불빛정원',region:'서울',city:'중구',start:'2025-12-05',end:'2026-01-10',
-       tags:['イルミ','겨울'],likes:502,thumbnail:'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=1200&auto=format&fit=crop',
-       desc:'겨울 시즌 야간 라이트업 & 마켓',
-       weather:[{date:'2025-12-06',min:-2,max:4,summary:'눈'}],
-       nearby:[{type:'cafe',name:'루미카페',address:'명동',distanceMeter:220}]
-      }
-    ];
+    const FESTIVALS = [ ];
+
+  document.addEventListener("DOMContentLoaded", function(){
+  fetch("/api/festivals")
+  .then(res => res.json())
+  .then(festivals =>{
+    festivals.forEach(festival =>{
+      console.log(festival)
+      const formattedFestival = {
+        id: festival.festival_idx,
+        name: festival.festival_name || '이름 없음',
+        category: festival.festival_category_name || '기타',
+        region: '서울',
+        city: festival.region_name || '',
+        begin: festival.festival_begin_date || '',   // 날짜 가공이 필요할 수 있음
+        end: festival.festival_end_date || '',     // 종료일이 없을 경우 빈값
+        fee: festival.festival_fee,     // 요금 정보 없을 경우 기본값
+        host: festival.festival_host || '서울시',
+        img: festival.festival_img_path || 'https://via.placeholder.com/400x300?text=No+Image',
+        info: festival.festival_info || '장소 정보 없음',
+        address: festival.festival_address || '',
+        lat: parseFloat(festival.LAT) || 0,
+        lng: parseFloat(festival.LOT) || 0,
+        like: 0,
+      };
+      FESTIVALS.push(formattedFestival);
+      console.log(formattedFestival);
+    })
+    if (qs('#heroInner')) renderHome();
+  })
+  .catch(err =>{
+    console.log(err);
+  })
+
+});
 
     const state={
       page:'home',
@@ -391,7 +406,7 @@
     // ===== Home/List/Detail =====
     function renderHome(){
       const grid=$('#homeGrid');
-      grid.innerHTML=mockFestivals.slice(0,3).map(cardHtml).join('');
+      grid.innerHTML=FESTIVALS.slice(0,3).map(cardHtml(f)).join('');
       grid.querySelectorAll('[data-open]').forEach(el=>el.addEventListener('click',()=>openDetail(el.dataset.open)))
     }
 

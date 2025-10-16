@@ -18,4 +18,10 @@ public interface FestivalMapper {
 
     @Select("select * from festival where festival_idx = #{festival_idx}")
     FestivalDTO selectFestival(@Param("festival_idx") int id);
+
+    @Select("select festival_category_name from festival_category")
+    List<String> selectAllCategory();
+
+    @Select("select region_name from region")
+    List<String> selectAllRegion();
 }
