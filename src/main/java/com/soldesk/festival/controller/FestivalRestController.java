@@ -11,11 +11,11 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-public class MapRestController {
+public class FestivalRestController {
 
     private final FestivalService festivalService;
 
-    @GetMapping("/map/data")
+    @GetMapping("/api/data")
     public FestivalDTO getData(@RequestParam("festival_idx")int festival_idx) {
         return festivalService.getFestival(festival_idx);
     }

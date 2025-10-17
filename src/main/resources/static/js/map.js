@@ -1,4 +1,4 @@
-fetch(`/map/data?festival_idx=${festival_idx}`)
+fetch(`/api/data?festival_idx=${festival_idx}`)
     .then(response => response.json())
     .then(data => {
         let festival_lat = data.festival_lat;
