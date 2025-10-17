@@ -22,8 +22,15 @@
 <main class="container my-4" id="festivalDetail">
   <div class="row g-4">
     <div class="col-lg-7">
-      <img class="rounded-4 shadow w-100 object-fit-cover" th:src="${festival.festival_img_path}" style="height:380px">
-    </div>
+  <div class="text-center">
+    <a th:href="${festival.festival_link}">
+        <img th:src="${festival.festival_img_path}" 
+        class="img-fluid rounded-4 shadow" 
+        style="max-height: 600px; object-fit: contain;" 
+        alt="축제 포스터">
+    </a>
+  </div>
+</div>
     <div class="col-lg-5">
       <h3 class="fw-bold" th:text="${festival.festival_name}"></h3>
       <div class="mb-1" >일정 : <span th:text="${festival.festival_begin_date}"></span> ~ <span th:text="${festival.festival_end_date}"></span></div>
