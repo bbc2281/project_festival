@@ -22,6 +22,6 @@ public interface FestivalMapper {
     @Select("select festival_category_name from festival_category")
     List<String> selectAllCategory();
 
-    @Select("select region_name from region")
+    @Select("select region_name from region order by region_idx asc")
     List<String> selectAllRegion();
 }

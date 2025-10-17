@@ -18,10 +18,12 @@
   <div class="row g-4">
     <div class="col-lg-7">
   <div class="text-center">
-    <img th:src="${festival.festival_img_path}" 
-         class="img-fluid rounded-4 shadow" 
-         style="max-height: 600px; object-fit: contain;" 
-         alt="축제 포스터">
+    <a th:href="${festival.festival_link}">
+        <img th:src="${festival.festival_img_path}" 
+        class="img-fluid rounded-4 shadow" 
+        style="max-height: 600px; object-fit: contain;" 
+        alt="축제 포스터">
+    </a>
   </div>
 </div>
     <div class="col-lg-5">

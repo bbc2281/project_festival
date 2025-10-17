@@ -125,8 +125,17 @@ function festivalCard(f){
 // Search page
 function initSearchPage(){
   // Populate selects
-  const cats = [...new Set(FESTIVALS.map(f=>f.category))];
-  const regions = [...new Set(FESTIVALS.map(f=>f.city))];
+  const cats = [...new Set(FESTIVALS.map(f=>f.category))].sort((a, b) => {
+    if (a === "기타") return 1;      // a가 "기타"면 뒤로
+    if (b === "기타") return -1;     // b가 "기타"면 a가 앞에
+    return a.localeCompare(b, 'ko-KR'); // 가나다순 정렬 기타 맨뒤로
+  });
+  const regions = [...new Set(FESTIVALS.map(f => f.city))]
+  .sort((a, b) => {
+    if (a === "기타") return 1;
+    if (b === "기타") return -1;   
+    return a.localeCompare(b, 'ko-KR'); 
+  });
   fillOptions(qs('#cat'), ['전체', ...cats]);
   fillOptions(qs('#region'), ['전체', ...regions]);
 
@@ -150,7 +159,6 @@ function applyFilters(list){
   const cat = qs('#cat').value;
   const region = qs('#region').value;
   const from = qs('#from').value;
-  const to = qs('#to').value;
   const isFree = qs('#free').checked;
   
   return list.filter(f=>{
@@ -159,7 +167,6 @@ function applyFilters(list){
     if (region && region!=='전체' && f.city!==region) return false;
     if (isFree && f.fee!=='무료') return false;
     if (from && f.end < from) return false; // festival ends before range
-    if (to && f.begin > to) return false;   // festival begins after range
     return true;
   });
 }
