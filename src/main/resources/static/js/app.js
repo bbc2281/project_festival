@@ -150,7 +150,6 @@ function applyFilters(list){
   const cat = qs('#cat').value;
   const region = qs('#region').value;
   const from = qs('#from').value;
-  const to = qs('#to').value;
   const isFree = qs('#free').checked;
   
   return list.filter(f=>{
