@@ -1,6 +1,7 @@
 import requests
 import pandas as pd
 from sqlalchemy import create_engine
+from sqlalchemy import text
 
 #api 접속
 apiUrl = 'http://openapi.seoul.go.kr:8088/6342694e7a6262633132344e68487057/json/culturalEventInfo/1/395/축제/'
@@ -12,6 +13,20 @@ df = pd.DataFrame(rows)
 #db 접속
 db_url = 'mysql+pymysql://soldesk801:rladnxo9900!@soldesk801dbserver.mysql.database.azure.com/team_sixsense?charset=utf8mb4'
 engine = create_engine(db_url, echo=True)
+
+#테이블 초기화
+with engine.connect() as conn:
+    # 외래키 해제
+    conn.execute(text("SET FOREIGN_KEY_CHECKS = 0;"))
+    
+    # 테이블 비우기
+    conn.execute(text("TRUNCATE TABLE festival;"))
+    conn.execute(text("TRUNCATE TABLE region;"))
+    conn.execute(text("TRUNCATE TABLE festival_category;"))
+    
+    # 외래키 활성화
+    conn.execute(text("SET FOREIGN_KEY_CHECKS = 1;"))
+    conn.commit()
 
 #api 컬럼명 변경 
 mapping = {
@@ -41,9 +56,6 @@ df['festival_lat'] = df['festival_lat'].str.replace('~.*', '', regex=True)
 df['festival_lot'] = df['festival_lot'].str.replace('~.*', '', regex=True)
 df['festival_lat'] = pd.to_numeric(df['festival_lat'], errors='coerce')
 df['festival_lot'] = pd.to_numeric(df['festival_lot'], errors='coerce')
-df['is_etc'] = (df['region_name'] == '기타').astype(int)
-df = df.sort_values(by='is_etc', ascending=True)
-df = df.drop(columns='is_etc')
 df['festival_info'] = df['festival_info'].str.replace('？', '', regex=False)
 
 #사용할 컬럼만 필터링
@@ -64,18 +76,20 @@ df = df[db_cols]  # 순서도 동일하게 맞춤
 df_category = []
 df_region = []
 
-#카테고리 테이블 삽입용 데이터프레임
+#카테고리,지역 테이블 삽입용 데이터프레임
 df_category = df[['festival_category_name']].drop_duplicates()
-
-#지역 테이블 삽입용 데이터프레임
 df_region = df[['region_name']].drop_duplicates()
+
+df_region['is_etc'] = (df['region_name'] == '기타').astype(int)
+df_region = df_region.sort_values(by=['is_etc', 'region_name'], ascending=[True, True])
+df_region = df_region.drop(columns='is_etc')
+df_category['is_etc'] = (df['festival_category_name'] == '기타').astype(int)
+df_category = df_category.sort_values(by=['is_etc', 'festival_category_name'], ascending=[True, True])
+df_category = df_category.drop(columns='is_etc')
 
 #카테고리,지역 테이블 조회
 festival_category = pd.read_sql('SELECT * FROM festival_category', engine)
 region = pd.read_sql('SELECT * FROM region', engine)
-
-print(df.iloc[24]['festival_info'])
-print(df.iloc[376]['festival_info'])
 
 #이미 삽입된 데이터 중복 제거
 df_category = df_category[~df_category['festival_category_name'].isin(festival_category['festival_category_name'])]
