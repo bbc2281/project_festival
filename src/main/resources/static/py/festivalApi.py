@@ -44,6 +44,7 @@ df['festival_lot'] = pd.to_numeric(df['festival_lot'], errors='coerce')
 df['is_etc'] = (df['region_name'] == '기타').astype(int)
 df = df.sort_values(by='is_etc', ascending=True)
 df = df.drop(columns='is_etc')
+df['festival_info'] = df['festival_info'].str.replace('？', '', regex=False)
 
 #사용할 컬럼만 필터링
 db_cols = [
@@ -72,6 +73,9 @@ df_region = df[['region_name']].drop_duplicates()
 #카테고리,지역 테이블 조회
 festival_category = pd.read_sql('SELECT * FROM festival_category', engine)
 region = pd.read_sql('SELECT * FROM region', engine)
+
+print(df.iloc[24]['festival_info'])
+print(df.iloc[376]['festival_info'])
 
 #이미 삽입된 데이터 중복 제거
 df_category = df_category[~df_category['festival_category_name'].isin(festival_category['festival_category_name'])]
