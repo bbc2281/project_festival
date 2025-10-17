@@ -1,6 +1,7 @@
 import requests
 import pandas as pd
 from sqlalchemy import create_engine
+from sqlalchemy import text
 
 #api 접속
 apiUrl = 'http://openapi.seoul.go.kr:8088/6342694e7a6262633132344e68487057/json/culturalEventInfo/1/395/축제/'
@@ -12,6 +13,20 @@ df = pd.DataFrame(rows)
 #db 접속
 db_url = 'mysql+pymysql://soldesk801:rladnxo9900!@soldesk801dbserver.mysql.database.azure.com/team_sixsense?charset=utf8mb4'
 engine = create_engine(db_url, echo=True)
+
+#테이블 초기화
+with engine.connect() as conn:
+    # 외래키 해제
+    conn.execute(text("SET FOREIGN_KEY_CHECKS = 0;"))
+    
+    # 테이블 비우기
+    conn.execute(text("TRUNCATE TABLE festival;"))
+    conn.execute(text("TRUNCATE TABLE region;"))
+    conn.execute(text("TRUNCATE TABLE festival_category;"))
+    
+    # 외래키 활성화
+    conn.execute(text("SET FOREIGN_KEY_CHECKS = 1;"))
+    conn.commit()
 
 #api 컬럼명 변경 
 mapping = {
@@ -36,10 +51,12 @@ df['festival_category_name'] = df['festival_category_name'].str.replace('축제-
 df['festival_fee'] = df['festival_fee'].str.replace('없음', '무료', regex=False)
 df.loc[df['festival_fee'] == '', 'festival_fee'] = '무료'
 df.loc[df['festival_info'] == '', 'festival_info'] = '상세내용은 공식 사이트를 참조해 주세요'
+df.loc[df['region_name'] == '', 'region_name'] = '기타'
 df['festival_lat'] = df['festival_lat'].str.replace('~.*', '', regex=True)
 df['festival_lot'] = df['festival_lot'].str.replace('~.*', '', regex=True)
 df['festival_lat'] = pd.to_numeric(df['festival_lat'], errors='coerce')
 df['festival_lot'] = pd.to_numeric(df['festival_lot'], errors='coerce')
+df['festival_info'] = df['festival_info'].str.replace('？', '', regex=False)
 
 #사용할 컬럼만 필터링
 db_cols = [
@@ -48,6 +65,7 @@ db_cols = [
     'festival_info', 'festival_img_path', 'festival_link', 'festival_address',
     'festival_lat', 'festival_lot'
 ]
+
 for col in db_cols:
     if col not in df.columns:
         df[col] = None  # 누락된 컬럼은 None으로
@@ -58,11 +76,16 @@ df = df[db_cols]  # 순서도 동일하게 맞춤
 df_category = []
 df_region = []
 
-#카테고리 테이블 삽입용 데이터프레임
+#카테고리,지역 테이블 삽입용 데이터프레임
 df_category = df[['festival_category_name']].drop_duplicates()
-
-#지역 테이블 삽입용 데이터프레임
 df_region = df[['region_name']].drop_duplicates()
+
+df_region['is_etc'] = (df['region_name'] == '기타').astype(int)
+df_region = df_region.sort_values(by=['is_etc', 'region_name'], ascending=[True, True])
+df_region = df_region.drop(columns='is_etc')
+df_category['is_etc'] = (df['festival_category_name'] == '기타').astype(int)
+df_category = df_category.sort_values(by=['is_etc', 'festival_category_name'], ascending=[True, True])
+df_category = df_category.drop(columns='is_etc')
 
 #카테고리,지역 테이블 조회
 festival_category = pd.read_sql('SELECT * FROM festival_category', engine)
@@ -94,7 +117,7 @@ final_cols = [
 df = df[final_cols]
 
 #df['festival_category_idx'] = df['festival_category_idx'].fillna(2)
-df['region_idx'] = df['region_idx'].fillna(25)
+df['region_idx'] = df['region_idx'].fillna(26)
 
 #기존 데이터 조회
 existing_df = pd.read_sql('SELECT festival_name FROM festival', engine) 
