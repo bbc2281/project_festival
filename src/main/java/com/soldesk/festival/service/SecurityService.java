@@ -1,13 +1,13 @@
-package com.example.demo.service;
+package com.soldesk.festival.service;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.dto.MemberDTO;
-import com.example.demo.dto.SecurityMemberDTO;
-import com.example.demo.mapper.MemberMapper;
+import com.soldesk.festival.dto.MemberDTO;
+import com.soldesk.festival.dto.SecurityMemberDTO;
+import com.soldesk.festival.mapper.MemberMapper;
 
 import lombok.RequiredArgsConstructor;
 
