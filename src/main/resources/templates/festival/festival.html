@@ -12,6 +12,7 @@
 </script>
 <script defer th:src="@{/js/app.js}"></script>
 <script defer th:src="@{/js/map.js}"></script>
+<script defer th:src="@{/js/weather.js}"></script>
 <script type="text/javascript" src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=u4pl1guhug"></script>
 
 </head>
@@ -34,6 +35,11 @@
         <a class="btn btn-outline-secondary" th:href="@{/}">목록으로</a>
       </div>
       <div id="map" style="width:300px; height:300px;"></div> <!-- 지도 (현재 크기 300px 고정)-->
+      <div id="weather">
+        <p>현재시간: <span id="weather_time"></span></p>
+        <p>온도: <span id="weather_temp"></span></p>
+        <p>날씨 아이콘: <span id="weather_icon"></span></p>
+      </div>
       <div class="alert alert-light border mt-3">💬 이 축제의 전용 채팅방은 1개로 고정됩니다. (모의)</div>
     </div>
   </div>
