@@ -14,14 +14,14 @@ import lombok.Data;
 @Data
 public class SecurityMemberDTO implements UserDetails, OAuth2User{
 	
-	private MemberJoinDTO member;
+	private MemberDTO member;
 	private Map<String, Object> attributes;
 	
-	public SecurityMemberDTO(MemberJoinDTO member) {
+	public SecurityMemberDTO(MemberDTO member) {
 		this.member = member;
 	}
 	
-	public SecurityMemberDTO(MemberJoinDTO member, Map<String, Object> attributes) {
+	public SecurityMemberDTO(MemberDTO member, Map<String, Object> attributes) {
 		this.member = member;
 		this.attributes = attributes;
 	}
