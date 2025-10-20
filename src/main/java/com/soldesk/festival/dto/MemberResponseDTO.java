@@ -16,6 +16,7 @@ public class MemberResponseDTO {
     private String member_id;
     private String member_name;
     private String member_email;
+    private String member_nickname;
     private MemberRole role;
 
 

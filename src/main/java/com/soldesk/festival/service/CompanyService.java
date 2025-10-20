@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import com.soldesk.festival.config.AuthUtil;
 import com.soldesk.festival.dto.CompanyDTO;
 import com.soldesk.festival.dto.SecurityCompanyDTO;
 import com.soldesk.festival.exception.CompanyException;

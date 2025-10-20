@@ -11,7 +11,8 @@ import com.soldesk.festival.config.AuthUtil;
 import com.soldesk.festival.config.MemberRole;
 import com.soldesk.festival.dto.MemberDTO;
 import com.soldesk.festival.dto.MemberJoinDTO;
-import com.soldesk.festival.dto.MemberRole;
+import com.soldesk.festival.dto.MemberResponseDTO;
+import com.soldesk.festival.dto.MemberUpdateDTO;
 import com.soldesk.festival.dto.SecurityMemberDTO;
 import com.soldesk.festival.exception.MemberException;
 import com.soldesk.festival.mapper.MemberMapper;
@@ -46,7 +47,7 @@ public class MemberService {
 	
 	public Optional<MemberDTO> findUserbyId(String userId){
 		
-		return Optional.ofNullable(memberMapper.findUserById(userId));
+		return memberMapper.findUserById(userId);
 	}
     
 	@Transactional
@@ -73,9 +74,9 @@ public class MemberService {
 	}
 	
 	@Transactional
-	public Optional<MemberDTO> modifyMember(MemberDTO updateMember){
+	public Optional<MemberResponseDTO> modifyMember(MemberUpdateDTO updateMember){
 		
-		MemberDTO existingMember = findUserbyId(updateMember.getMember_id()).orElseThrow(()-> new MemberException("아이디나 비밀번호가 일치하지 않습니"));
+		MemberDTO existingMember = findUserbyId(updateMember.getMember_id()).orElseThrow(()-> new MemberException("아이디나 비밀번호가 일치하지 않습니다."));
 		
 		if(updateMember.getMember_pass() != null && !updateMember.getMember_pass().isBlank()) {
 			updateMember.setMember_pass(authUtil.encodedPassword(updateMember.getMember_pass()));
@@ -84,8 +85,17 @@ public class MemberService {
 		}
 		
 		memberMapper.updateMember(updateMember);
-		
-		return findUserbyId(updateMember.getMember_id());
+
+		Optional<MemberDTO> finalMemberDTO = memberMapper.findUserById(updateMember.getMember_id());
+
+		return finalMemberDTO.map(dto -> MemberResponseDTO.builder()
+		                                  .member_id(dto.getMember_id())
+										  .member_name(dto.getMember_name())
+										  .member_email(dto.getMember_email())
+										  .role(dto.getRole())
+										  .member_nickname(dto.getMember_nickname())
+										  .build()
+										  );
 		}
 		
 	@Transactional
@@ -94,10 +104,10 @@ public class MemberService {
 		MemberDTO currentMember = findUserbyId(userId).filter(member -> authUtil.checkPassword(password, member.getMember_pass()))
 				.orElseThrow(()-> new MemberException("아이디나 비밀번호가 일치하지 않습니다"));
 		
-		currentMember.setDeleted(true);
-		currentMember.setDeletedAt(LocalDateTime.now());
+		//currentMember.setDeleted(true);
+		//currentMember.setDeletedAt(LocalDateTime.now());
 		
-		memberMapper.updateMemberDeletion(currentMember);
+		memberMapper.deleteMember(currentMember);
 		
 	}
 

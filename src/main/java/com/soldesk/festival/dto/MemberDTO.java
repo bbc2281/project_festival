@@ -1,6 +1,5 @@
 package com.soldesk.festival.dto;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 
 import com.soldesk.festival.config.MemberRole;
@@ -10,8 +9,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class MemberDTO {
-
+public class MemberDTO { 
+    //DB 연결용 MemberDTO
 	//일반회원 &  관리자
 	
 	private Integer member_idx;
@@ -41,8 +40,8 @@ public class MemberDTO {
 	private Integer member_point;
 	private MemberRole role;
 	
-	private boolean deleted;
-	private LocalDateTime deletedAt;
+	//private boolean deleted;
+	//private LocalDateTime deletedAt;
 
 
 
