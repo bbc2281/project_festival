@@ -1,5 +1,7 @@
 package com.soldesk.festival.dto;
 
+import com.soldesk.festival.config.MemberRole;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package com.soldesk.festival.dto;
+package com.soldesk.festival.config;
 
 import lombok.Getter;
 
@@ -9,9 +9,6 @@ public enum MemberRole {
 	GUEST,
 	USER,
 	ADMIN;
-
-    
-
 	
 	public String getMemberRole() {
 		return "ROLE_"+ this.name();

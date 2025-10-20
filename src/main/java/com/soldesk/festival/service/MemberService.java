@@ -7,7 +7,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.soldesk.festival.config.AuthUtil;
+import com.soldesk.festival.config.MemberRole;
 import com.soldesk.festival.dto.MemberDTO;
+import com.soldesk.festival.dto.MemberJoinDTO;
 import com.soldesk.festival.dto.MemberRole;
 import com.soldesk.festival.dto.SecurityMemberDTO;
 import com.soldesk.festival.exception.MemberException;
@@ -47,7 +50,7 @@ public class MemberService {
 	}
     
 	@Transactional
-	public void join(MemberDTO joinMember) {
+	public void join(MemberJoinDTO joinMember) {
 		
         if(checkMemberIdExists(joinMember.getMember_id())) {
         	return;

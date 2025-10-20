@@ -3,6 +3,8 @@ package com.soldesk.festival.dto;
 import java.time.LocalDateTime;
 import java.util.Date;
 
+import com.soldesk.festival.config.MemberRole;
+
 import lombok.Getter;
 import lombok.Setter;
 

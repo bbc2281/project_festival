@@ -1,4 +1,4 @@
-package com.soldesk.festival.service;
+package com.soldesk.festival.config;
 
 import java.util.Arrays;
 import java.util.List;

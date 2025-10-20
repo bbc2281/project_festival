@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 import com.soldesk.festival.dto.MemberDTO;
+import com.soldesk.festival.dto.MemberJoinDTO;
 
 @Mapper
 public interface MemberMapper {
@@ -25,7 +26,7 @@ public interface MemberMapper {
 	@Insert("insert into member(member_id, member_name, member_pass, member_nickname, member_email, member_phone, member_address,"
 			+ "member_gender, member_job, member_age, role) values(#{member_id). #{member_name}, #{member_pass}, #{member_nickname}, #{member_email},"
 			+ "#{member_email}, #{member_phone}, #{member_address}, #{member_gender}, #{member_job}, #{member_age}, #{role})")
-	void insertMember(MemberDTO joinMember);
+	void insertMember(MemberJoinDTO joinMember);
 	
 	@Update("update ")
 	MemberDTO updateMember(MemberDTO updateMember); //아이디 제외

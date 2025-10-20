@@ -1,5 +1,8 @@
-package com.soldesk.festival.dto;
+package com.soldesk.festival.config;
 
+import lombok.Getter;
+
+@Getter
 public enum CompanyRole {
 	
 	COMPANY,

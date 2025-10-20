@@ -1,7 +1,8 @@
 package com.soldesk.festival.dto;
 
-import java.time.LocalDateTime;
 import java.util.Date;
+
+import com.soldesk.festival.config.MemberRole;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -54,7 +55,7 @@ public class MemberJoinDTO {
 	private Integer member_point;
 	private MemberRole role;
 	
-	private boolean deleted;
-	private LocalDateTime deletedAt;
+	//private boolean deleted;
+	//private LocalDateTime deletedAt;
 
 }
