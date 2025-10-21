@@ -10,9 +10,8 @@ import lombok.Setter;
 @Getter
 public class MemberUpdateDTO {
 
-    
 	private Integer member_idx;
-	
+
 	private String member_id;
 	
 

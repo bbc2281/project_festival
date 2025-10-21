@@ -21,11 +21,8 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/v1/member")
 public class MemberRestController {
 	
-	private MemberService memberService;
+	private final MemberService memberService;
 
-	public MemberRestController(MemberService memberService){
-		this.memberService = memberService;
-	}
 	
 	public ResponseEntity<Map<String, Object>> checkId(@RequestParam("member_id")String member_id){
 	
@@ -39,7 +36,9 @@ public class MemberRestController {
     
 	@PostMapping
 	public ResponseEntity<?> login(@Valid @RequestBody MemberLoginDTO memberLogin){
-       return null;
+      
+		
+		return null;
 	}
 
 

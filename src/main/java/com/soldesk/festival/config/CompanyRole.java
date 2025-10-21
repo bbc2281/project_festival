@@ -28,5 +28,8 @@ public enum CompanyRole {
 	public boolean isCompany(){
 		return this == COMPANY;
 	}
-	
+
+	public boolean hasHigherLevelThan(CompanyRole otherRole){
+		return this.ordinal() >= otherRole.ordinal();
+	}   
 }
