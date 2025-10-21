@@ -32,10 +32,10 @@ document.addEventListener("DOMContentLoaded", function(){
     if (qs('#resultGrid')) initSearchPage();
     if (qs('#festivalDetail')) renderFestivalDetail();
     if (qs('#postList')) renderBoard();
-  bindAuthForms();
+    bindAuthForms();
   })
   .catch(err =>{
-    console.log(err);
+    console.log("축제정보 호출 오류",err);
   })
 
 });
@@ -46,12 +46,22 @@ const NOTICES = [
   {title:"사이트 정식 오픈 공지", date:"2025-09-20"}
 ];
 
-const NEWS = [
-  {title:"드론쇼와 합작으로 볼거리 확대", url:"#"},
-  {title:"유등축제 야간 교통 통제 안내", url:"#"},
-  {title:"불빛정원 사전 예매 오픈", url:"#"},
-  {title:"지역 상권과 함께하는 먹거리 축제", url:"#"}
-];
+// 홈화면 공지사항 호출
+fetch("/index/board")
+.then(res => response.json())
+.then(BoardList =>{
+  BoardList.forEach(board => {
+    const formattedBoard = {
+      title : board.board_title,
+      date : board.board_regDate
+    };
+    // 공지사항 추가
+    NOTICES.push(formattedBoard);
+  })
+})
+.catch(err =>{
+  console.log("공지사항 호출 오류",err);
+});
 
 // Utility
 const qs = (s,doc=document)=>doc.querySelector(s);
@@ -90,14 +100,21 @@ function renderHome(){
 
   // News
   const newsWrap = qs('#newsList');
-  NEWS.forEach(n=>{
-    const a = document.createElement('a');
-    a.href = n.url; a.target="_blank";
-    a.className='d-flex align-items-center gap-2 news-item';
-    a.innerHTML = `<span>🗞️</span><span>${n.title}</span>`;
-    newsWrap.appendChild(a);
+  fetch('/js/news.json')
+  .then(response => response.json())
+  .then(newsList => {
+    newsList.slice(0,5).forEach(n =>{
+      const a = document.createElement('a');
+      a.href = n.url; a.target="_blank";
+      a.className='d-flex align-items-center gap-2 news-item';
+      a.innerHTML = `<span>🗞️</span><span>${n.title}</span>`;
+      newsWrap.appendChild(a);
+    })
+  })
+  .catch(err => {
+    console.log("뉴스정보 호출 오류",err)
   });
- // ✅ Recommended festivals (6개로 표시)
+  // ✅ Recommended festivals (6개로 표시)
   const grid = qs('#homeGrid');
   FESTIVALS.slice(0,6).forEach(f=>grid.appendChild(festivalCard(f)));
 }

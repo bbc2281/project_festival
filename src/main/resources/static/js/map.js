@@ -13,7 +13,7 @@ fetch(`/api/data?festival_idx=${festival_idx}`)
                 position: naver.maps.Position.TOP_RIGHT
             }
         };
-
+        
         let map = new naver.maps.Map('map', mapOptions);
 
         let marker = new naver.maps.Marker({
@@ -27,5 +27,5 @@ fetch(`/api/data?festival_idx=${festival_idx}`)
         });
     })
     .catch(error => {
-        console.error(error);
+        console.error("map 연동오류",error);
     });
