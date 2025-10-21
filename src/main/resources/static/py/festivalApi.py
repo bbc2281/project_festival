@@ -15,6 +15,7 @@ db_url = 'mysql+pymysql://soldesk801:rladnxo9900!@soldesk801dbserver.mysql.datab
 engine = create_engine(db_url, echo=True)
 
 #테이블 초기화
+'''
 with engine.connect() as conn:
     # 외래키 해제
     conn.execute(text("SET FOREIGN_KEY_CHECKS = 0;"))
@@ -26,7 +27,7 @@ with engine.connect() as conn:
     
     # 외래키 활성화
     conn.execute(text("SET FOREIGN_KEY_CHECKS = 1;"))
-    conn.commit()
+    conn.commit()'''
 
 #api 컬럼명 변경 
 mapping = {
