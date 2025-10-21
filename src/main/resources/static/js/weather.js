@@ -10,7 +10,6 @@ fetch(`/api/data?festival_idx=${festival_idx}`)
           return response.json();
         })
         .then(data2 => {
-          console.log(data2);
           const items = data2.response.body.items.item;
           const summary = parseWeatherData(items);
 
@@ -106,22 +105,22 @@ function weather(pty, sky){
     if(pty == 0){
         return notRain(sky);
     }else if(pty == 1){
-        return `비`;
+        return `🌧️ 비`;
     }else if(pty == 2){
-        return `비/눈`;
+        return `🌧️🌨️ 비/눈`;
     }else if(pty == 3){
-        return `눈`;
+        return `🌨️ 눈`;
     }else{
-        return `소나기`;
+        return `🌦️ 소나기`;
     }
 }
 
 function notRain(sky){
     if(sky == 1){
-        return `맑음`;
+        return `☀️ 맑음`;
     }else if(sky == 3){
-        return `구름많음`;
+        return `🌥️ 구름많음`;
     }else{
-        return `흐림`;
+        return `☁️ 흐림`;
     }
 }

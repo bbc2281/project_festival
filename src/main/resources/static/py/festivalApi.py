@@ -27,7 +27,8 @@ with engine.connect() as conn:
     
     # 외래키 활성화
     conn.execute(text("SET FOREIGN_KEY_CHECKS = 1;"))
-    conn.commit()'''
+    conn.commit()
+'''
 
 #api 컬럼명 변경 
 mapping = {
