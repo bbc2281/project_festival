@@ -10,6 +10,6 @@ import com.soldesk.festival.dto.BoardDTO;
 @Mapper
 public interface BoardMapper {
     
-    @Select("")
+    @Select("select * from board")
     List<BoardDTO> selectAllBoard();
 }

@@ -7,7 +7,7 @@ fetch(`/api/data?festival_idx=${festival_idx}`)
             center: new naver.maps.LatLng(festival_lat, festival_lot),
             zoom: 17
         };
-
+        
         let map = new naver.maps.Map('map', mapOptions);
 
         naver.maps.Event.addListener(map, 'click', function(e){
@@ -18,5 +18,5 @@ fetch(`/api/data?festival_idx=${festival_idx}`)
         });
     })
     .catch(error => {
-        console.error(error);
+        console.error("map 연동오류",error);
     });
