@@ -20,7 +20,7 @@ public class PythonScriptRunner implements ApplicationRunner{
     public void runPythonScript() throws IOException{
         String pythonPath = "C:\\Users\\soldesk\\AppData\\Local\\Programs\\Python\\Python314\\python.exe";
         ClassPathResource resource_f = new ClassPathResource("static/py/festivalApi.py");
-        ClassPathResource resource_s = new ClassPathResource("static/py/search.py");
+        ClassPathResource resource_s = new ClassPathResource("static/py/news.py");
         
         Path path1 = Paths.get(resource_f.getURI());
         Path path2 = Paths.get(resource_s.getURI());

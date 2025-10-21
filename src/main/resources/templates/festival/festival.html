@@ -17,7 +17,7 @@
 
 </head>
 
-<body>
+<body class="bg-gradient-festive">
   <!-- 상단 네비바 -->
   <div th:replace="~{common/header :: header}"></div>
 
@@ -43,8 +43,8 @@
                   <span th:text="${festival.festival_begin_date}"></span> ~
                   <span th:text="${festival.festival_end_date}"></span>
                 </div>
+                <span class="chip">요금: <span th:text="${festival.festival_fee}"></span></span>
               </div>
-              <span class="chip">요금: <span th:text="${festival.festival_fee}"></span></span>
             </div>
 
             <div class="mb-2"><b>주최:</b> <span th:text="${festival.festival_host}"></span></div>
@@ -53,6 +53,7 @@
             <hr>
             <h5 class="fw-bold mb-2">상세 소개</h5>
             <p th:text="${festival.festival_info}" style="white-space:pre-line;"></p>
+            <span th:if="${festival.festival_info == '상세내용은 공식 사이트를 참조해 주세요'}"><a th:href="${festival.festival_link}" target="_blank"  style="text-decoration: none;"> - 공식사이트(클릭)</a></span>
 
             <!-- 지도 / 길찾기 -->
             <div class="section">
@@ -125,7 +126,7 @@
       </div>
 
       <!-- 오른쪽 패널 -->
-<div class="col-lg-4 d-flex flex-column justify-content-between" style="gap: 1rem;">
+<div class="col-lg-4 d-flex flex-column justify-content-start" style="gap: 0.25rem;">
   <!-- 리뷰 -->
   <div class="gradient-card" style="max-height: 500px; height: 500px;">
     <div class="body d-flex flex-column h-100">

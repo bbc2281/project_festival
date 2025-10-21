@@ -11,7 +11,10 @@
   max-height: 260px;
   overflow: auto;
 }
-.news-item a { text-decoration: none; }
+.news-item {
+  text-decoration: none;
+  color: inherit; /* 링크 색상도 기본 텍스트 색으로 */
+}
 
 .card-fes:hover {
   transform: translateY(-2px);
