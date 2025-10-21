@@ -29,7 +29,7 @@ public class MemberJoinDTO {
 	
 	@NotBlank(message = "비밀번호를 입력해주세요")
 	@Size(min=8, max=30, message = "비밀번호는 영문, 숫자,특수문자를 모두 포함하여 8자 이상 입력해야 합니다 ")
-	@Pattern(regexp = "^(?=.*[A-Za-z]) (?=.*\\d)(?=.*[!@#$%^&*()_+=-]).{8,}$")
+	@Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[!@#$%^&*()_+=-]).{8,}$")
 	private String member_pass;
 	
 	@NotBlank(message = "비밀번호 확인입력을 해주세요")

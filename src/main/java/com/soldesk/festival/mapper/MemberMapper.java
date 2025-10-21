@@ -3,24 +3,41 @@ package com.soldesk.festival.mapper;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Result;
+import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 import com.soldesk.festival.dto.MemberDTO;
 import com.soldesk.festival.dto.MemberJoinDTO;
 import com.soldesk.festival.dto.MemberUpdateDTO;
+import com.soldesk.festival.handler.MemberRoleTypeHandler;
 
 @Mapper
 public interface MemberMapper {
 	
 	@Select("select * from member where member_id=#{member_id}")
+	@Results({
+		@Result(property="member_id", column="member_id"),
+		@Result(property="member_name", column="member_name"),
+		@Result(property="role", column="role", typeHandler=MemberRoleTypeHandler.class)
+	})
 	Optional<MemberDTO> findUserById(@Param("member_id")String userId);
 	
+
+
 	@Select("select * from member where member_email=#{member_email")
+	@Results({
+		@Result(property="member_email", column="member_email"),
+		@Result(property="role", column="role", typeHandler=MemberRoleTypeHandler.class)
+	})
 	Optional<MemberDTO> selectUserByEmail(@Param("member_email")String userEmail);
+	
+
 	
 	@Select("select * from member")
 	List<MemberDTO> getMemberList();
@@ -30,10 +47,11 @@ public interface MemberMapper {
 			+ "#{member_email}, #{member_phone}, #{member_address}, #{member_gender}, #{member_job}, #{member_age}, #{role})")
 	void insertMember(MemberJoinDTO joinMember);
 	
-	@Update("update ")
+	@Update("update member set member_name=#{member_name},member_pass=#{member_oass}")
 	MemberDTO updateMember(MemberUpdateDTO updateMember); //아이디 제외
 	
-	@Update("update ")
+	//@Update("update ")
+	@Delete("delete from member where member_idx=#{member_idx}")
 	MemberDTO deleteMember(MemberDTO deleteMember);
 	
 	

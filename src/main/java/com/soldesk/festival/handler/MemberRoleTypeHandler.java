@@ -8,11 +8,22 @@ import java.sql.SQLException;
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.MappedTypes;
+import org.mybatis.spring.annotation.MapperScan;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 import com.soldesk.festival.config.MemberRole;
 
 @MappedTypes(MemberRole.class)
+@Configuration
+@MapperScan(basePackages="com.soldesk.festival.mapper")
 public class MemberRoleTypeHandler extends BaseTypeHandler<MemberRole> {
+    
+    @Bean
+    public MemberRoleTypeHandler roleTypeHandler(){
+        return new MemberRoleTypeHandler();
+    }
+
     //1.java객체(enum)을 db에 저장할때 : enum ->  string
     @Override
     public void setNonNullParameter(PreparedStatement ps, int i, MemberRole parameter, JdbcType jdbcType) throws SQLException {

@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @Getter
 public class MemberResponseDTO {
-
+    private Integer member_idx;
     private String member_id;
     private String member_name;
     private String member_email;

@@ -19,13 +19,8 @@ import lombok.RequiredArgsConstructor;
 public class CompanyService {
 	
 	private final CompanyMapper companyMapper;
-	private AuthUtil authUtil;
-	
-	public CompanyService(CompanyMapper companyMapper, AuthUtil authUtil) {
-		this.companyMapper = companyMapper;
-		this.authUtil = authUtil;
-	}
-    
+	private final AuthUtil authUtil;
+
 	public UserDetails loginCompany(String companyId, String pass) {
 		
 		return findCompanyUserById(companyId).filter(company -> authUtil.checkPassword(pass, company.getCompany_pass()))
@@ -35,7 +30,7 @@ public class CompanyService {
 	
 	public Optional<CompanyDTO> findCompanyUserById(String companyId){
 		
-		return Optional.ofNullable(companyMapper.findCompanyUserById(companyId));
+		return companyMapper.findCompanyUserById(companyId);
 	} // 시스템 조회용
 	
 	public Optional<CompanyDTO> findCompanyUserByregNum(int regNum){
