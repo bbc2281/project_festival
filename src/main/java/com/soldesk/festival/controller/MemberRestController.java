@@ -2,6 +2,7 @@ package com.soldesk.festival.controller;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,11 +13,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.soldesk.festival.dto.MemberDTO;
 import com.soldesk.festival.dto.MemberJoinDTO;
 import com.soldesk.festival.dto.MemberLoginDTO;
 import com.soldesk.festival.service.AuthService;
 import com.soldesk.festival.service.MemberService;
 
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -40,9 +43,19 @@ public class MemberRestController {
 	}
     
 	@PostMapping("/login")
-	public ResponseEntity<?> login(@Valid @RequestBody MemberLoginDTO memberLogin){
+	public ResponseEntity<?> login(@Valid @RequestBody MemberLoginDTO memberLogin, HttpSession session){
       
 		UserDetails authUser = authService.login(memberLogin.getMember_id(), memberLogin.getMember_pass());
+        
+		//forUsingSessionAttribute
+		Optional<MemberDTO> opMember = memberService.findUserbyId(authUser.getUsername());
+		if(opMember.isPresent()){
+			MemberDTO loginMember = opMember.get();
+			session.setAttribute("loginMember", loginMember);
+		}else {
+            System.out.println("세션에 저장된 회원의 정보가 없습니다");
+		}
+		//
 
 		Map<String,Object> response = new HashMap<>();
 		response.put("message", "로그인 성동");
