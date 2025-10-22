@@ -17,12 +17,6 @@ public class AuthUtil {
 	
 	private final PasswordEncoder passEncoder;
 	
-	/* 
-	public AuthUtil(PasswordEncoder passEncoder) {
-		this.passEncoder = passEncoder;
-	}
-	*/
-	
 	public boolean checkPassword(String raw, String encoded) {
 		
 		 return raw != null && encoded != null && passEncoder.matches(raw, encoded);

@@ -3,7 +3,6 @@ package com.soldesk.festival.service;
 import java.util.Optional;
 
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,7 +12,6 @@ import com.soldesk.festival.dto.MemberDTO;
 import com.soldesk.festival.dto.MemberJoinDTO;
 import com.soldesk.festival.dto.MemberResponseDTO;
 import com.soldesk.festival.dto.MemberUpdateDTO;
-import com.soldesk.festival.dto.SecurityMemberDTO;
 import com.soldesk.festival.exception.MemberException;
 import com.soldesk.festival.mapper.MemberMapper;
 
@@ -26,18 +24,6 @@ public class MemberService {
 	private final MemberMapper memberMapper;
 	private final AuthUtil authUtil;
 
-
-	public UserDetails login(String userId, String userPass) {
-		/*
-		Optional<Member> optionalMember = findUserbyId(userId);
-		Member loginMember = optionalMember.filter(member-> authUtil.checkPassword(userPass,member.getMember_pass()))
-				.orElseThrow(()-> new BadCredentialsException("아이디나 비밀번호가 일치하지 않습니다"));
-		
-		return new SecurityMemberDTO(loginMember); */
-		return findUserbyId(userId).filter(member-> authUtil.checkPassword(userPass, member.getMember_pass()))
-				.map(SecurityMemberDTO::new)
-				.orElseThrow(()-> new BadCredentialsException("아이디나 비밀번호가 일치하지 않습니다"));	
-	}
 	
 	@Transactional(readOnly=true)
 	public Optional<MemberDTO> findUserbyId(String userId){
@@ -97,7 +83,7 @@ public class MemberService {
 	public void deleteMember(String userId, String password) {
 		
 		MemberDTO currentMember = findUserbyId(userId).filter(member -> authUtil.checkPassword(password, member.getMember_pass()))
-				.orElseThrow(()-> new MemberException("아이디나 비밀번호가 일치하지 않습니다"));
+				.orElseThrow(()-> new BadCredentialsException("아이디나 비밀번호가 일치하지 않습니다"));
 		
 		//currentMember.setDeleted(true);
 		//currentMember.setDeletedAt(LocalDateTime.now());
