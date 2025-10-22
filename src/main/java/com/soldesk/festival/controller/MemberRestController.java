@@ -4,8 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,8 +16,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.soldesk.festival.dto.MemberDTO;
+import com.soldesk.festival.dto.MemberDetailDTO;
 import com.soldesk.festival.dto.MemberJoinDTO;
 import com.soldesk.festival.dto.MemberLoginDTO;
+import com.soldesk.festival.dto.UserResponse;
+import com.soldesk.festival.exception.UserException;
 import com.soldesk.festival.service.AuthService;
 import com.soldesk.festival.service.MemberService;
 
@@ -43,7 +48,7 @@ public class MemberRestController {
 	}
     
 	@PostMapping("/login")
-	public ResponseEntity<?> login(@Valid @RequestBody MemberLoginDTO memberLogin, HttpSession session){
+	public ResponseEntity<UserResponse> login(@Valid @RequestBody MemberLoginDTO memberLogin, HttpSession session){
       
 		UserDetails authUser = authService.login(memberLogin.getMember_id(), memberLogin.getMember_pass());
         
@@ -55,26 +60,30 @@ public class MemberRestController {
 		}else {
             System.out.println("세션에 저장된 회원의 정보가 없습니다");
 		}
-		//
-
-		Map<String,Object> response = new HashMap<>();
-		response.put("message", "로그인 성동");
-		response.put("member_id", authUser.getUsername());
+		MemberDetailDTO details = memberService.getMemberDetails(authUser.getUsername());
+		UserResponse response = UserResponse.success("로그인 성공", details);
+	    
 
 		return ResponseEntity.ok(response);
 	}
 
     @PostMapping("/join")
-	public ResponseEntity<?> join(@Valid @RequestBody MemberJoinDTO memberJoin){
+	public ResponseEntity<UserResponse> join(@Valid @RequestBody MemberJoinDTO memberJoin){
         
 		checkId(memberJoin.getMember_id());
 		memberService.join(memberJoin);
-
-		Map<String,Object> response = new HashMap<>();
-		response.put("message", "회원가입 상공");
+        
+		UserResponse response = UserResponse.successMessage("회원가입 성공");
 
 		return ResponseEntity.status(201).body(response);
 	}
 
+
+	
+    @ExceptionHandler(UserException.class)
+    public ResponseEntity<UserResponse> handleMemberException(UserException ex){
+            
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(UserResponse.error(ex.getMessage()));
+	}
 	
 }  

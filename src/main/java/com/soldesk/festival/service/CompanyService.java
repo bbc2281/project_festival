@@ -1,6 +1,5 @@
 package com.soldesk.festival.service;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -8,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.soldesk.festival.config.AuthUtil;
 import com.soldesk.festival.dto.CompanyDTO;
-import com.soldesk.festival.exception.CompanyException;
+import com.soldesk.festival.exception.UserException;
 import com.soldesk.festival.mapper.CompanyMapper;
 
 import lombok.RequiredArgsConstructor;
@@ -36,10 +35,10 @@ public class CompanyService {
 	public void deleteCompany(String companyId, String password) {
 		
 		CompanyDTO thisCompany = findCompanyUserById(companyId).filter(company -> authUtil.checkPassword(password, company.getCompany_pass()))
-				.orElseThrow(()-> new CompanyException("아이디나 비밀번호가 일치하지 않습니다"));
+				.orElseThrow(()-> new UserException("아이디나 비밀번호가 일치하지 않습니다"));
 		
-		thisCompany.setDeleted(true);
-		thisCompany.setDeletedAt(LocalDateTime.now());
+		//thisCompany.setDeleted(true);
+		//thisCompany.setDeletedAt(LocalDateTime.now());
 		
 	}
 }

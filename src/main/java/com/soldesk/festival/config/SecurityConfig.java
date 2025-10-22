@@ -49,10 +49,10 @@ public class SecurityConfig {
             )
             .authorizeHttpRequests((auth)-> auth
                  //로그인 , 회원가입 , 정적리로스
-                                        .requestMatchers("/api/v1/member/login", "/api/v1/member/join", "/api/v1/member/checkId","/api/v1/company/join").permitAll()
+                                        .requestMatchers("/api/v1/member/login", "/api/v1/member/join", "/api/v1/member/checkId","/api/v1/company/join",
+                                                            "/api/v1/company/join").permitAll()
                                         .requestMatchers("/", "/css/**", "/js/**", "/image/**").permitAll() 
                                         .requestMatchers("/api/v1/admin/**").hasRole(MemberRole.ADMIN.name())
-                                        .requestMatchers("/api/v1/company/join").hasAnyRole(CompanyRole.COMPANY.name(), CompanyRole.FESTIVAL_PLANNER.name())
                                         .requestMatchers("/api/v1/member/**").hasAnyRole(MemberRole.USER.name(), MemberRole.ADMIN.name(),
                                                                                         CompanyRole.COMPANY.name(), CompanyRole.FESTIVAL_PLANNER.name())
                                                                                         
@@ -76,8 +76,6 @@ public class SecurityConfig {
                                      .permitAll()
                    );          
                                     
-        
-        
              
         return http.build();        
                

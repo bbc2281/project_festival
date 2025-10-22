@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Getter
-public class MemberResponseDTO {
+public class MemberDetailDTO {
     private Integer member_idx;
     private String member_id;
     private String member_name;

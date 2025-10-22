@@ -19,37 +19,37 @@ public class MemberJoinDTO {
 	
 	private Integer member_idx;
 	
-	@NotBlank(message = "아이디를 입력해주세요")
-	@Size(min=4, max=20, message = "아이디는 영어 대소문자와 숫자만 사용가능하며 4~20글자여야합니다")
+	@NotBlank(message="아이디를 입력해주세요")
+	@Size(min=4, max=20, message="아이디는 영어 대소문자와 숫자만 사용가능하며 4~20글자여야합니다")
 	@Pattern(regexp = "^[a-zA-Z0-9]{4,20}$")
 	private String member_id;
 	
-	@NotBlank(message = "이름을 입력해주세요")
+	@NotBlank(message="이름을 입력해주세요")
 	private String member_name;
 	
-	@NotBlank(message = "비밀번호를 입력해주세요")
-	@Size(min=8, max=30, message = "비밀번호는 영문, 숫자,특수문자를 모두 포함하여 8자 이상 입력해야 합니다 ")
+	@NotBlank(message="비밀번호를 입력해주세요")
+	@Size(min=8, max=30, message="비밀번호는 영문, 숫자,특수문자를 모두 포함하여 8자 이상 입력해야 합니다 ")
 	@Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[!@#$%^&*()_+=-]).{8,}$")
 	private String member_pass;
 	
-	@NotBlank(message = "비밀번호 확인입력을 해주세요")
+	@NotBlank(message="비밀번호 확인입력을 해주세요")
 	private String member_pass2;
 	
 	private String member_nickname;
 	
-	@Email(message = "이메일 형식이 올바르지 않습니다")
+	@Email(message="이메일 형식이 올바르지 않습니다")
 	private String member_email;
 	
-	@NotBlank(message = "핸드폰 번호를 입력해주세요")
+	@NotBlank(message="핸드폰 번호를 입력해주세요")
 	private String member_phone;
 	
-	@NotBlank(message = "주소를 입력해주세요")
+	@NotBlank(message="주소를 입력해주세요")
 	private String member_address;
 	
 	private String member_gender;
 	private String member_job;
 	
-	@NotBlank(message = "생년월일을 선택해주세요")
+	@NotBlank(message="생년월일을 선택해주세요")
 	private Date member_birth;
 	
 	private Integer member_point;
