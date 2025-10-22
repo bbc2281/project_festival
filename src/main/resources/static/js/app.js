@@ -1,6 +1,7 @@
 
 // Dataset (mock)
 const FESTIVALS = [ ];
+const NOTICES = [ ];
 
 document.addEventListener("DOMContentLoaded", function(){
   fetch("/api/festivals")
@@ -32,36 +33,37 @@ document.addEventListener("DOMContentLoaded", function(){
     if (qs('#resultGrid')) initSearchPage();
     if (qs('#festivalDetail')) renderFestivalDetail();
     if (qs('#postList')) renderBoard();
-    bindAuthForms();
+    // bindAuthForms();
   })
   .catch(err =>{
     console.log("축제정보 호출 오류",err);
-  })
+  });
 
+  // 홈화면 공지사항 호출
+  fetch("/index/board")
+  .then(response => response.json())
+  .then(BoardList =>{
+    console.log(BoardList)
+    BoardList.forEach(board => {
+      console.log(board.board_regDate)
+      const board_date = new Date(board.board_regDate)
+      formattedDate = board_date.toISOString().split('T')[0]
+      const formattedBoard = {
+        title : board.board_title,
+        date :  formattedDate
+      };
+      // 공지사항 추가
+      NOTICES.push(formattedBoard);
+    })
+  })
+  .catch(err =>{
+    console.log("공지사항 호출 오류",err);
+  });
 });
 
-const NOTICES = [
-  {title:"서버 점검 안내", date:"2025-10-05"},
-  {title:"가을 축제 이벤트 당첨자 발표", date:"2025-10-01"},
-  {title:"사이트 정식 오픈 공지", date:"2025-09-20"}
-];
 
-// 홈화면 공지사항 호출
-fetch("/index/board")
-.then(res => response.json())
-.then(BoardList =>{
-  BoardList.forEach(board => {
-    const formattedBoard = {
-      title : board.board_title,
-      date : board.board_regDate
-    };
-    // 공지사항 추가
-    NOTICES.push(formattedBoard);
-  })
-})
-.catch(err =>{
-  console.log("공지사항 호출 오류",err);
-});
+
+
 
 // Utility
 const qs = (s,doc=document)=>doc.querySelector(s);
@@ -132,7 +134,7 @@ function festivalCard(f){
       <div class="mt-2">${f.fee}</div>
       <div class="mt-auto d-flex justify-content-between align-items-center">
         <a href="festivalInfo?id=${f.id}" class="btn btn-outline-primary btn-sm">자세히</a>
-        <span class="text-secondary small">❤️ ${f.like}</span>
+        // <span class="text-secondary small">❤️ ${f.like}</span>
       </div>
     </div>
   </div>`;
