@@ -34,7 +34,7 @@ public interface BoardMapper {
     int countBoardBycategory(String board_category);
 
 
-    @Insert("insert into board (board_title,board_content,board_regDate,board_category,board_img_path) values (#{board_title},#{board_content},now(),#{board_category},#{board_img_path})")
+    @Insert("insert into board (board_title,board_content,board_regDate,board_category,board_img_path,member_idx) values (#{board_title},#{board_content},now(),#{board_category},#{board_img_path},#{member_idx})")
     void writeProcess(BoardDTO writeBoard);
 
 

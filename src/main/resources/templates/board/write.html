@@ -63,17 +63,17 @@
       <form th:action="@{/board/write}" th:object="${writeBoard}" method="post" enctype="multipart/form-data">
         <div class="mb-3">
           <label for="board_title" class="form-label">제목</label>
-          <input type="text" th:field="*{board_title}" class="form-control" placeholder="제목을 입력하세요" required>
+          <input type="text" th:field="*{board_title}" class="form-control" placeholder="제목을 입력하세요" >
         </div>
 
         <div class="row mb-3">
           <div class="col-md-6">
             <label for="member_nickname" class="form-label">작성자</label>
-           <input type="text" name="member_nickname" class="form-control" value="테스트1" readonly> <!--맴버 세션 연동 하면 교체 예정-->
+           <input type="text" name="member_nickname" class="form-control" value="${loginMember.member_nickname}" readonly> <!--맴버 세션 연동 하면 교체 예정-->
           </div>
           <div class="col-md-6">
             <label for="board_category" class="form-label">카테고리</label>
-            <select th:field="*{board_category}" class="form-select" required>
+            <select th:field="*{board_category}" class="form-select">
               <option value="">선택하세요</option>
               <option th:each="category : ${categories}" th:value="${category}" th:text="${category}"></option>
             </select>
@@ -82,7 +82,7 @@
 
         <div class="mb-3">
           <label for="board_content" class="form-label">내용</label>
-          <textarea th:field="*{board_content}" class="form-control" rows="8" placeholder="내용을 입력하세요" required></textarea>
+          <textarea th:field="*{board_content}" class="form-control" rows="8" placeholder="내용을 입력하세요"></textarea>
         </div>
 
         <div class="mb-4">
@@ -97,6 +97,8 @@
       </form>
     </div>
   </main>
+
+  <script src="/js/boardWrite.js"></script>
 
   <!-- Footer -->
   <div th:replace="~{common/footer :: footer}"></div>

@@ -111,7 +111,7 @@
 
       <div>
          <div th:each="category : ${categories}">
-          <a th:href="@{/board/list(board_category=${category})}">카테고리</a>
+          <a th:href="@{/board/list(board_category=${category})}">[[${category}]]</a> <br>
         </div>
       </div>
 

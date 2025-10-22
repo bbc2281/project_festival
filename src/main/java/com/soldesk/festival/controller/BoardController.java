@@ -9,13 +9,16 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.soldesk.festival.dto.BoardDTO;
 import com.soldesk.festival.dto.BoardPageDTO;
+import com.soldesk.festival.dto.MemberDTO;
 import com.soldesk.festival.service.BoardService;
 import com.soldesk.festival.service.FileUploadService;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -27,7 +30,14 @@ public class BoardController {
     private final FileUploadService fileUploadService;
 
     @GetMapping("/list")
-    public String listForm(Model model, @RequestParam(name = "page" , defaultValue = "1") int page , @RequestParam(name = "board_category" ,defaultValue = "") String board_category ){
+    public String listForm(Model model, @RequestParam(name = "page" , defaultValue = "1") int page , 
+        @RequestParam(name = "board_category" ,defaultValue = "") String board_category , HttpSession session){
+        
+        //나중에 진짜 맴버 객체랑 연동 할 예정입니다.
+        MemberDTO memberDTO = new MemberDTO();
+        memberDTO.setMember_idx(1);
+        session.setAttribute("loginMember", memberDTO);
+        
         List<String> category = createCategoryList();
         model.addAttribute("categories", category);
         if (page < 1) page = 1;
@@ -46,15 +56,17 @@ public class BoardController {
     }
 
     @GetMapping("/write")
-    public String writeFrom(Model model , BoardDTO boardDTO){
+    public String writeFrom(Model model , BoardDTO boardDTO,  @SessionAttribute("loginMember")MemberDTO memberDTO){   
         boardDTO.setBoard_category(""); 
         model.addAttribute("categories", createCategoryList());
         model.addAttribute("writeBoard", boardDTO);
+        model.addAttribute("loginMember", memberDTO);
         return"/board/write";
     }
 
     @PostMapping("/write")
-    public String writeSubmit(@ModelAttribute("writeBoard")BoardDTO boardDTO ,@RequestParam("upload_file")MultipartFile file){
+    public String writeSubmit(@ModelAttribute("writeBoard")BoardDTO boardDTO ,@RequestParam("upload_file")MultipartFile file, @SessionAttribute("loginMember")MemberDTO memberDTO ){
+        boardDTO.setMember_idx(memberDTO.getMember_idx());
         if(!file.isEmpty()){
             String imageUrl;
             try {
@@ -113,10 +125,9 @@ public class BoardController {
     }
 
     @PostMapping("/delete")
-    public String deleteSubmit(@RequestParam("board_idx")int board_idx){ //int SessionUser -> 로그인 객체랑 연동 예정
-        int SessionUser = 1;
+    public String deleteSubmit(@RequestParam("board_idx")int board_idx ,@SessionAttribute("loginMember")MemberDTO MemberDTO){
         BoardDTO deleteBaord = boardService.infoProcess(board_idx);
-        if(deleteBaord.getMember_idx() == SessionUser){
+        if(deleteBaord.getMember_idx() == MemberDTO.getMember_idx()){
             String imgPath = deleteBaord.getBoard_img_path();
                 if (imgPath != null && !imgPath.isBlank()) {
                      String extractedPath = fileUploadService.extractPathFromUrl(imgPath);
