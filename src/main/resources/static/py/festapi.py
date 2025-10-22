@@ -1,8 +1,17 @@
 from fastapi import FastAPI, Query, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 import requests
 from datetime import datetime, timedelta
 import math
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
+import time
+
 
 
 app = FastAPI()
@@ -85,3 +94,66 @@ def get_weather(lat: float = Query(...), lon: float = Query(...)):
         raise HTTPException(status_code=weather_resp.status_code, detail="기상청 날씨 API 호출 실패")
 
     return weather_resp.json()
+
+
+
+@app.get("/locatinInfo")
+def receive_festival(lat: float = Query(...), lon: float = Query(...)):
+    lat = round(lat, 12)
+    lon = round(lon, 12)
+
+    options = Options()
+    #options.add_argument('--headless=new')
+    options.add_argument('--disable-gpu')
+    options.add_argument('--no-sandbox')
+    options.add_argument('--disable-dev-shm-usage')
+    options.add_argument('--window-size=1920,1080')
+
+    driver = None
+    
+    driver = webdriver.Chrome(options=options)
+    
+    url = f"https://map.naver.com/v5/search/{lat},{lon}"
+    print(url)
+    driver.set_window_position(0, 1000)
+    driver.set_window_size(800, 600)    
+    driver.minimize_window()
+    driver.get(url)
+    # 잠깐 대기 (동적 렌더링)
+    time.sleep(1.5)
+
+    # 현재 주소창에 표시된 URL 가져오기
+    current_url = driver.current_url
+    print("최종 URL:", current_url)
+    driver.get(current_url)
+    wait = WebDriverWait(driver, 5)
+
+    # 필요한 요소가 로드될 때까지 기다림
+    try:
+        wait.until(EC.presence_of_all_elements_located((By.CLASS_NAME, "end_area")))
+    except TimeoutException:
+        # 요소가 없으면 빈 리스트 반환
+        return JSONResponse(content=[], status_code=201)
+
+    elements = driver.find_elements(By.CLASS_NAME, 'link_space')
+
+    img_src_list =[]
+    title_list =[]
+
+    for element in elements :
+        title = element.find_element(By.CLASS_NAME, 'space_title')
+        try:
+            img_src = element.find_element(By.TAG_NAME, 'img').get_attribute('src')
+        except NoSuchElementException:
+            img_src = None  # 또는 'null', '' 등 원하는 기본값
+
+        if img_src is not None:
+            img_src_list.append(img_src)
+        else :
+            img_src_list.append('null')
+        title_list.append(title.text)
+    
+    js_info = [{"title": title, "src": link} for title, link in zip(title_list, img_src_list)]
+    driver.quit()
+    return JSONResponse(content=js_info, status_code=200)
+    
