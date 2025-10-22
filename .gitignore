@@ -1,0 +1,6 @@
+/target/
+firebase-key.json
+application.properties
+.idea/
+*.class
+*.log

@@ -1,0 +1,6 @@
+spring:
+  servlet:
+    multipart:
+      enabled: true            # 파일 업로드 기능 활성화
+      max-file-size: 10MB     # 단일 파일 최대 크기
+      max-request-size: 20MB  # 전체 요청 최대 크기
