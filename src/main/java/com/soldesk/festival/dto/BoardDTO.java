@@ -1,4 +1,5 @@
 package com.soldesk.festival.dto;
+import java.util.Date;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -7,15 +8,19 @@ import lombok.Setter;
 @Setter
 public class BoardDTO {
     
-    int board_idx;
-    int member_idx;
-    int festival_idx;
-    int festival_category_idx;
-    String board_title;
-    String board_content;
-    String board_regDate;
-    int board_views;
-    String board_img_path;
-    String board_category;
+    private int board_idx;
+    private int member_idx;
+    private int festival_idx;
+    private int festival_category_idx;
+    private String board_title;
+    private String board_content;
+    private Date board_regDate;
+    private int board_views;
+    private String board_img_path;
+    private String board_category;
+    private String member_nickname;
+    
+
+
 
 }
