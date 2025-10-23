@@ -7,53 +7,54 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class MemberViewController {
     
     //로그인품
-    @GetMapping("/Allusers/login")
+    @GetMapping("/auth/login")
     public String loginForm(){
-        return "Allusers/login";
+        return "auth/login";
     }
 
     //회원가입:일반회원
-    @GetMapping("/member/join")
+    @GetMapping("/auth/member/join")
     public String joinForm(){
-        return "member/join";   
+        return "auth/member/join";   
     }
     
     //기업회원가입
-    @GetMapping("/company/join")
+    @GetMapping("/auth/company/join")
     public String companyJoinForm(){
-        return "company/join";
+        return "auth/company/join";
     }
     
-    //공용마이페이지
-    @GetMapping("/Allusers/mypage")
+    //공용마이페이지(일반/회사-미정)
+    @GetMapping("/auth/mypage")
     public String mypageForm(){
-        return "Allusers/mypage";
+        return "auth/mypage";
     }
     
     
     //일반회원 정보수정
-    @GetMapping("/member/modify")
+    @GetMapping("/auth/member/modify")
     public String mypageModifyForMember(){
-        return "member/modify";
+        return "auth/member/modify";
     }
+    
     //기업회원 정보수정
     @GetMapping("/company/modify")
     public String mypageModifyForCompany(){
-        return "company/modify";
+        return "auth/company/modify";
     }
     
     //공용회원탈퇴페이지
-    @GetMapping("/Allusers/delete")
+    @GetMapping("/auth/delete")
     public String accountWithdrawal(){
-        return "Allsusers/delete";
+        return "auth/delete";
     }
 
 
        
     //관리자 전용 페이지
-    @GetMapping("/Allusers/admin")
+    @GetMapping("/auth/admin")
     public String onlyAdminPage(){
-        return "Allusers/admin";
+        return "auth/admin";
     }
     
 

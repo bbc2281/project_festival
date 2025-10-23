@@ -49,11 +49,11 @@ public class SecurityConfig {
             )
             .authorizeHttpRequests((auth)-> auth
                  //로그인 , 회원가입 , 정적리로스
-                                        .requestMatchers("/api/v1/member/login", "/api/v1/member/join", "/api/v1/member/checkId","/api/v1/company/join",
-                                                            "/api/v1/company/join").permitAll()
+                                        .requestMatchers("/api/v1/auth/login", "/api/v1/auth/join", "/api/v1/auth/member/checkId","/api/v1/auth/company/join",
+                                                            "/api/v1/auth/company/join").permitAll()
                                         .requestMatchers("/", "/css/**", "/js/**", "/image/**").permitAll() 
-                                        .requestMatchers("/api/v1/admin/**").hasRole(MemberRole.ADMIN.name())
-                                        .requestMatchers("/api/v1/member/**").hasAnyRole(MemberRole.USER.name(), MemberRole.ADMIN.name(),
+                                        .requestMatchers("/api/v1/auth/admin/**").hasRole(MemberRole.ADMIN.name())
+                                        .requestMatchers("/api/v1/auth/member/**").hasAnyRole(MemberRole.USER.name(), MemberRole.ADMIN.name(),
                                                                                         CompanyRole.COMPANY.name(), CompanyRole.FESTIVAL_PLANNER.name())
                                                                                         
                                         .anyRequest().authenticated()
@@ -61,15 +61,15 @@ public class SecurityConfig {
                 );
         http
             .formLogin((form)-> form
-                                    .loginPage("/member/login")
-                                    .loginProcessingUrl("/member/login")
+                                    .loginPage("/auth/login")
+                                    .loginProcessingUrl("/auth/login")
                                     .defaultSuccessUrl("/")
-                                    .failureUrl("member/login?error")
+                                    .failureUrl("/auth/login?error")
                                     .permitAll()
                                     
                       )
             .logout((logout)-> logout
-                                     .logoutUrl("/member/logout")
+                                     .logoutUrl("/auth/logout")
                                      .logoutSuccessUrl("/")
                                      .invalidateHttpSession(true)
                                      .deleteCookies("JSESSIONID")
