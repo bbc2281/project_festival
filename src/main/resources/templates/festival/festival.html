@@ -14,6 +14,7 @@
 <script defer th:src="@{/js/map.js}"></script>
 <script defer th:src="@{/js/weather.js}"></script>
 <script defer th:src="@{/js/locationInfo.js}"></script>
+<script th:src="@{/js/filtering.js}"></script>
 <!-- <script defer th:src="@{/js/aiChat.js}"></script> -->
 <script type="text/javascript" src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=u4pl1guhug"></script>
 
@@ -196,20 +197,24 @@
       chatBox.appendChild(div);
       chatBox.scrollTop = chatBox.scrollHeight;
     }
+    
+    document.getElementById("btnSendChat").addEventListener("click", async ()=>{
+      let msg = chatInput.value.trim();
+      chat_ok = await sendMsg(msg);
+      if(!chat_ok) return;
 
-    function sendChat() {
-      const msg = chatInput.value.trim();
-      if (!msg) return;
-      addMessage(msg, "me");
       chatInput.value = "";
-      setTimeout(() => addMessage("문의 감사합니다!", "other"), 700);
-    }
+      addMessage(msg, "me");
+    });
 
-    document.getElementById("btnSendChat").addEventListener("click", sendChat);
-    chatInput.addEventListener("keydown", (e) => {
+    chatInput.addEventListener("keydown", async (e) => {
       if (e.key === "Enter" && !e.shiftKey) {
-        e.preventDefault();
-        sendChat();
+        let msg = chatInput.value.trim();
+        chat_ok = await sendMsg(msg);
+        if(!chat_ok) return;
+
+        chatInput.value = "";
+        addMessage(msg, "me");
       }
     });
 
