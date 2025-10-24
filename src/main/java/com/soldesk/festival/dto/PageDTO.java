@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class BoardPageDTO {
+public class PageDTO {
     
     private int min; //최소페이지 
 	private int max; //최대페이지
@@ -17,7 +17,7 @@ public class BoardPageDTO {
 	private int paginationCnt = 10; //페이지 버튼 개수
     
     
-public BoardPageDTO(int contentCnt, int currentPage) {
+public PageDTO(int contentCnt, int currentPage) {
     this.currentPage = currentPage < 1 ? 1 : currentPage;
 
     if (contentCnt == 0) {

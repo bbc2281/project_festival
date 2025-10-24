@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.soldesk.festival.dto.BoardDTO;
-import com.soldesk.festival.dto.BoardPageDTO;
+import com.soldesk.festival.dto.PageDTO;
 import com.soldesk.festival.dto.MemberDTO;
 import com.soldesk.festival.service.BoardService;
 import com.soldesk.festival.service.FileUploadService;
@@ -42,7 +42,7 @@ public class BoardController {
         model.addAttribute("categories", category);
         if (page < 1) page = 1;
         List<BoardDTO> boardList;
-        BoardPageDTO pageDTO;    
+        PageDTO pageDTO;    
         if (board_category == null || board_category.isBlank()) {
             boardList = boardService.selectAllBoard(page);
             pageDTO = boardService.getPageDTO(page);
@@ -103,23 +103,20 @@ public class BoardController {
     @PostMapping("/modify")
     public String modifySubmit(@ModelAttribute("board_now")BoardDTO boardDTO, @RequestParam("upload_file")MultipartFile file ){      
         BoardDTO modifyBoard = boardService.infoProcess(boardDTO.getBoard_idx());
-        if (modifyBoard.getBoard_img_path() != null && !modifyBoard.getBoard_img_path().isBlank()) {
-           String imgPath = fileUploadService.extractPathFromUrl(modifyBoard.getBoard_img_path());
-        fileUploadService.deleteFromFirebase(imgPath);
-        } 
         try {
-        if (file != null && !file.isEmpty()) {
-            String updateImage = fileUploadService.uploadToFirebase(file);
-            boardDTO.setBoard_img_path(updateImage);
-        }   
-        else{
-        boardDTO.setBoard_img_path(modifyBoard.getBoard_img_path());
-        }
-        
-        boardService.modifyProcess(boardDTO);
-        } 
-        catch (IOException e) {
-        e.printStackTrace();
+            if(file != null && !file.isEmpty()){
+                if(modifyBoard.getBoard_img_path() != null && !modifyBoard.getBoard_img_path().isEmpty()){
+                    String imgPath = fileUploadService.extractPathFromUrl(modifyBoard.getBoard_img_path());
+                    fileUploadService.deleteFromFirebase(imgPath);
+                }
+                String uploadImage = fileUploadService.uploadToFirebase(file);
+                boardDTO.setBoard_img_path(uploadImage);
+            }else{
+                boardDTO.setBoard_img_path(modifyBoard.getBoard_img_path());
+            }
+            boardService.modifyProcess(boardDTO);            
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return"redirect:/board/info?board_idx="+boardDTO.getBoard_idx();
     }

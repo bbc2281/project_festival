@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.soldesk.festival.dao.BoardDAO;
 import com.soldesk.festival.dto.BoardDTO;
-import com.soldesk.festival.dto.BoardPageDTO;
+import com.soldesk.festival.dto.PageDTO;
 
 import lombok.RequiredArgsConstructor;
 
@@ -30,15 +30,15 @@ public class BoardService {
         return boardDAO.selectAllBoardByCategory(start,limit, board_category);
     }
 
-    public BoardPageDTO getPageDTO(int currentPage) {
+    public PageDTO getPageDTO(int currentPage) {
 		int boardCount = boardDAO.countBoard();
-		BoardPageDTO pageDTO = new BoardPageDTO(boardCount , currentPage);
+		PageDTO pageDTO = new PageDTO(boardCount , currentPage);
     	return pageDTO;
 	}
 
-    public BoardPageDTO getPageDTOByCategory(int currentPage , String board_category) {
+    public PageDTO getPageDTOByCategory(int currentPage , String board_category) {
 		int boardCount = boardDAO.countBoardBycategory(board_category);
-		BoardPageDTO pageDTO = new BoardPageDTO(boardCount , currentPage);
+		PageDTO pageDTO = new PageDTO(boardCount , currentPage);
     	return pageDTO;
 	}
 
