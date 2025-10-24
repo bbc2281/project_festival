@@ -6,9 +6,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.soldesk.festival.dto.BoardDTO;
 import com.soldesk.festival.dto.FestivalDTO;
-import com.soldesk.festival.service.BoardService;
+//import com.soldesk.festival.service.BoardService;
 import com.soldesk.festival.service.FestivalService;
 
 import lombok.RequiredArgsConstructor;
@@ -19,7 +18,7 @@ import lombok.RequiredArgsConstructor;
 public class HomeContoroller {
 
     private final FestivalService festivalService;
-    private final BoardService boardService;
+    //private final BoardService boardService;
     
     @GetMapping("/")
     public String home(){
