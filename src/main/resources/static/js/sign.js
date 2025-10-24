@@ -1,94 +1,106 @@
-const $ = sel => document.querySelector(sel);
-const $$ = sel => Array.from(document.querySelectorAll(sel));
+// signup.js (통합 코드)
+const csrfToken = document.querySelector('input[name="_csrf"]').value;
+const csrfHeader = document.querySelector('input[name="_csrf"]').name;
 
-function openModal(id){ const el = $(id); if(!el) return; el.classList.add('show'); }
-function closeModal(id){ const el = $(id); if(!el) return; el.classList.remove('show'); }
 
-window.addEventListener('DOMContentLoaded', () => {
-  // 회원유형 선택 모달
-  $$('#open-signup').forEach(btn => btn.addEventListener('click', () => openModal('#signupModal')));
-  $$('#close-signup').forEach(btn => btn.addEventListener('click', () => closeModal('#signupModal')));
+// 🚨🚨 중복확인 상태를 관리하는 객체 (핵심) 🚨🚨
+const checkStatus = {
+    'member_id': false,
+};
 
-  // 페이지 전환
-  const go = (path) => { window.location.href = path; };
-  $('#opt-user')?.addEventListener('click', ()=> go('signup-user.html'));
-  $('#opt-company')?.addEventListener('click', ()=> go('signup-company.html'));
 
-  // ✅ 폼 제출 (동작만 막고 별도 알림 없음)
-  $$('#auth-form').forEach(form => {
-    form.addEventListener('submit', e => {
-      e.preventDefault();
-      // fetch() 또는 백엔드 로직 연결 시 이 부분에 추가하면 됨
-    });
-  });
+function checkDuplicateId(){
+   const memberId = document.getElementById('member_id').value;
+   const checkMessage = document.getElementById('idCheckMessage');
+    
+   checkMessage.textContent = 'Checking';
+   checkDuplicateId.style.color = 'gray';
+   const url = '/checkId?member_id=' + encodeURIComponent(memberId);
+   
+   fetch(url)
+            .then(response=>{
+                if(!response.ok){
+                    throw new Error('네트워크가 불안정합니다' + response.statusText);
+                }
+                return response.json();
+              })
+              .then(data=>{
+                const exists = data.exists;
+                if(exists){
+                    checkMessage.textContent = `❌ The ID '${memberId}' is already taken.`;
+                    checkMessage.style.color = 'red';
+                }
+              })
+              .catch(error=>{
+                 console.log('error');
+                 checkMessage.textContent = 'An error occurred. Please try again.';
+                 checkMessage.style.color = 'orange';
 
-  // ✅ 비밀번호 확인 (일반회원)
-  const userPw = $('#member_pass');
-  const userPw2 = $('#member_pass2');
-  const pwHelp = $('#pw-help');
-  if (userPw && userPw2 && pwHelp) {
-    const check = () => {
-      const a = userPw.value;
-      const b = userPw2.value;
-      if (!b) { pwHelp.textContent = '영문/숫자/특수문자 8~20자 권장'; pwHelp.style.color = ''; return; }
-      if (a !== b) { pwHelp.textContent = '비밀번호가 일치하지 않습니다'; pwHelp.style.color = '#ef4444'; }
-      else { pwHelp.textContent = '비밀번호가 일치합니다'; pwHelp.style.color = '#10b981'; }
-    };
-    userPw.addEventListener('input', check);
-    userPw2.addEventListener('input', check);
-  }
+              });
 
-  // ✅ 비밀번호 확인 (기업회원)
-  const companyPw = $('company_pass');
-  const companyPw2 = $('company_pass2');
-  const help2 = $('#pw-help');
-  if (companyPw && companyPw2 && help2) {
-    const check2 = () => {
-      const a = companyPw.value;
-      const b = companyPw2.value;
-      if (!b) { help2.textContent = '영문/숫자/특수문자 8~20자 권장'; help2.style.color = ''; return; }
-      if (a !== b) { help2.textContent = '비밀번호가 일치하지 않습니다'; help2.style.color = '#ef4444'; }
-      else { help2.textContent = '비밀번호가 일치합니다'; help2.style.color = '#10b981'; }
-    };
-    companyPw.addEventListener('input', check2);
-    companyPw2.addEventListener('input', check2);
-  }
 
-  // ✅ 중복확인 버튼 (한 줄 정렬 포함)
-document.querySelectorAll('.check-btn').forEach(btn => {
-  btn.style.display = 'inline-flex';
-  btn.style.alignItems = 'center';
-  btn.style.justifyContent = 'center';
-  btn.style.whiteSpace = 'nowrap';
-
-  btn.addEventListener('click', () => {
-    btn.classList.remove('btn-secondary');
-    btn.classList.add('btn-primary');
-    btn.textContent = '사용 가능';
-    btn.disabled = true;
-    setTimeout(() => {
-      btn.disabled = false;
-      btn.textContent = '중복확인';
-      btn.classList.remove('btn-primary');
-      btn.classList.add('btn-secondary');
-    }, 1200);
-  });
-});
-
-});
-
-// ✅ SNS 로그인 / 회원가입 기능
-function socialLogin(provider) {
-  switch(provider) {
-    case 'kakao':
-      window.location.href = 'https://kauth.kakao.com/oauth/authorize?client_id=YOUR_KAKAO_CLIENT_ID&redirect_uri=http://localhost:8080/auth/kakao/callback&response_type=code';
-      break;
-    case 'google':
-      window.location.href = 'https://accounts.google.com/o/oauth2/v2/auth?client_id=YOUR_GOOGLE_CLIENT_ID&redirect_uri=http://localhost:8080/auth/google/callback&response_type=code&scope=email profile';
-      break;
-    case 'naver':
-      window.location.href = 'https://nid.naver.com/oauth2.0/authorize?client_id=YOUR_NAVER_CLIENT_ID&redirect_uri=http://localhost:8080/auth/naver/callback&response_type=code';
-      break;
-  }
 }
-function socialSignup(provider) { socialLogin(provider); }
+
+
+
+
+
+
+// ✅ 회원가입 폼 제출 (API 연동)
+async function handleSignupSubmit(e) {
+    e.preventDefault();
+
+    const form = e.target;
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
+
+    // 1. 비밀번호 일치 검증
+    if (data.member_pass !== data.member_pass2) {
+        alert('비밀번호와 비밀번호 확인 값이 일치하지 않습니다.');
+        $('#member_pass2').focus();
+        return;
+    }
+
+    // 2. 🚨🚨 중복확인 완료 여부 검사 (가장 중요!) 🚨🚨
+    if (!checkStatus.member_id) {
+        alert('아이디 중복확인을 완료해야 가입할 수 있습니다.');
+        $('#member_id').focus();
+        return;
+    }
+    if (!checkStatus.member_nickname) {
+        alert('닉네임 중복확인을 완료해야 가입할 수 있습니다.');
+        $('#member_nickname').focus();
+        return;
+    }
+
+    // 3. 백엔드로 보내지 않을 필드 제거
+    delete data.member_pass2; 
+
+    // 4. API 호출
+    try {
+        const response = await fetch('/api/v1/auth/memberjoin', { // 🚨 백엔드 URL 확인 필요
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                [csrfHeader]: csrfToken,
+            },
+            body: JSON.stringify(data) 
+        });
+
+        const result = await response.json();
+
+        if (response.ok && response.status === 201) {
+            alert(result.message || '회원가입 성공! 로그인 페이지로 이동합니다.');
+            window.location.href = '/auth/login'; 
+        } else if (response.status === 400 && result.errors) {
+            // 유효성 검사 실패 (MethodArgumentNotValidException)
+            alert(`가입 실패: 입력 항목을 확인해주세요.\n\n오류: ${Object.values(result.errors).join(', ')}`);
+        } else {
+            // 기타 에러 (UserException 등)
+            alert(result.message || '회원가입 중 알 수 없는 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+        }
+    } catch (error) {
+        console.error('API 통신 오류:', error);
+        alert('서버와 통신하는 중 문제가 발생했습니다. 네트워크 연결을 확인하세요.');
+    }
+}

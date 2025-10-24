@@ -2,12 +2,15 @@ document.addEventListener('DOMContentLoaded',()=>{
    const authForm = document.getElementById('auth-form');
    const userIdInput = document.getElementById('member_id');
    const userPassInput = document.getElementById('member_pass');
-   
-   const csrfElement = document.querySelector('meta[name="_csrf"]');
 
-   const csrfToken = csrfElement ? csrfElement.value : '';
-   const csrfHeader = csrfElement ? csrfElement.name : '';
+   const csrfTokenInput = document.querySelector('input[name="' + document.querySelector('input[type="hidden"]').name + '"]');
    
+   let csrfToken = '';
+   let csrfHeader = '';
+   if(csrfTokenInput){
+      csrfToken = csrfTokenInput.value;
+      csrfHeader = 'X-CSRF-TOKEN';
+   }
    const errorMessageContainer = document.createElement('p');
    errorMessageContainer.className = 'text-danger mt-2';
    
@@ -29,22 +32,19 @@ document.addEventListener('DOMContentLoaded',()=>{
                return;
             }
       
-            if(member_pass.length < 6){
-               errorMessageContainer.textContent='비밀번호는 최소 6자 이상이여야 합니다';
-               return;
-            }
+         
       
             errorMessageContainer.textContent='';
       
-            fetch('/api/v1/auth/login',{
+            fetch('http://localhost:8080/api/v1/auth/login',{
                method: 'POST',
                headers: {
                   'Content-Type': 'application/json',
-                  [csrfHeader]: csrfToken
+                  ...(csrfToken && csrfHeader ? { [csrfHeader]: csrfToken } : {})
                },
                body: JSON.stringify({
-                  memberid:member_id,
-                  member_pass:member_pass
+                  'member_id': member_id,
+                  'member_pass':member_pass
                })
             })
             .then(response => {

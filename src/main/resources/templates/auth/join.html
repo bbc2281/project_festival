@@ -1,19 +1,19 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" th:xmlns="www.thymeleaf.org">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>회원가입 유형 선택 — FesLite</title>
-  <link rel="stylesheet" href="css/style.css" />
-  <script defer src="js/app.js"></script>
+  <link rel="stylesheet" th:href="@{/css/loginStyle.css}" />
+  <script defer th:src="@{/js/joinpage.js}"></script>
 </head>
 <body>
   <nav class="navbar">
     <div class="container">
       <div class="navbar-inner">
-        <a class="brand" href="index.html"><div class="logo"></div><span>FesLite</span></a>
+        <a class="brand" th:href="@{/}"><div class="logo"></div><span>FesLite</span></a>
         <div class="nav-actions">
-          <a href="login.html" class="btn btn-secondary">로그인</a>
+          <a th:href="@{/auth/login}" class="btn btn-secondary">로그인</a>
         </div>
       </div>
     </div>
@@ -31,9 +31,6 @@
             <img src="images/user_icon.png" alt="일반회원 아이콘" class="member-icon">
             <div class="card-title mt-3">일반회원 가입</div>
             <div class="small">즐겨찾기, 리뷰, 티켓 구매 등을 위한 기본 계정</div>
-            <ul class="service-list">
-              <li>축제 조회 및 추천</li>
-              <li>채팅 / 리뷰</li>
               <li>축제 뉴스 조회</li>
               <li>공지 및 이벤트 참여</li>
             </ul>
@@ -50,14 +47,13 @@
               <li>축제 뉴스 조회</li>
               <li>공지 및 이벤트 참여</li>
               <li>축제 제안</li>
-              <li>후원 기능</li>
-              
+              <li>후원 기능</li> 
             </ul>
           </div>
         </div>
 
         <div class="mt-5">
-          <a href="index.html" class="btn btn-secondary">뒤로가기</a>
+          <a th:href="@{/}" class="btn btn-secondary">뒤로가기</a>
         </div>
       </div>
     </section>

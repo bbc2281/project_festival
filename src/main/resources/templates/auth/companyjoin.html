@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ko" th:xmlns="www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>기업회원 가입 — FesLite</title>
+  <link rel="stylesheet" th:href="@{/css/loginStyle.css}" />
+  <script defer th:src="@{/js/sign.js}"></script>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <div class="navbar-inner">
+        <a class="brand" th:href="@{/}"><div class="logo"></div><span>FesLite</span></a>
+        <div class="nav-actions">
+          <a th:href="@{/auth/login}" class="btn btn-secondary">로그인</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container" style="padding:30px 0 50px">
+    <section class="card" style="max-width:820px; margin:0 auto">
+      <div class="card-body">
+        <h2>기업회원 가입</h2>
+        <p class="card-sub">사업자 정보를 입력해주세요.</p>
+
+        <form th:action="@{/auth/companyjoin}" method="post" id="sign-form" class="form">
+
+          <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+          <!-- 회사/대표자 -->
+          <div class="form-row">
+            <div>
+              <label for="company_name">회사명</label>
+              <input id="company_name" name="company_name" class="input" placeholder="FesLite Corp." required />
+            </div>
+            <div>
+              <label for="company_owner">대표자명</label>
+              <input id="company_owner" name="company_owner" class="input" placeholder="홍길동" required />
+            </div>
+          </div>
+
+          <!-- 아이디/비번 -->
+          <div class="form-row">
+            <div>
+              <label for="company_id">아이디</label>
+              <div style="display:flex; gap:8px; align-items:center;">
+                <input id="company_id" name="username" class="input" placeholder="fes_company01" required minlength="4" />
+                <button type="button" class="btn btn-secondary check-btn" data-target="company_id">중복확인</button>
+              </div>
+            </div>
+            <div>
+              <label for="company_pass">비밀번호</label>
+              <input id="company_pass" name="password" type="password" class="input" placeholder="영문/숫자/특수 8~20자" required minlength="8" />
+              <div id="pw-help" class="help">영문/숫자/특수문자 8~20자 권장</div>
+            </div>
+          </div>
+
+          <div>
+            <label for="company_pass2">비밀번호 확인</label>
+            <input id="company_pass2" name="company_pass2" type="password" class="input" placeholder="다시 입력" required minlength="8" />
+          </div>
+
+          <!-- 사번/이메일 -->
+          <div class="form-row">
+            <div>
+              <label for="company_reg_num">사업자등록번호</label>
+              <div style="display:flex; gap:8px; align-items:center;">
+                <input id="company_reg_num" name="company_reg_num" class="input" placeholder="000-00-00000" required />
+                <button type="button" class="btn btn-secondary check-btn" data-target="company_reg_num">사업자확인</button>
+              </div>
+            </div>
+            <div>
+              <label for="company_email">이메일</label>
+              <input id="company_email" name="company_email" type="email" class="input" placeholder="biz@feslite.kr" required />
+            </div>
+          </div>
+
+          <!-- 연락/개업일 -->
+          <div class="form-row">
+            <div>
+              <label for="company_phone">회사 전화</label>
+              <input id="company_phone" name="company_phone" class="input" placeholder="02-000-0000 또는 010-0000-0000" />
+            </div>
+            <div>
+              <label for="company_open_date">개업일</label>
+              <input id="company_open_date" name="company_open_date" type="date" class="input" />
+            </div>
+          </div>
+
+          <!-- 주소/계좌 -->
+          <div>
+            <label for="company_address">회사 주소</label>
+            <input id="company_address" name="company_address" class="input" placeholder="서울특별시 ..." />
+          </div>
+
+          <div>
+            <label for="company_account">계좌번호</label>
+            <input id="company_account" name="company_account" class="input" placeholder="예: 우리은행 1002-123-456789" />
+          </div>
+
+          <input type="hidden" name="role" value="COMPANY" />
+
+          <button class="btn btn-primary btn-block mt-3" type="submit">가입 완료</button>
+          <p class="small mt-3">제출 시 콘솔/알림으로만 확인됩니다.</p>
+        </form>
+
+        <div class="social-login text-center mt-4">
+          <p class="social-label">또는 SNS 계정으로 회원가입</p>
+          <div class="social-buttons">
+            <button class="social-btn kakao" onclick="socialSignup('kakao')">카카오로 회원가입</button>
+            <button class="social-btn google" onclick="socialSignup('google')">Google로 회원가입</button>
+            <button class="social-btn naver" onclick="socialSignup('naver')">네이버로 회원가입</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer"><div class="container">© 2025 FesLite Demo</div></footer>
+</body>
+</html>

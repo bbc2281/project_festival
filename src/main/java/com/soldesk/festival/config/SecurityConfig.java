@@ -49,8 +49,9 @@ public class SecurityConfig {
             )
             .authorizeHttpRequests((auth)-> auth
                  //로그인 , 회원가입 , 정적리로스
-                                        .requestMatchers("/api/v1/auth/login", "/api/v1/auth/join", "/api/v1/auth/member/checkId","/api/v1/auth/company/join",
-                                                            "/api/v1/auth/company/join").permitAll()
+                                        .requestMatchers("/auth/login", "/auth/join","/auth/memberjoin" , "/auth/companyjoin",
+                                                            "/api/v1/auth/login", "/api/v1/auth/join", "/api/v1/auth/member/checkId","/api/v1/auth/memberjoin",
+                                                            "/api/v1/auth/companyjoin").permitAll()
                                         .requestMatchers("/", "/css/**", "/js/**", "/image/**").permitAll() 
                                         .requestMatchers("/api/v1/auth/admin/**").hasRole(MemberRole.ADMIN.name())
                                         .requestMatchers("/api/v1/auth/member/**").hasAnyRole(MemberRole.USER.name(), MemberRole.ADMIN.name(),
@@ -63,6 +64,8 @@ public class SecurityConfig {
             .formLogin((form)-> form
                                     .loginPage("/auth/login")
                                     .loginProcessingUrl("/auth/login")
+                                    .usernameParameter("member_id")
+                                    .passwordParameter("member_pass")
                                     .defaultSuccessUrl("/")
                                     .failureUrl("/auth/login?error")
                                     .permitAll()
@@ -75,7 +78,7 @@ public class SecurityConfig {
                                      .deleteCookies("JSESSIONID")
                                      .permitAll()
                    );          
-                                    
+     
              
         return http.build();        
                

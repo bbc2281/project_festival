@@ -12,16 +12,22 @@ public class MemberViewController {
         return "auth/login";
     }
 
+    //회원가입 유형 선택
+    @GetMapping("/auth/join")
+    public String joinSelect(){
+        return "auth/join";
+    }
+
     //회원가입:일반회원
-    @GetMapping("/auth/member/join")
+    @GetMapping("/auth/memberjoin")
     public String joinForm(){
-        return "auth/member/join";   
+        return "auth/memberjoin";   
     }
     
     //기업회원가입
-    @GetMapping("/auth/company/join")
+    @GetMapping("/auth/companyjoin")
     public String companyJoinForm(){
-        return "auth/company/join";
+        return "auth/companyjoin";
     }
     
     //공용마이페이지(일반/회사-미정)
@@ -32,9 +38,9 @@ public class MemberViewController {
     
     
     //일반회원 정보수정
-    @GetMapping("/auth/member/modify")
+    @GetMapping("/auth/modify")
     public String mypageModifyForMember(){
-        return "auth/member/modify";
+        return "auth/modify";
     }
     
     //기업회원 정보수정
