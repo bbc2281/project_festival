@@ -143,12 +143,16 @@
   <div class="gradient-card" style="max-height: 500px; height: 500px;">
     <div class="body d-flex flex-column h-100">
       <h5 class="fw-bold mb-3">리뷰</h5>
-     <div th:each="review : ${reviews}" class="border rounded p-2 bg-light">
-        <b th:text="${review.member_nickname}">익명</b> — 
-        <span th:text="${review.review_content}">정말 재밌었어요!</span><br>
-          <img th:if="${review.review_img_path != null}" th:src="@{${review.review_img_path}}" class="img-fluid mt-2" style="max-height: 200px;">
-          <button class="btn-gradient" id="btnModifyReview">수정</button>
-      </div>
+        <div th:each="review : ${reviews}" class="border rounded p-2 bg-light review-box">
+          <b th:text="${review.member_nickname}"></b> — 
+          <span class="review-content" th:text="${review.review_content}"></span><br>
+          <img th:if="${review.review_img_path != null}" th:src="@{${review.review_img_path}}" class="img-fluid mt-2 review-image" style="max-height: 200px;">
+          <button class="btn-gradient btnModifyReview" 
+                  data-review-idx="${review.review_idx}" 
+                  data-review-content="${review.review_content}">
+                    수정
+          </button>
+        </div>
       <div class="input-group mt-auto">
         <textarea class="form-control" id="reviewText" placeholder="리뷰 작성" rows="3" cols="20"></textarea>
         <button class="btn-gradient" id="btnAddReview">등록</button>
