@@ -96,7 +96,7 @@ def get_weather(lat: float = Query(...), lon: float = Query(...)):
 
     return weather_resp.json()
 
-@app.get("/locatinInfo")
+@app.get("/locationInfo")
 def receive_festival(lat: float = Query(...), lon: float = Query(...)):
     lat = round(lat, 12)
     lon = round(lon, 12)
@@ -190,6 +190,9 @@ async def check_word(req: WordRequest):
         if toxicity_score >= 0.6:
             raise HTTPException(status_code=400, detail='경고: 비속어는 사용할 수 없습니다')
         return {'message': 'Success'}
+
+    except HTTPException:
+        raise
     
     except Exception as e:
         print(str(e))

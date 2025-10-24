@@ -1,4 +1,4 @@
-async function sendMsg(msg) {
+async function testMsg(msg) {
     if (!msg) return false;
 
     try {

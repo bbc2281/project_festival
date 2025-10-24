@@ -8,5 +8,7 @@ import lombok.Setter;
 public class MemberDTO {
     
     int member_idx;
+    String member_id;
     String member_nickname;
+    String member_email;
 }
