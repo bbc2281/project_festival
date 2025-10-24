@@ -50,6 +50,7 @@
       opacity: 0.9;
     }
   </style>
+  <script th:src="@{/js/filtering.js}"></script>
 </head>
 
 <body>
@@ -63,7 +64,7 @@
       <form th:action="@{/board/write}" th:object="${writeBoard}" method="post" enctype="multipart/form-data">
         <div class="mb-3">
           <label for="board_title" class="form-label">제목</label>
-          <input type="text" th:field="*{board_title}" class="form-control" placeholder="제목을 입력하세요" >
+          <input type="text" id="board_title" th:field="*{board_title}" class="form-control" placeholder="제목을 입력하세요" >
         </div>
 
         <div class="row mb-3">
@@ -91,7 +92,7 @@
         </div>
 
         <div class="text-end">
-          <button type="submit" class="btn-gradient">등록</button>
+          <button type="submit" class="btn-gradient" id="submit-btn">등록</button>
           <button type="button" class="btn btn-outline-secondary" th:onclick="|location.href='@{/board/list}'|">취소</button>
         </div>
       </form>
@@ -99,6 +100,23 @@
   </main>
 
   <script src="/js/boardWrite.js"></script>
+
+  <script>
+    document.getElementById('submit-btn').addEventListener('click', async (e) => {
+      e.preventDefault();
+        let board_title = document.getElementById(`board_title`);
+        let content = document.getElementsByTagName(`textarea`)[0];
+        let title_msg = board_title.value.trim();
+        let content_msg = content.value.trim();
+
+        let msg = title_msg + `\n` + content_msg;
+        
+        let msg_ok = await sendMsg(msg);
+        if(!msg_ok) return;
+
+        e.target.closest('form').submit();
+    });
+  </script>
 
   <!-- Footer -->
   <div th:replace="~{common/footer :: footer}"></div>

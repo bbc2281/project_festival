@@ -38,13 +38,13 @@ public class PythonScriptRunner implements ApplicationRunner {
     
     public void runFastApiServer() throws IOException {
         String uvicornPath = "C:\\Users\\soldesk\\AppData\\Local\\Programs\\Python\\Python314\\Scripts\\uvicorn.exe";
-        ClassPathResource resource = new ClassPathResource("static/py/festapi.py");
+        ClassPathResource resource = new ClassPathResource("static/py/runFastApi.py");
         Path path = Paths.get(resource.getURI());
         File workingDir = path.getParent().toFile();
 
         ProcessBuilder pb = new ProcessBuilder(
             uvicornPath,
-            "festapi:app",
+            "runFastApi:app",
             "--reload",
             "--port",
             "8000"
