@@ -4,7 +4,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttribute;
 
 import com.soldesk.festival.dto.ChatRoomDTO;
 import com.soldesk.festival.dto.FestivalDTO;
@@ -30,7 +29,7 @@ public class FestivalController {
         ChatRoomDTO chatRoom = chatService.getChatRoomById(id);
         model.addAttribute("chatRoom", chatRoom);
 
-        MemberDTO memberDTO = chatService.getMember(1);
+        MemberDTO memberDTO = chatService.getMember(2);
 
         model.addAttribute("loginMember", memberDTO);
 

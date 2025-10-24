@@ -12,6 +12,7 @@ public class ChatDTO {
     private int chat_sender;// 채팅 보낸 사람
     private String chat_message;// 채팅 내용
 
+    private String sender_name; // 보낸 사람 이름
     private String sender_id; // 보낸 사람 아이디
     private String sender_nickname; // 보낸 사람 닉네임
 }

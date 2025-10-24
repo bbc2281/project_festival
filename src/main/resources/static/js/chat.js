@@ -30,8 +30,6 @@ function sendMessage(){
         console.log(`메시지 전송: ${chatMessage}`);
         stompClient.send(`/app/chat/${roomId}`, {}, JSON.stringify(chatMessage));//서버로 메시지 전송
 
-        showMessage(chatMessage);
-
         chatInput.value = "";//입력창 초기화
     }
 }
