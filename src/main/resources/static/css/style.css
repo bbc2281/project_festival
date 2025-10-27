@@ -1,4 +1,10 @@
 
+/* 채팅방 고정 */
+.sticky-wrapper {
+  position: sticky;
+  top: 100px;
+}
+
 /* Festive gradient background */
 .bg-gradient-festive {
   background: linear-gradient(135deg,#ffdee9 0%,#b5fffc 100%);
@@ -41,6 +47,8 @@ body {
     }
 
     .gradient-card {
+      position: sticky;
+      z-index: 10; /* 다른 요소 위에 표시 */
       border: 2px solid transparent;
       border-image: linear-gradient(90deg, #7c3aed, #22d3ee) 1;
       border-radius: 16px;

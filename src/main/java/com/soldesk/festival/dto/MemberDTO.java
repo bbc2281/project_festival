@@ -7,8 +7,17 @@ import lombok.Setter;
 @Setter
 public class MemberDTO {
     
-    int member_idx;
-    String member_id;
-    String member_nickname;
-    String member_email;
+    private int member_idx;
+    private String member_id;
+    private String member_name;
+    private String member_pass;
+    private String member_nickname;
+    private String member_email;
+    private String member_phone;
+    private String member_address;
+    private String member_gender;
+    private String member_job;
+    private String member_birth;
+    private String role;
+    private int member_point;
 }
