@@ -165,9 +165,9 @@ async def check_word(req: WordRequest):
     if not word :
         raise HTTPException(status_code=400, detail="빈칸은 보낼 수 없습니다")
     
-    if not re.search(r'[a-zA-Z0-9가-힣]', word):
+    #특수문자, 숫자만 보냈을 시 검사x
+    if re.match(r'^[0-9\W_]+$', word):
         return {'message': 'Success'}
-
     
     try:
         client = discovery.build(
