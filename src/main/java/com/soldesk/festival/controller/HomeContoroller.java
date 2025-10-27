@@ -33,10 +33,10 @@ public class HomeContoroller {
         return festivalService.AllFestivals();  // JSON 형태로 반환
     }
     
-    // @GetMapping("/index/board")
-    // @ResponseBody
-    // public List<BoardDTO> getBoards() {
-    //     return boardService.AllBoards();
-    // }
+    @GetMapping("/index/board")
+    @ResponseBody
+    public List<BoardDTO> getBoards() {
+        return boardService.selectAllBoard(1);
+    }
     
 }

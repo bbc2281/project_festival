@@ -1,6 +1,7 @@
 
 // Dataset (mock)
 const FESTIVALS = [ ];
+const NOTICES = [ ];
 
 document.addEventListener("DOMContentLoaded", function(){
   fetch("/api/festivals")
@@ -32,36 +33,37 @@ document.addEventListener("DOMContentLoaded", function(){
     if (qs('#resultGrid')) initSearchPage();
     if (qs('#festivalDetail')) renderFestivalDetail();
     if (qs('#postList')) renderBoard();
-    bindAuthForms();
+    // bindAuthForms();
   })
   .catch(err =>{
     console.log("축제정보 호출 오류",err);
-  })
+  });
 
+  // 홈화면 공지사항 호출
+  fetch("/index/board")
+  .then(response => response.json())
+  .then(BoardList =>{
+    console.log(BoardList)
+    BoardList.forEach(board => {
+      console.log(board.board_regDate)
+      const board_date = new Date(board.board_regDate)
+      formattedDate = board_date.toISOString().split('T')[0]
+      const formattedBoard = {
+        title : board.board_title,
+        date :  formattedDate
+      };
+      // 공지사항 추가
+      NOTICES.push(formattedBoard);
+    })
+  })
+  .catch(err =>{
+    console.log("공지사항 호출 오류",err);
+  });
 });
 
-const NOTICES = [
-  {title:"서버 점검 안내", date:"2025-10-05"},
-  {title:"가을 축제 이벤트 당첨자 발표", date:"2025-10-01"},
-  {title:"사이트 정식 오픈 공지", date:"2025-09-20"}
-];
 
-// 홈화면 공지사항 호출
-fetch("/index/board")
-.then(res => response.json())
-.then(BoardList =>{
-  BoardList.forEach(board => {
-    const formattedBoard = {
-      title : board.board_title,
-      date : board.board_regDate
-    };
-    // 공지사항 추가
-    NOTICES.push(formattedBoard);
-  })
-})
-.catch(err =>{
-  console.log("공지사항 호출 오류",err);
-});
+
+
 
 // Utility
 const qs = (s,doc=document)=>doc.querySelector(s);
@@ -153,6 +155,7 @@ function initSearchPage(){
     if (b === "기타") return -1;   
     return a.localeCompare(b, 'ko-KR'); 
   });
+  
   fillOptions(qs('#cat'), ['전체', ...cats]);
   fillOptions(qs('#region'), ['전체', ...regions]);
 
@@ -294,19 +297,19 @@ function renderPager(total, size, page) {
 //   </div>`;
 // }
 
-// Board page content
-function renderBoard(){
-  const list = qs('#postList');
-  const posts = [
-    {title:'서버 점검 안내', author:'관리자', date:'2025-10-05'},
-    {title:'가을 축제 이벤트 당첨자 발표', author:'운영팀', date:'2025-10-01'},
-    {title:'사이트 정식 오픈 공지', author:'관리자', date:'2025-09-20'},
-  ];
-  posts.forEach(p=>{
-    const li = document.createElement('li');
-    li.className = 'list-group-item d-flex justify-content-between align-items-center';
-    li.innerHTML = `<div><a href="#" class="text-decoration-none">${p.title}</a><div class="small text-secondary">by ${p.author}</div></div><div class="small text-secondary">${p.date}</div>`;
-    list.appendChild(li);
-  });
-}
+// // Board page content
+// function renderBoard(){
+//   const list = qs('#postList');
+//   const posts = [
+//     {title:'서버 점검 안내', author:'관리자', date:'2025-10-05'},
+//     {title:'가을 축제 이벤트 당첨자 발표', author:'운영팀', date:'2025-10-01'},
+//     {title:'사이트 정식 오픈 공지', author:'관리자', date:'2025-09-20'},
+//   ];
+//   posts.forEach(p=>{
+//     const li = document.createElement('li');
+//     li.className = 'list-group-item d-flex justify-content-between align-items-center';
+//     li.innerHTML = `<div><a href="#" class="text-decoration-none">${p.title}</a><div class="small text-secondary">by ${p.author}</div></div><div class="small text-secondary">${p.date}</div>`;
+//     list.appendChild(li);
+//   });
+// }
 

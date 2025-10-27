@@ -24,6 +24,7 @@ fetch(`/api/data?festival_idx=${festival_idx}`)
               wrapper.href = 'https://map.naver.com/v5/search/' + locate.title;
               wrapper.style.textDecoration = 'none';
               wrapper.style.color = 'inherit';
+              
 
               const locateSrc = document.createElement("img");
               locateSrc.src = locate.src;
