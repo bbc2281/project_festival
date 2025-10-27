@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link th:href="@{/css/style.css}" rel="stylesheet">
+  <script defer th:src="@{/js/app.js}"></script>
+  <title>축제 제안 등록 | FesLite</title>
+  <style>
+    body {
+      background: linear-gradient(135deg, #ffdee9 0%, #b5fffc 100%);
+      font-family: 'Pretendard', sans-serif;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 25px;
+      background: #fff8;
+      border-radius: 12px;
+      backdrop-filter: blur(10px);
+    }
+
+    input,
+    select,
+    textarea {
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background: #0099ff;
+      color: #fff;
+    }
+
+    .header-img {
+      display: block;
+      width: 180px;
+      margin: 40px auto 10px auto;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(0px);
+      }
+
+      50% {
+        transform: translateY(-10px);
+      }
+
+      100% {
+        transform: translateY(0px);
+      }
+    }
+
+    /* 등록하기 버튼 스타일 */
+    button {
+      align-self: center;
+      /* 버튼 중앙정렬 */
+      padding: 10px 28px;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      font-weight: bold;
+      color: white;
+      background: linear-gradient(90deg, #8e2de2 0%, #ff6a88 100%);
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.25);
+    }
+  </style>
+</head>
+
+<body>
+  <!-- 상단 네비바 -->
+  <div th:replace="~{common/header :: header}"></div>
+
+  <main>
+    <!-- 👇 새로 추가된 이미지 -->
+    <img th:src="@{/images/make-wish.png}" alt="축제 제안 이미지" class="header-img" />
+
+    <h2 style="text-align:center;margin-top:10px;">원하시는 축제를 제안해 보세요!</h2>
+
+    <form id="projectPlanForm">
+      <label>축제 카테고리</label>
+      <select name="festival_category_idx" required>
+        <option value="${cat.festival_category_idx}" th:each="cat : ${category}" th:text="${cat.festival_category_name}"></option>
+      </select>
+
+      <label>제안 구분</label>
+      <input type="text" name="project_plan_category" placeholder="예: 지역특화축제" required />
+
+      <label>제안 제목</label>
+      <input type="text" name="project_plan_title" placeholder="축제 제목을 입력하세요" required />
+
+      <label>제안 내용</label>
+      <textarea name="project_plan_content" rows="6" placeholder="축제 제안 내용을 입력하세요" required></textarea>
+
+      <label>첨부 파일</label>
+      <input type="file" name="project_plan_file" accept=".pdf,.docx" />
+
+      <label>대표 이미지</label>
+      <input type="file" name="project_plan_img_path" accept="image/*" />
+
+      <button type="submit">등록하기</button>
+    </form>
+  </main>
+
+  <!-- 하단 푸터 -->
+  <div th:replace="~{common/footer :: footer}"></div>
+
+  <script>
+    document.querySelector('#projectPlanForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      const res = await fetch('/api/project_plan/insert', { method: 'POST', body: formData });
+      if (res.ok) {
+        alert('🎉 축제 제안이 등록되었습니다!');
+        location.href = 'index.html';
+      } else {
+        alert('등록 중 오류가 발생했습니다.');
+      }
+    });
+  </script>
+</body>
+
+</html>
