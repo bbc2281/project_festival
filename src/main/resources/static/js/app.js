@@ -134,7 +134,7 @@ function festivalCard(f){
       <div class="mt-2">${f.fee}</div>
       <div class="mt-auto d-flex justify-content-between align-items-center">
         <a href="festivalInfo?id=${f.id}" class="btn btn-outline-primary btn-sm">자세히</a>
-        // <span class="text-secondary small">❤️ ${f.like}</span>
+        <span class="text-secondary small">❤️ ${f.like}</span>
       </div>
     </div>
   </div>`;
@@ -155,6 +155,7 @@ function initSearchPage(){
     if (b === "기타") return -1;   
     return a.localeCompare(b, 'ko-KR'); 
   });
+  
   fillOptions(qs('#cat'), ['전체', ...cats]);
   fillOptions(qs('#region'), ['전체', ...regions]);
 
@@ -296,19 +297,19 @@ function renderPager(total, size, page) {
 //   </div>`;
 // }
 
-// Board page content
-function renderBoard(){
-  const list = qs('#postList');
-  const posts = [
-    {title:'서버 점검 안내', author:'관리자', date:'2025-10-05'},
-    {title:'가을 축제 이벤트 당첨자 발표', author:'운영팀', date:'2025-10-01'},
-    {title:'사이트 정식 오픈 공지', author:'관리자', date:'2025-09-20'},
-  ];
-  posts.forEach(p=>{
-    const li = document.createElement('li');
-    li.className = 'list-group-item d-flex justify-content-between align-items-center';
-    li.innerHTML = `<div><a href="#" class="text-decoration-none">${p.title}</a><div class="small text-secondary">by ${p.author}</div></div><div class="small text-secondary">${p.date}</div>`;
-    list.appendChild(li);
-  });
-}
+// // Board page content
+// function renderBoard(){
+//   const list = qs('#postList');
+//   const posts = [
+//     {title:'서버 점검 안내', author:'관리자', date:'2025-10-05'},
+//     {title:'가을 축제 이벤트 당첨자 발표', author:'운영팀', date:'2025-10-01'},
+//     {title:'사이트 정식 오픈 공지', author:'관리자', date:'2025-09-20'},
+//   ];
+//   posts.forEach(p=>{
+//     const li = document.createElement('li');
+//     li.className = 'list-group-item d-flex justify-content-between align-items-center';
+//     li.innerHTML = `<div><a href="#" class="text-decoration-none">${p.title}</a><div class="small text-secondary">by ${p.author}</div></div><div class="small text-secondary">${p.date}</div>`;
+//     list.appendChild(li);
+//   });
+// }
 

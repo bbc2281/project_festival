@@ -37,7 +37,7 @@
         <div class="card-header bg-white">
           <div class="d-flex justify-content-between align-items-center">
             <h5 class="mb-0">📢 공지사항</h5>
-            <a class="btn btn-sm btn-outline-secondary" th:href="@{/board}">더보기</a>
+            <a class="btn btn-sm btn-outline-secondary" th:href="@{/board/list}">더보기</a>
           </div>
         </div>
         <ul class="list-group list-group-flush" id="noticeList"></ul>
@@ -82,11 +82,10 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body">
-        <form id="loginForm" class="vstack gap-3">
-          <input class="form-control" type="email" placeholder="이메일" required>
+        <form th:action="@{/login}" method="post" id="loginForm" class="vstack gap-3">
+          <input class="form-control" type="text" name="member_id" placeholder="아이디" required>
           <input class="form-control" type="password" placeholder="비밀번호" required>
-          <div class="form-text">기업 회원은 회사 이메일로 로그인하세요.</div>
-          <button class="btn btn-primary" type="submit">로그인</button>
+          <button class="btn btn-primary" type="submit" >로그인</button>
         </form>
       </div>
     </div>
@@ -94,7 +93,7 @@
 </div>
 
 <!-- Signup Modal -->
-<div class="modal fade" id="signupModal" tabindex="-1">
+<!-- <div class="modal fade" id="signupModal" tabindex="-1">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
@@ -136,7 +135,7 @@
       </div>
     </div>
   </div>
-</div>
+</div> -->
 
 </body>
 </html>
