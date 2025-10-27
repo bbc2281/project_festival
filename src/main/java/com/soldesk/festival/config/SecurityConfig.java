@@ -50,7 +50,7 @@ public class SecurityConfig {
             .authorizeHttpRequests((auth)-> auth
                  //로그인 , 회원가입 , 정적리로스
                                         .requestMatchers("/auth/login", "/auth/join","/auth/memberjoin" , "/auth/companyjoin",
-                                                            "/api/v1/auth/login", "/api/v1/auth/join", "/api/v1/auth/member/checkId","/api/v1/auth/memberjoin",
+                                                            "/api/v1/auth/login", "/api/v1/auth/join", "/api/v1/auth/checkId","/api/v1/auth/memberjoin",
                                                             "/api/v1/auth/companyjoin").permitAll()
                                         .requestMatchers("/", "/css/**", "/js/**", "/image/**").permitAll() 
                                         .requestMatchers("/api/v1/auth/admin/**").hasRole(MemberRole.ADMIN.name())

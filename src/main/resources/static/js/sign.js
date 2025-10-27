@@ -1,6 +1,7 @@
 // signup.js (통합 코드)
-const csrfToken = document.querySelector('input[name="_csrf"]').value;
-const csrfHeader = document.querySelector('input[name="_csrf"]').name;
+const csrfInput = document.querySelector('input[name="_csrf"]');
+const csrfToken = csrfInput ? csrfInput.value : null;
+const csrfHeader = 'X-CSRF-TOKEN'; // Spring Security 기본 헤더 이름
 
 
 // 🚨🚨 중복확인 상태를 관리하는 객체 (핵심) 🚨🚨
@@ -13,35 +14,46 @@ function checkDuplicateId(){
    const memberId = document.getElementById('member_id').value;
    const checkMessage = document.getElementById('idCheckMessage');
     
-   checkMessage.textContent = 'Checking';
-   checkDuplicateId.style.color = 'gray';
-   const url = '/checkId?member_id=' + encodeURIComponent(memberId);
+    if (!memberId) {
+    checkMessage.textContent = '아이디를 입력해주세요.';
+    checkMessage.style.color = 'red';
+    return;
+   } 
+
+   checkMessage.textContent = 'Checking...';
+   checkMessage.style.color = 'gray';      // ✅ 올바른 요소 변수명
+
+   const url = '/api/v1/auth/checkId?member_id=' + encodeURIComponent(memberId);
    
    fetch(url)
             .then(response=>{
-                if(!response.ok){
-                    throw new Error('네트워크가 불안정합니다' + response.statusText);
-                }
-                return response.json();
+                 console.log('응답 상태코드:', response.status);
+                 if (!response.ok) throw new Error('응답 오류: ' + response.statusText);
+                 return response.json();
               })
               .then(data=>{
                 const exists = data.exists;
-                if(exists){
-                    checkMessage.textContent = `❌ The ID '${memberId}' is already taken.`;
+                console.log('응답 데이터:', data);
+                if (exists) {
+                    checkMessage.textContent = `❌ The ID ${memberId} is already taken.`;
                     checkMessage.style.color = 'red';
+                    checkStatus.member_id = false;
+                } else {
+                    checkMessage.textContent = `✅ The ID ${memberId} is available.`;
+                    checkMessage.style.color = 'green';
+                    checkStatus.member_id = true;
                 }
-              })
-              .catch(error=>{
-                 console.log('error');
-                 checkMessage.textContent = 'An error occurred. Please try again.';
-                 checkMessage.style.color = 'orange';
 
-              });
+
+              })
+             .catch(error => {
+                    console.error('fetch 에러 상세:', error);
+                    checkMessage.textContent = '서버 응답 오류: ' + error.message;
+                    checkMessage.style.color = 'orange';
+                    });
 
 
 }
-
-
 
 
 
@@ -64,12 +76,6 @@ async function handleSignupSubmit(e) {
     // 2. 🚨🚨 중복확인 완료 여부 검사 (가장 중요!) 🚨🚨
     if (!checkStatus.member_id) {
         alert('아이디 중복확인을 완료해야 가입할 수 있습니다.');
-        $('#member_id').focus();
-        return;
-    }
-    if (!checkStatus.member_nickname) {
-        alert('닉네임 중복확인을 완료해야 가입할 수 있습니다.');
-        $('#member_nickname').focus();
         return;
     }
 
@@ -78,7 +84,7 @@ async function handleSignupSubmit(e) {
 
     // 4. API 호출
     try {
-        const response = await fetch('/api/v1/auth/memberjoin', { // 🚨 백엔드 URL 확인 필요
+        const response = await fetch('/api/v1/auth/join', { // 🚨 백엔드 URL 확인 필요
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -92,10 +98,8 @@ async function handleSignupSubmit(e) {
         if (response.ok && response.status === 201) {
             alert(result.message || '회원가입 성공! 로그인 페이지로 이동합니다.');
             window.location.href = '/auth/login'; 
-        } else if (response.status === 400 && result.errors) {
-            // 유효성 검사 실패 (MethodArgumentNotValidException)
-            alert(`가입 실패: 입력 항목을 확인해주세요.\n\n오류: ${Object.values(result.errors).join(', ')}`);
-        } else {
+        }
+         else {
             // 기타 에러 (UserException 등)
             alert(result.message || '회원가입 중 알 수 없는 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
         }

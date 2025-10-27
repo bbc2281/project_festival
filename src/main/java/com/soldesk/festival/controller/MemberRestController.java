@@ -38,10 +38,16 @@ public class MemberRestController {
 
 	@GetMapping("/checkId")
 	public ResponseEntity<Map<String, Object>> checkId(@RequestParam("member_id")String member_id){
-	
+	    Map<String, Object> response = new HashMap<>();
+
+		if(member_id == null || member_id.trim().isBlank()){
+			response.put("error", "아이디를 입력해주세요");
+			return ResponseEntity.badRequest().body(response);
+		}
+		
 		boolean exists = memberService.checkMemberIdExists(member_id);
 		
-		Map<String, Object> response = new HashMap<>();
+		
 		response.put("exists", exists);
 		
 		return ResponseEntity.ok(response);

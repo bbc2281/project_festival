@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="_csrf" th:content="${_csrf.token}"/>
+  <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+
   <title>일반회원 가입 — FesLite</title>
   <link rel="stylesheet" th:href="@{/css/loginStyle.css}" />
   <script defer th:src="@{/js/sign.js}"></script>
@@ -38,7 +41,7 @@
               <label for="member_id">아이디</label>
               <div style="display:flex; gap:8px; align-items:center;">
                 <input id="member_id" name="username" class="input" placeholder="fes_user01" required minlength="4" />
-                <button type="button" class="checkId-btn" onclick="checkDuplicateId(event)">중복확인</button>
+                <button type="button" class="checkId-btn" onclick="checkDuplicateId()">중복확인</button>
               </div>
 
               <p id="idCheckMessage" class="help"></p>

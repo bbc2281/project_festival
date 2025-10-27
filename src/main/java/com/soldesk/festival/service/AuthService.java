@@ -1,8 +1,5 @@
 package com.soldesk.festival.service;
 
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -22,7 +19,6 @@ public class AuthService implements UserDetailsService {
 	
 	private final MemberMapper memberMapper;
 	private final CompanyMapper companyMapper;
-	private final AuthenticationManager authenticationManager;
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -39,11 +35,4 @@ public class AuthService implements UserDetailsService {
         		
 		return new SecurityAllUsersDTO(member, null);
 	}
-
-	  
-    public UserDetails login(String id, String pass){
-        Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(id,pass));
-        return (UserDetails)auth.getPrincipal();
-    }
-
 }

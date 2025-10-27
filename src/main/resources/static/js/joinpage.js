@@ -3,7 +3,7 @@ const $$ = sel => Array.from(document.querySelectorAll(sel));
 
 window.addEventListener('DOMContentLoaded', () => {
     
-    // 페이지 전환 로직
+    
     const go = (path) => { window.location.href = path; };
 
     // 일반회원 옵션 카드 클릭 시 이동
