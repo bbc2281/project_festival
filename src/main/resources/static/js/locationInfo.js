@@ -7,7 +7,7 @@ fetch(`/api/data?festival_idx=${festival_idx}`)
         const containDiv = document.getElementById("locationInfo_list");
         containDiv.textContent = "로딩 중...";
 
-        fetch(`http://localhost:8000/locatinInfo?lat=${festival_lat}&lon=${festival_lot}`)
+        fetch(`http://localhost:8000/locationInfo?lat=${festival_lat}&lon=${festival_lot}`)
         .then(response => {
           if (!response.ok) throw new Error('네트워크 오류');
           return response.json();

@@ -4,6 +4,8 @@ from fastapi.responses import JSONResponse
 import requests
 from datetime import datetime, timedelta
 import math
+from googleapiclient import discovery
+from pydantic import BaseModel
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
@@ -11,10 +13,12 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
 import time
-
-
+import re
 
 app = FastAPI()
+
+weather_api_key = "JWVjDL8GTl2lYwy_Br5d0Q"
+moderate_api_key = 'AIzaSyAQ3GMnUAXXYelHFqnoxUnb2PcEPsjt51w'
 
 origins = [
     "http://localhost:8080",
@@ -28,8 +32,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-API_KEY = "JWVjDL8GTl2lYwy_Br5d0Q"
 
 def dfs_xy_conv(lat: float, lon: float):
     RE = 6371.00877  # 지구 반경(km)
@@ -65,7 +67,6 @@ def dfs_xy_conv(lat: float, lon: float):
 
     return nx, ny
 
-
 @app.get("/weather")
 def get_weather(lat: float = Query(...), lon: float = Query(...)):
     # 1. 좌표 변환 함수 호출
@@ -86,7 +87,7 @@ def get_weather(lat: float = Query(...), lon: float = Query(...)):
     weather_url = (
         f"https://apihub.kma.go.kr/api/typ02/openApi/VilageFcstInfoService_2.0/getVilageFcst"
         f"?pageNo=1&numOfRows=850&dataType=JSON&base_date={base_date}&base_time={base_time}"
-        f"&nx={nx}&ny={ny}&authKey={API_KEY}"
+        f"&nx={nx}&ny={ny}&authKey={weather_api_key}"
     )
 
     weather_resp = requests.get(weather_url)
@@ -95,9 +96,7 @@ def get_weather(lat: float = Query(...), lon: float = Query(...)):
 
     return weather_resp.json()
 
-
-
-@app.get("/locatinInfo")
+@app.get("/locationInfo")
 def receive_festival(lat: float = Query(...), lon: float = Query(...)):
     lat = round(lat, 12)
     lon = round(lon, 12)
@@ -156,4 +155,45 @@ def receive_festival(lat: float = Query(...), lon: float = Query(...)):
     js_info = [{"title": title, "src": link} for title, link in zip(title_list, img_src_list)]
     driver.quit()
     return JSONResponse(content=js_info, status_code=200)
+
+class WordRequest(BaseModel):
+    word: str
+
+@app.post('/checkWord')
+async def check_word(req: WordRequest):
+    word = req.word
+    if not word :
+        raise HTTPException(status_code=400, detail="빈칸은 보낼 수 없습니다")
     
+    if not re.search(r'[a-zA-Z0-9가-힣]', word):
+        return {'message': 'Success'}
+
+    
+    try:
+        client = discovery.build(
+        "commentanalyzer",
+        "v1alpha1",
+        developerKey = moderate_api_key,
+        discoveryServiceUrl = "https://commentanalyzer.googleapis.com/$discovery/rest?version=v1alpha1",
+        static_discovery=False,
+        )
+
+        analyze_request = {
+        'comment': { 'text': word },
+        'requestedAttributes': {'TOXICITY': {}}
+        }
+
+        response = client.comments().analyze(body=analyze_request).execute()
+
+        toxicity_score = response['attributeScores']['TOXICITY']['summaryScore']['value']
+
+        if toxicity_score >= 0.6:
+            raise HTTPException(status_code=400, detail='경고: 비속어는 사용할 수 없습니다')
+        return {'message': 'Success'}
+
+    except HTTPException:
+        raise
+    
+    except Exception as e:
+        print(str(e))
+        raise HTTPException(status_code=500, detail='지원하지 않는 언어입니다')
