@@ -3,10 +3,12 @@ package com.soldesk.festival.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,10 +22,10 @@ import com.soldesk.festival.dto.MemberDetailDTO;
 import com.soldesk.festival.dto.MemberJoinDTO;
 import com.soldesk.festival.dto.MemberLoginDTO;
 import com.soldesk.festival.dto.UserResponse;
+import com.soldesk.festival.exception.UserException;
 import com.soldesk.festival.service.AuthService;
 import com.soldesk.festival.service.MemberService;
 
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -54,13 +56,27 @@ public class MemberRestController {
 	}
     
 	@PostMapping("/login")
-	public ResponseEntity<UserResponse> login(@Valid @RequestBody MemberLoginDTO memberLogin, HttpSession session){
+	public ResponseEntity<UserResponse> login(@Valid @RequestBody MemberLoginDTO memberLogin){
         
-		Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(memberLogin.getMember_id(), memberLogin.getMember_pass()));
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-   
-		UserDetails authUser = (UserDetails)authentication.getPrincipal();
-        
+		try {
+			Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(memberLogin.getMember_id(), memberLogin.getMember_pass()));
+             SecurityContextHolder.getContext().setAuthentication(authentication);
+			UserDetails authUser = (UserDetails)authentication.getPrincipal();
+			MemberDetailDTO details = memberService.getMemberDetails(authUser.getUsername());
+		    UserResponse response = UserResponse.success("로그인 성공", details);
+	    
+
+		return ResponseEntity.ok(response);
+
+
+		} catch (AuthenticationException e) {
+			
+			String errorMessage = "아이디 혹은 비밀번호가 올바르지 않습니다";
+			UserResponse response = UserResponse.error(errorMessage);
+
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+		}
+		 
 		//forUsingSessionAttribute
 		/* 
 		Optional<MemberDTO> opMember = memberService.findUserbyId(authUser.getUsername());
@@ -71,23 +87,25 @@ public class MemberRestController {
             System.out.println("세션에 저장된 회원의 정보가 없습니다");
 		}
 			*/
-		
-		MemberDetailDTO details = memberService.getMemberDetails(authUser.getUsername());
-		UserResponse response = UserResponse.success("로그인 성공", details);
-	    
-
-		return ResponseEntity.ok(response);
 	}
 
     @PostMapping("/join")
 	public ResponseEntity<UserResponse> join(@Valid @RequestBody MemberJoinDTO memberJoin){
         
+		try {
+			memberService.join(memberJoin);
+			UserResponse response = UserResponse.successMessage("회원가입 성공");
+			return ResponseEntity.status(201).body(response);
+			
+		} catch (UserException e) {
+			UserResponse response = UserResponse.error(e.getMessage());
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
 		
-		memberService.join(memberJoin);
-        
-		UserResponse response = UserResponse.successMessage("회원가입 성공");
-
-		return ResponseEntity.status(201).body(response);
+		} catch (Exception e){
+			e.printStackTrace();
+			UserResponse response = UserResponse.error("회원가입 중 오류가 발생하였습니다");
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+		}
 	}
 
 

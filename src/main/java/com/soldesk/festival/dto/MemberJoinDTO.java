@@ -1,11 +1,10 @@
 package com.soldesk.festival.dto;
 
-import java.util.Date;
-
 import com.soldesk.festival.config.MemberRole;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -32,8 +31,8 @@ public class MemberJoinDTO {
 	@Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[!@#$%^&*()_+=-]).{8,}$")
 	private String member_pass;
 	
-	@NotBlank(message="비밀번호 확인입력을 해주세요")
-	private String member_pass2;
+	//@NotBlank(message="비밀번호 확인입력을 해주세요")
+	//private String member_pass2;
 	
 	private String member_nickname;
 	
@@ -49,10 +48,11 @@ public class MemberJoinDTO {
 	private String member_gender;
 	private String member_job;
 	
-	@NotBlank(message="생년월일을 선택해주세요")
-	private Date member_birth;
+	@Pattern(regexp="\\d{4}-\\d{2}-\\d{2}", message="YYYY-MM-DD형식으로 입력해주세요")
+	@NotNull(message="생년월일을 선택해주세요")
+	private String member_birth;
 	
-	private Integer member_point;
+	private int member_point;
 	private MemberRole role;
 	
 	//private boolean deleted;

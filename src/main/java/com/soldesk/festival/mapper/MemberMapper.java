@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
@@ -30,7 +31,7 @@ public interface MemberMapper {
 	
 
 
-	@Select("select * from member where member_email=#{member_email")
+	@Select("select * from member where member_email=#{member_email}")
 	@Results({
 		@Result(property="member_email", column="member_email"),
 		@Result(property="role", column="role", typeHandler=MemberRoleTypeHandler.class)
@@ -41,13 +42,14 @@ public interface MemberMapper {
 	
 	@Select("select * from member")
 	List<MemberDTO> getMemberList();
-	
+
+	@Options(useGeneratedKeys=true, keyProperty="member_idx")
 	@Insert("insert into member(member_id, member_name, member_pass, member_nickname, member_email, member_phone, member_address,"
-			+ "member_gender, member_job, member_age, role) values(#{member_id). #{member_name}, #{member_pass}, #{member_nickname}, #{member_email},"
-			+ "#{member_email}, #{member_phone}, #{member_address}, #{member_gender}, #{member_job}, #{member_age}, #{role})")
+            + "member_gender, member_job, member_birth, role, member_point) values(#{member_id}, #{member_name}, #{member_pass}, #{member_nickname}, #{member_email},"
+            + " #{member_phone}, #{member_address}, #{member_gender}, #{member_job}, #{member_birth}, #{role}, #{member_point})")		
 	void insertMember(MemberJoinDTO joinMember);
 	
-	@Update("update member set member_name=#{member_name},member_pass=#{member_oass}")
+	@Update("update member set member_name=#{member_name},member_pass=#{member_pass}")
 	MemberDTO updateMember(MemberUpdateDTO updateMember); //아이디 제외
 	
 	//@Update("update ")

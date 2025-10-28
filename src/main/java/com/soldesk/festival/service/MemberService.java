@@ -23,23 +23,24 @@ public class MemberService {
 	private final MemberMapper memberMapper;
 	private final AuthUtil authUtil;
 
-	
-	@Transactional(readOnly=true)
+
 	public Optional<MemberDTO> findUserbyId(String userId){
 		
 		return memberMapper.findUserById(userId);
 	}
     
-	@Transactional
+	@Transactional(rollbackFor= com.soldesk.festival.exception.UserException.class)
 	public void join(MemberJoinDTO joinMember) {
 		
+		/* 
         if(checkMemberIdExists(joinMember.getMember_id())) {
            throw new UserException("이미 사용중인 아이디 입니다");
         }
+		   */
         
         joinMember.setMember_pass(authUtil.encodedPassword(joinMember.getMember_pass()));
 		joinMember.setRole(MemberRole.USER);
-		
+		joinMember.setMember_point(0); 
 		memberMapper.insertMember(joinMember);
 		
 	}

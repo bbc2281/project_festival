@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class MemberViewController {
     
     //로그인품
-    @GetMapping("/auth/login")
+    @GetMapping("/auth/loginPage")
     public String loginForm(){
-        return "auth/login";
+        return "auth/loginPage";
     }
 
     //회원가입 유형 선택

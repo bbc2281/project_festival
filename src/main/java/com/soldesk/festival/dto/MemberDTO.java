@@ -1,7 +1,5 @@
 package com.soldesk.festival.dto;
 
-import java.util.Date;
-
 import com.soldesk.festival.config.MemberRole;
 
 import lombok.Getter;
@@ -21,7 +19,7 @@ public class MemberDTO {
 
 	private String member_pass;
 	
-	private String member_pass2;
+	//private String member_pass2;
 	
 	private String member_nickname;
 	
@@ -35,9 +33,9 @@ public class MemberDTO {
 	private String member_gender;
 	private String member_job;
 
-	private Date member_birth;
+	private String member_birth;
 	
-	private Integer member_point;
+	private int member_point;
 	private MemberRole role;
 	
 	//private boolean deleted;

@@ -1,7 +1,5 @@
 package com.soldesk.festival.dto;
  
-import java.util.Date;
-
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
@@ -50,7 +48,7 @@ public class MemberUpdateDTO {
   
     @NotBlank
 	@Setter
-	private Date member_birth;
+	private String member_birth;
 
 
 }

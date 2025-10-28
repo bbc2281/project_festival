@@ -11,6 +11,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.soldesk.festival.dto.UserResponse;
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -57,6 +59,14 @@ public class GlobalExceptionHandler {
         response.put("message", ex.getMessage());
             
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST); // 400 Bad Request
+    }
+    
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<UserResponse> handleAll(Exception e){
+        e.printStackTrace();
+        UserResponse response = UserResponse.error(" 서버오류" +  e.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+
     }
 
 }

@@ -49,7 +49,7 @@ public class SecurityConfig {
             )
             .authorizeHttpRequests((auth)-> auth
                  //로그인 , 회원가입 , 정적리로스
-                                        .requestMatchers("/auth/login", "/auth/join","/auth/memberjoin" , "/auth/companyjoin",
+                                        .requestMatchers("/auth/loginPage", "/auth/join","/auth/memberjoin" , "/auth/companyjoin",
                                                             "/api/v1/auth/login", "/api/v1/auth/join", "/api/v1/auth/checkId","/api/v1/auth/memberjoin",
                                                             "/api/v1/auth/companyjoin").permitAll()
                                         .requestMatchers("/", "/css/**", "/js/**", "/image/**").permitAll() 
@@ -62,12 +62,12 @@ public class SecurityConfig {
                 );
         http
             .formLogin((form)-> form
-                                    .loginPage("/auth/login")
-                                    .loginProcessingUrl("/auth/login")
+                                    .loginPage("/auth/loginPage")
+                                    .loginProcessingUrl("/auth/loginPage")
                                     .usernameParameter("member_id")
                                     .passwordParameter("member_pass")
                                     .defaultSuccessUrl("/")
-                                    .failureUrl("/auth/login?error")
+                                    .failureUrl("/auth/loginPage?error")
                                     .permitAll()
                                     
                       )
