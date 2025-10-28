@@ -11,6 +11,7 @@ import com.soldesk.festival.dto.ChatRoomDTO;
 import com.soldesk.festival.dto.FestivalCategoryDTO;
 import com.soldesk.festival.dto.FestivalDTO;
 import com.soldesk.festival.dto.MemberDTO;
+import com.soldesk.festival.dto.RegionDTO;
 import com.soldesk.festival.service.ChatService;
 import com.soldesk.festival.service.FestivalService;
 
@@ -42,7 +43,9 @@ public class FestivalController {
     @GetMapping("/festivalReg")
     public String register(Model model){
         List<FestivalCategoryDTO> category = festivalService.getCategory();
-
+        List<RegionDTO> regions = festivalService.getRegion();
+        
+        model.addAttribute("regions", regions);
         model.addAttribute("category", category);
 
         return "festival/project_plan";

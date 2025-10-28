@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Select;
 
 import com.soldesk.festival.dto.FestivalCategoryDTO;
 import com.soldesk.festival.dto.FestivalDTO;
+import com.soldesk.festival.dto.RegionDTO;
 
 @Mapper
 public interface FestivalMapper {
@@ -24,5 +25,5 @@ public interface FestivalMapper {
     List<FestivalCategoryDTO> selectAllCategory();
 
     @Select("select region_name from region order by region_idx asc")
-    List<String> selectAllRegion();
+    List<RegionDTO> selectAllRegion();
 }
