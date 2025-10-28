@@ -18,7 +18,6 @@
 <script defer th:src="@{/js/locationInfo.js}"></script>
 <script defer th:src="@{/js/chat.js}"></script>
 <script th:src="@{/js/filtering.js}"></script>
-<!-- <script defer th:src="@{/js/aiChat.js}"></script> -->
 <script type="text/javascript" src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=u4pl1guhug"></script>
 
 </head>
@@ -135,7 +134,7 @@
       <!-- 오른쪽 패널 -->
       <div class="col-lg-4 d-flex flex-column justify-content-start" style="gap: 0.25rem;">
         <!-- 리뷰 -->
-        <div class="gradient-card" style="max-height: 500px; height: 500px;">
+        <!-- <div class="gradient-card" style="max-height: 500px; height: 500px;">
           <div class="body d-flex flex-column h-100">
             <h5 class="fw-bold mb-3">리뷰</h5>
             <div id="reviewList" class="vstack gap-2 mb-3 flex-grow-1 overflow-auto">
@@ -146,16 +145,17 @@
               <button class="btn-gradient" id="btnAddReview">등록</button>
             </div>
           </div>
-        </div>
+        </div> -->
 
         <!-- 채팅 -->
+        <div class="sticky-wrapper">
         <div class="gradient-card" style="max-height: 500px; height: 500px;">
           <div class="body d-flex flex-column h-100">
             <h5 class="fw-bold mb-3">채팅방</h5>
             <div class="chat-box flex-grow-1 overflow-auto" id="chatBox">
               <div class="bubble other">
                 안녕하세요! 🎉
-                <small>관리자 · 12:30</small>
+                <small>관리자</small>
               </div>
             </div>
             <div class="input-group mt-2">
@@ -164,12 +164,13 @@
             </div>
           </div>
         </div>
+        </div>
       </div>
 </main>
 
   <!-- 하단 푸터 -->
   <div th:replace="~{common/footer :: footer}"></div>
-
+<!-- 
   <script>
     // 리뷰 추가
     document.getElementById("btnAddReview").addEventListener("click", () => {
@@ -181,7 +182,7 @@
       document.getElementById("reviewList").prepend(div);
       document.getElementById("reviewText").value = "";
     });
-  </script>
+  </script> -->
   <!-- 채팅 -->
   <script th:inline="javascript">
         const roomId = `[[${chatRoom.chat_room_idx}]]`;
