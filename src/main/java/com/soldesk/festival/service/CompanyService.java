@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.soldesk.festival.config.AuthUtil;
 import com.soldesk.festival.dto.CompanyDTO;
+import com.soldesk.festival.dto.CompanyJoinDTO;
 import com.soldesk.festival.exception.UserException;
 import com.soldesk.festival.mapper.CompanyMapper;
 
@@ -31,14 +32,29 @@ public class CompanyService {
 		
 		return Optional.ofNullable(companyMapper.findCompanyUserByregNum(regNum));
 	}
+
+
+
+    @Transactional(rollbackFor= com.soldesk.festival.exception.UserException.class)
+	public void join(CompanyJoinDTO joinCompany){
+
+		joinCompany.setCompany_pass(authUtil.encodedPassword(joinCompany.getCompany_pass()));
+		
+		String roleType = joinCompany.getRole().name();
+      
+
+	
+		
+
+	}
+
+
 	
 	public void deleteCompany(String companyId, String password) {
 		
 		CompanyDTO thisCompany = findCompanyUserById(companyId).filter(company -> authUtil.checkPassword(password, company.getCompany_pass()))
 				.orElseThrow(()-> new UserException("아이디나 비밀번호가 일치하지 않습니다"));
 		
-		//thisCompany.setDeleted(true);
-		//thisCompany.setDeletedAt(LocalDateTime.now());
 		
 	}
 }
