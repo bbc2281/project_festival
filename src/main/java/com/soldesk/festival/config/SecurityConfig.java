@@ -7,6 +7,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -32,6 +33,11 @@ public class SecurityConfig {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfiguration) throws Exception{
         return authConfiguration.getAuthenticationManager();
     }
+    
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer(){
+        return (web-> web.ignoring().requestMatchers("/css/**", "/js/**", "/image/**"));
+    }
 
     
     @Bean
@@ -48,15 +54,17 @@ public class SecurityConfig {
                            
             )
             .authorizeHttpRequests((auth)-> auth
+            
                  //로그인 , 회원가입 , 정적리로스
                                         .requestMatchers("/auth/loginPage", "/auth/join","/auth/memberjoin" , "/auth/companyjoin",
                                                             "/api/v1/auth/login", "/api/v1/auth/join", "/api/v1/auth/checkId","/api/v1/auth/memberjoin",
                                                             "/api/v1/auth/companyjoin").permitAll()
-                                        .requestMatchers("/", "/css/**", "/js/**", "/image/**").permitAll() 
+                                        //.requestMatchers("/", "/css/**", "/js/**", "/image/**").permitAll() 
+                                        .requestMatchers("/").permitAll()
                                         .requestMatchers("/api/v1/auth/admin/**").hasRole(MemberRole.ADMIN.name())
                                         .requestMatchers("/api/v1/auth/member/**").hasAnyRole(MemberRole.USER.name(), MemberRole.ADMIN.name(),
                                                                                         CompanyRole.COMPANY.name(), CompanyRole.FESTIVAL_PLANNER.name())
-                                                                                        
+                                                                                  
                                         .anyRequest().authenticated()
                  
                 );
