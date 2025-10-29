@@ -24,6 +24,7 @@ with engine.connect() as conn:
     conn.execute(text("TRUNCATE TABLE festival;"))
     conn.execute(text("TRUNCATE TABLE region;"))
     conn.execute(text("TRUNCATE TABLE festival_category;"))
+    conn.execute(text("TRUNCATE TABLE chat_room;"))
     
     # 외래키 활성화
     conn.execute(text("SET FOREIGN_KEY_CHECKS = 1;"))

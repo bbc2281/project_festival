@@ -122,20 +122,6 @@
 
   <!-- 하단 푸터 -->
   <div th:replace="~{common/footer :: footer}"></div>
-
-  <script>
-    document.querySelector('#projectPlanForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const formData = new FormData(e.target);
-      const res = await fetch('/api/project_plan/insert', { method: 'POST', body: formData });
-      if (res.ok) {
-        alert('🎉 축제 제안이 등록되었습니다!');
-        location.href = 'index.html';
-      } else {
-        alert('등록 중 오류가 발생했습니다.');
-      }
-    });
-  </script>
 </body>
 
 </html>

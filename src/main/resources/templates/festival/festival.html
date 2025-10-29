@@ -62,7 +62,7 @@
 
             <!-- 지도 / 길찾기 -->
             <div class="section">
-              <h5 class="fw-bold mb-3">지도 / 길찾기 (임시)</h5>
+              <h5 class="fw-bold mb-3">지도</h5>
               <div class="gradient-card">
                 <div class="body">
                   <div id ="map" class="map"></div>
@@ -72,7 +72,7 @@
 
             <!-- 날씨 섹션 -->
             <div class="section">
-              <h5 class="fw-bold mb-3">날씨 (목데이터)</h5>
+              <h5 class="fw-bold mb-3">날씨</h5>
               <div class="row g-3">
                 <div class="col-md-4">
                   <div class="gradient-card">
@@ -153,10 +153,6 @@
           <div class="body d-flex flex-column h-100">
             <h5 class="fw-bold mb-3">채팅방</h5>
             <div class="chat-box flex-grow-1 overflow-auto" id="chatBox">
-              <div class="bubble other">
-                안녕하세요! 🎉
-                <small>관리자</small>
-              </div>
             </div>
             <div class="input-group mt-2">
               <input type="text" id="chatInput" class="form-control" placeholder="메시지 입력..." />
@@ -186,7 +182,16 @@
   <!-- 채팅 -->
   <script th:inline="javascript">
         const roomId = `[[${chatRoom.chat_room_idx}]]`;
-        let loginMember = `[[${loginMember.member_nickname}]]` ?? `[[${loginMember.member_id}]]` ?? `[[${loginMember.member_email}]]`;
+        function isValid(value) {
+          return value != null && value !== "" && value !== "null";
+        }
+        //닉네임 없으면 아이디, 아이디 없으면 이메일 출력
+        let loginMember = isValid(`[[${loginMember.member_nickname}]]`) 
+                                  ? `[[${loginMember.member_nickname}]]`
+                                  : isValid(`[[${loginMember.member_id}]]`)
+                                  ? `[[${loginMember.member_id}]]`
+                                  : `[[${loginMember.member_email}]]`;
+        loginMember = loginMember.replace(/^"(.*)"$/, '$1');
         const loginMemberIdx = `[[${loginMember.member_idx}]]`//현재 접속한 회원의 기본키
         const socket = new SockJS("/ws");//웹소켓 연결 객체
         let stompClient = Stomp.over(socket);//STOMP 프로토콜 이용
@@ -195,15 +200,21 @@
         const chatInput = document.getElementById("chatInput");
         //웹소켓 연결, 구독 설정(수신)
         stompClient.connect({}, function(response){
-          console.log(`웹소켓 연결 성공`);
           stompClient.subscribe(`/topic/chat/${roomId}`, function(message){
               let chatMessage = JSON.parse(message.body);
               //서버로부터 받은 메시지(JSON)를 자바스크립트 객체로 변환
               showMessage(chatMessage);
-          })
-      }, function(error){
+          });
+          let welcome = {
+            chat_type : "SYSTEM",
+            chat_room : parseInt(roomId),
+            chat_sender : parseInt(loginMemberIdx),
+            chat_message : `'${loginMember}'님이<br>입장하셨습니다`
+          };
+          stompClient.send(`/app/chat/${roomId}`, {}, JSON.stringify(welcome));
+        }, function(error){
           console.log(`웹소켓 연결 실패`);  
-      });
+        });
   </script>
 </body>
 </html>

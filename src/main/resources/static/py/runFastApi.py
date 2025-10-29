@@ -165,9 +165,9 @@ async def check_word(req: WordRequest):
     if not word :
         raise HTTPException(status_code=400, detail="빈칸은 보낼 수 없습니다")
     
-    if not re.search(r'[a-zA-Z0-9가-힣]', word):
+    #특수문자, 숫자만 보냈을 시 검사x
+    if re.match(r'^[0-9\W_]+$', word):
         return {'message': 'Success'}
-
     
     try:
         client = discovery.build(
@@ -188,7 +188,7 @@ async def check_word(req: WordRequest):
         toxicity_score = response['attributeScores']['TOXICITY']['summaryScore']['value']
 
         if toxicity_score >= 0.6:
-            raise HTTPException(status_code=400, detail='경고: 비속어는 사용할 수 없습니다')
+            raise HTTPException(status_code=400, detail='경고 : 욕설은 사용할 수 없습니다')
         return {'message': 'Success'}
 
     except HTTPException:
@@ -196,4 +196,4 @@ async def check_word(req: WordRequest):
     
     except Exception as e:
         print(str(e))
-        raise HTTPException(status_code=500, detail='지원하지 않는 언어입니다')
+        raise HTTPException(status_code=500, detail='오류 : 지원하지 않는 언어입니다')
