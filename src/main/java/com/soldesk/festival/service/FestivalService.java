@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.soldesk.festival.dao.FestivalDAO;
 import com.soldesk.festival.dto.FestivalCategoryDTO;
 import com.soldesk.festival.dto.FestivalDTO;
+import com.soldesk.festival.dto.RegionDTO;
 
 import lombok.RequiredArgsConstructor;
 
@@ -29,8 +30,9 @@ public class FestivalService {
         return festivalDAO.getCategory();
     } //getCategory
 
-    public List<String> getRegion(){
+    public List<RegionDTO> getRegion(){
         return festivalDAO.getRegion();
     }
 
+    
 }
