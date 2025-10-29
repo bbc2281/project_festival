@@ -21,6 +21,26 @@ import com.soldesk.festival.handler.MemberRoleTypeHandler;
 @Mapper
 public interface MemberMapper {
 	
+	@Select("select member_idx, member_id, member_name, member_pass, member_nickname, member_email, member_phone, member_address, member_gender, member_job, member_birth, member_point, role from member where member_id=#{member_id}")
+	@Results({
+		@Result(property="member_idx", column="member_idx"),
+		@Result(property="member_id", column="member_id"),
+		@Result(property="member_name", column="member_name"),
+		@Result(property="member_pass", column="member_pass"),
+		@Result(property="member_nickname", column="member_nickname"),
+		@Result(property="member_email", column="member_email"),
+		@Result(property="member_phone", column="member_phone"),
+		@Result(property="member_address", column="member_address"),
+		@Result(property="member_gender", column="member_gender"),
+		@Result(property="member_job", column="member_job"),
+		@Result(property="member_birth", column="member_birth"),
+		@Result(property="member_point", column="member_point"),
+		@Result(property="role", column="role", typeHandler=MemberRoleTypeHandler.class)
+	})
+	Optional<MemberDTO> findUserDetailAllById(@Param("member_id")String userId);
+
+
+	
 	@Select("select * from member where member_id=#{member_id}")
 	@Results({
 		@Result(property="member_id", column="member_id"),
@@ -28,6 +48,21 @@ public interface MemberMapper {
 		@Result(property="role", column="role", typeHandler=MemberRoleTypeHandler.class)
 	})
 	Optional<MemberDTO> findUserById(@Param("member_id")String userId);
+
+
+
+
+	@Select("select member_id, member_name, member_pass, role from member where member_id=#{member_id}")
+	@Results({
+		@Result(property="member_idx", column="member_idx"),
+		@Result(property="member_id", column="member_id"),
+		@Result(property="member_name", column="member_name"),
+		@Result(property="member_pass", column="member_pass"),
+		@Result(property="member_nickname", column="member_nickname"),
+		@Result(property="member_email", column="member_email"),
+		@Result(property="role", column="role", typeHandler=MemberRoleTypeHandler.class)
+	})
+	Optional<MemberDTO> findUserByIdforUser(@Param("member_id")String userId);
 	
 
 

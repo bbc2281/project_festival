@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import com.soldesk.festival.mapper.MemberMapper;
 
 import lombok.RequiredArgsConstructor;
-
+/* 
 @Service
 @RequiredArgsConstructor
 public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User>{
@@ -46,3 +46,4 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 	}
 
 }
+*/

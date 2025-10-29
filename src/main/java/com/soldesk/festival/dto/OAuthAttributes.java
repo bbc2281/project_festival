@@ -3,7 +3,7 @@ package com.soldesk.festival.dto;
 import java.util.Map;
 
 import lombok.Getter;
-
+/* 
 @Getter
 public class OAuthAttributes {
 	
@@ -30,3 +30,4 @@ public class OAuthAttributes {
 	}
 
 }
+	*/

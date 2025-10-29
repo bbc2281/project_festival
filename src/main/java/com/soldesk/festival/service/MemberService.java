@@ -28,6 +28,7 @@ public class MemberService {
 		
 		return memberMapper.findUserById(userId);
 	}
+
     
 	@Transactional(rollbackFor= com.soldesk.festival.exception.UserException.class)
 	public void join(MemberJoinDTO joinMember) {
@@ -97,21 +98,21 @@ public class MemberService {
     
 		public MemberDetailDTO getMemberDetails(String userId){
             
-			    if(!checkMemberIdExists(userId)){
-				    throw new UserException("아이디와 일치하는 회원이 존재하지 않습니다");
-			    } 
-				Optional<MemberDTO> opMember = findUserbyId(userId);
+				Optional<MemberDTO> opMember = memberMapper.findUserByIdforUser(userId);
 				MemberDTO member = opMember.get();
                 
 				return MemberDetailDTO.builder()
-				                       .member_id(member.getMember_id())
-									   .member_idx(member.getMember_idx())
+				                       .member_idx(member.getMember_idx())
+									   .member_pass(member.getMember_pass())
+									   .member_id(member.getMember_id())
 									   .member_name(member.getMember_name())
 									   .member_email(member.getMember_email())
 									   .member_nickname(member.getMember_nickname())
+									   .role(member.getRole())
 									   .build();
 			
 		}
+		
 
 
 }

@@ -14,9 +14,9 @@ import lombok.Data;
 @Data
 public class SecurityAllUsersDTO implements UserDetails, OAuth2User{
 	
-	private MemberDTO member;
+	private final MemberDTO member;
 	private Map<String, Object> attributes;
-	private CompanyDTO company;
+	private final CompanyDTO company;
 	
 	//일반 회원가입한 회원 생성자
 	public SecurityAllUsersDTO(MemberDTO member, CompanyDTO company) {
@@ -24,6 +24,7 @@ public class SecurityAllUsersDTO implements UserDetails, OAuth2User{
 		this.company = company;
 		this.attributes = null;
 	}
+
 
 	//OAuth2,소셜 로그인용 생성자
 	public SecurityAllUsersDTO(MemberDTO member, CompanyDTO company, Map<String, Object> attributes){

@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthUtil {
 	
+	
 	private final PasswordEncoder passEncoder;
 	
 	public boolean checkPassword(String raw, String encoded) {

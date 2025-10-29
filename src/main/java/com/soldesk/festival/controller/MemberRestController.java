@@ -10,7 +10,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,9 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.soldesk.festival.dto.MemberDetailDTO;
 import com.soldesk.festival.dto.MemberJoinDTO;
 import com.soldesk.festival.dto.MemberLoginDTO;
+import com.soldesk.festival.dto.SecurityAllUsersDTO;
 import com.soldesk.festival.dto.UserResponse;
 import com.soldesk.festival.exception.UserException;
 import com.soldesk.festival.service.AuthService;
@@ -57,26 +56,28 @@ public class MemberRestController {
     
 	@PostMapping("/login")
 	public ResponseEntity<UserResponse> login(@Valid @RequestBody MemberLoginDTO memberLogin){
-        
+
 		try {
 			Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(memberLogin.getMember_id(), memberLogin.getMember_pass()));
+
              SecurityContextHolder.getContext().setAuthentication(authentication);
-			UserDetails authUser = (UserDetails)authentication.getPrincipal();
-			MemberDetailDTO details = memberService.getMemberDetails(authUser.getUsername());
-		    UserResponse response = UserResponse.success("로그인 성공", details);
-	    
+			 
+			 SecurityAllUsersDTO user = (SecurityAllUsersDTO)authentication.getPrincipal();
 
-		return ResponseEntity.ok(response);
+		    UserResponse response = UserResponse.success("로그인 성공", user);
 
+		    return ResponseEntity.ok(response);
 
 		} catch (AuthenticationException e) {
-			
+
 			String errorMessage = "아이디 혹은 비밀번호가 올바르지 않습니다";
 			UserResponse response = UserResponse.error(errorMessage);
 
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+
+
 		}
-		 
+        
 		//forUsingSessionAttribute
 		/* 
 		Optional<MemberDTO> opMember = memberService.findUserbyId(authUser.getUsername());
