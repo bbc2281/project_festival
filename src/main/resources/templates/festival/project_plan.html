@@ -1,49 +1,77 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>축제 제안 등록 | FesLite</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link th:href="@{/css/style.css}" rel="stylesheet">
   <script defer th:src="@{/js/app.js}"></script>
   <script defer th:src="@{/js/address.js}"></script>
   <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-  <script type="text/javascript" src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=u4pl1guhug"></script>
-  <script type="text/javascript" src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=u4pl1guhug&submodules=geocoder"></script>
-  <title>축제 제안 등록 | FesLite</title>
+  <script src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=u4pl1guhug&submodules=geocoder"></script>
+
   <style>
     body {
       background: linear-gradient(135deg, #ffdee9 0%, #b5fffc 100%);
       font-family: 'Pretendard', sans-serif;
     }
 
+    main {
+      max-width: 720px;
+      margin: 40px auto;
+      padding: 20px;
+    }
+
     form {
       display: flex;
       flex-direction: column;
-      gap: 14px;
-      max-width: 600px;
-      margin: 40px auto;
-      padding: 25px;
-      background: #fff8;
-      border-radius: 12px;
+      gap: 18px;
+      padding: 30px 28px;
+      background: #ffffffcc;
+      border-radius: 16px;
+      box-shadow: 0 5px 12px rgba(0, 0, 0, 0.1);
       backdrop-filter: blur(10px);
+    }
+
+    label {
+      font-weight: 600;
+      margin-bottom: 4px;
     }
 
     input,
     select,
     textarea {
-      padding: 10px;
+      width: 100%;
+      padding: 10px 12px;
       border-radius: 8px;
       border: 1px solid #ccc;
+      font-size: 15px;
+      box-sizing: border-box;
+    }
+
+    .address-group input[type="button"] {
+      margin: 5px 0 10px 0;
+      width: 100%;
+      border-radius: 8px;
+      border: none;
+      padding: 10px;
+      background: linear-gradient(90deg, #8e2de2 0%, #ff6a88 100%);
+      color: #fff;
+      font-weight: 600;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .address-group input[type="button"]:hover {
+      transform: scale(1.03);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
 
     button {
       align-self: center;
-      padding: 10px 28px;
+      padding: 12px 36px;
       border: none;
-      border-radius: 25px;
-      cursor: pointer;
+      border-radius: 30px;
       font-weight: bold;
       color: white;
       background: linear-gradient(90deg, #8e2de2 0%, #ff6a88 100%);
@@ -68,129 +96,159 @@
       50% { transform: translateY(-10px); }
       100% { transform: translateY(0px); }
     }
+
+    #price_detail_box {
+      margin-top: 10px;
+      transition: all 0.25s ease;
+    }
+
+    /* ✅ 요금 구역 디자인 개선 */
+    .price-box {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 4px;
+      flex-wrap: wrap;
+    }
+
+    .price-option {
+      position: relative;
+    }
+
+    .price-option input[type="radio"] {
+      display: none;
+    }
+
+    .price-option label {
+      display: inline-block;
+      padding: 10px 22px;
+      border-radius: 25px;
+      cursor: pointer;
+      background: #f3f3f3;
+      font-weight: 600;
+      color: #555;
+      transition: all 0.3s ease;
+      border: 1px solid #ddd;
+      user-select: none;
+    }
+
+    .price-option input[type="radio"]:checked + label {
+      background: linear-gradient(90deg, #8e2de2 0%, #ff6a88 100%);
+      color: white;
+      border: none;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
   </style>
 </head>
 
 <body>
-  <!-- 상단 네비바 -->
   <div th:replace="~{common/header :: header}"></div>
 
   <main>
     <img th:src="@{/images/make-wish.png}" alt="축제 제안 이미지" class="header-img" />
-    <h2 style="text-align:center;margin-top:10px;">원하시는 축제를 제안해 보세요!</h2>
+    <h2 style="text-align:center;margin-bottom:25px;">원하시는 축제를 제안해 보세요!</h2>
 
-    <form id="projectPlanForm">
+    <form id="projectPlanForm" th:action="@{/festival/regSubData}" method="post" th:object="${festival}" enctype="multipart/form-data">
       <label>축제 카테고리</label>
-      <select name="festival_category_idx" required>
-        <option value="${cat.festival_category_idx}" th:each="cat : ${category}" th:text="${cat.festival_category_name}"></option>
+      <select name="festival_category_idx" th:field="*{festival_category_idx}" required>
+        <option th:value="${cat.festival_category_idx}" th:each="cat : ${category}" th:text="${cat.festival_category_name}"></option>
       </select>
 
-      <!-- 제안 구분 삭제됨 -->
-
       <label>제안 제목</label>
-      <input type="text" name="project_plan_title" placeholder="축제 제목을 입력하세요" required />
+      <input type="text" name="festival_name" th:field="*{festival_name}" placeholder="축제 제목을 입력하세요" required />
 
       <label>제안 내용</label>
-      <textarea name="project_plan_content" rows="6" placeholder="축제 제안 내용을 입력하세요" required></textarea>
+      <textarea name="festival_info" th:field="*{festival_info}" rows="5" placeholder="축제 제안 내용을 입력하세요" required></textarea>
 
-      <!-- 추가된 부분 -->
       <label>장소</label>
+      <div class="address-group">
         <input type="hidden" id="sample6_postcode" placeholder="우편번호">
-        <input type="button" onclick="sample6_execDaumPostcode()" value="주소 찾기"><br>
-        <input type="text" id="sample6_address" placeholder="주소" required><br>
-        
-        <select name="festival_category_idx" aria-placeholder="관할구를 골라주세요" required>
-        <option value="${region.region_idx}" th:each="region : ${regions}" th:text="${region.region_name}"></option>
-        </select>
-
         <input type="hidden" id="sample6_detailAddress" placeholder="상세주소">
         <input type="hidden" id="sample6_extraAddress" placeholder="참고항목">
-      
-      <label>날짜(시작일 - 마지막일)</label>
-      <input type="date" name="project_plan_date" required />
-      <input type="date" name="project_plan_date" required />
-      <!-- 여기까지 추가 -->
-      
-      <label>요금</label><br />
-      <input type="radio" name="project_plan_price" value="free" id="price_free" checked>
-      <label for="price_free">무료</label>
-
-      <input type="radio" name="project_plan_price" value="paid" id="price_paid">
-      <label for="price_paid">유료</label>
-
-      <!-- 유료 선택 시 표시될 상세 입력란 -->
-      <div id="price_detail_box" style="display: none; margin-top: 10px;">
-        <input type="text" name="project_plan_price_detail" placeholder="요금 상세내용 입력" style="width: 300px;" />
+        <input type="button" onclick="sample6_execDaumPostcode()" value="주소 찾기">
+        <input type="text" id="sample6_address" th:field="*{festival_address}" placeholder="주소를 입력하세요" required>
+        <label>관할지역을 지정해주세요</label>
+        <select name="region_idx" th:field="*{region_idx}" required>
+          <option th:value="${region.region_idx}" th:each="region : ${regions}" th:text="${region.region_name}"></option>
+        </select>
       </div>
 
-      <br />
+      <label>날짜 (시작일 - 종료일)</label>
+      <div class="d-flex gap-2">
+        <input type="date" th:field="*{festival_begin_date}" name="festival_begin_date" required />
+        <input type="date" th:field="*{festival_end_date}" name="festival_end_date" required />
+      </div>
+
+      <label>요금</label>
+      <div class="price-box">
+        <div class="price-option">
+          <input type="radio" name="festival_fee" th:field="*{festival_fee}" value="무료" id="price_free" checked>
+          <label for="price_free">무료</label>
+        </div>
+        <div class="price-option">
+          <input type="radio" name="festival_fee" value="유료" id="price_paid">
+          <label for="price_paid">유료</label>
+        </div>
+      </div>
+      <!-- 요금 상세정보 박스(유료 선택시) -->
+      <div id="price_detail_box" style="display:none;">
+        <input type="text" name="festival_fee_detail" th:field="*{festival_fee}" placeholder="요금 상세내용 입력 (예: 성인 5,000원, 청소년 3,000원)" />
+      </div>
 
       <label>홈페이지</label>
-      <input type="text" name="project_plan_homepage" placeholder="홈페이지 입력" />
-
-      <label>첨부 파일</label>
-      <input type="file" name="project_plan_file" accept=".pdf,.docx" />
+      <input type="text" name="festival_link" th:field="*{festival_link}" placeholder="홈페이지 주소 입력" />
 
       <label>대표 이미지</label>
-      <input type="file" name="project_plan_img_path" accept="image/*" />
+      <input type="file" name="upload_file" accept="image/*" />
 
-      <button class="subButton" id="dbReg" type="submit">등록하기</button>
+      <input type="hidden" id="festival_lat" th:field="*{festival_lat}">
+      <input type="hidden" id="festival_lot" th:field="*{festival_lot}">
+
+      <div class="text-center mt-3">
+        <button class="subButton" id="dbReg" type="submit" hidden>등록하기</button>
+        <button id="changeLoca" type="button">등록하기</button>
+      </div>
     </form>
-      <button id="changeLoca" type="submit">등록하기</button>
   </main>
 
-  <!-- 하단 푸터 -->
   <div th:replace="~{common/footer :: footer}"></div>
 
   <script>
-    document.getElementById('changeLoca').addEventListener(`click`, ()=>{
-      let address = document.getElementById('주소입력되는곳').value;
-      naver.maps.Service.geocode({
-          query: address
-      }, function(status, response) {
+    // 주소 → 좌표 변환 후 제출
+    document.getElementById('changeLoca').addEventListener('click', () => {
+      const addressInput = document.getElementById('sample6_address');
+      if (!addressInput || !addressInput.value.trim()) {
+        alert('주소를 입력하거나 주소 찾기를 먼저 진행해주세요.');
+        return;
+      }
+      naver.maps.Service.geocode({ query: addressInput.value }, function(status, response) {
         if (status !== naver.maps.Service.Status.OK) {
-            return alert('Something wrong!');
+          return alert('주소 변환 중 오류가 발생했습니다.');
         }
-
-        var result = response.v2, // 검색 결과의 컨테이너
-            items = result.addresses; // 검색 결과의 배열
-
-            //items[0].x = 경도 y = 위도
-        document.getElementById('경도입력할곳').value = items[0].x;
-        document.getElementById('위도입력할곳').value = items[0].y;
-
+        const items = response.v2.addresses;
+        if (!items || !items.length) {
+          return alert('해당 주소를 찾을 수 없습니다.');
+        }
+        document.getElementById('festival_lot').value = items[0].x;
+        document.getElementById('festival_lat').value = items[0].y;
         document.getElementById('dbReg').click();
       });
     });
-  </script>
-  <script>
-    document.querySelector('#projectPlanForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const formData = new FormData(e.target);
-      const res = await fetch('/api/project_plan/insert', { method: 'POST', body: formData });
-      if (res.ok) {
-        alert('🎉 축제 제안이 등록되었습니다!');
-        location.href = 'index.html';
-      } else {
-        alert('등록 중 오류가 발생했습니다.');
+
+    // 요금 토글: Thymeleaf가 id를 바꿔도 name/value 기준으로 안전하게 동작
+    document.addEventListener('DOMContentLoaded', function() {
+      const radios = document.querySelectorAll('input[type="radio"][name="festival_fee"]');
+      const detailBox = document.getElementById('price_detail_box');
+
+      function syncPriceBox() {
+        const paidChecked = Array.from(radios).some(r => r.checked && r.value === '유료');
+        detailBox.style.display = paidChecked ? 'block' : 'none';
       }
+
+      radios.forEach(r => r.addEventListener('change', syncPriceBox));
+      // 초기 상태 동기화
+      syncPriceBox();
     });
   </script>
-  <script>
-  // 라디오 버튼 선택에 따라 요금 상세 입력란 표시 제어
-  document.addEventListener('DOMContentLoaded', function() {
-    const freeRadio = document.getElementById('price_free');
-    const paidRadio = document.getElementById('price_paid');
-    const detailBox = document.getElementById('price_detail_box');
-
-    function togglePriceDetail() {
-      detailBox.style.display = paidRadio.checked ? 'block' : 'none';
-    }
-
-    freeRadio.addEventListener('change', togglePriceDetail);
-    paidRadio.addEventListener('change', togglePriceDetail);
-  });
-</script>
 </body>
-
 </html>

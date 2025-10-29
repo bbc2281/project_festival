@@ -32,4 +32,5 @@ public class FestivalDAO {
     public List<RegionDTO> getRegion(){
         return festivalMapper.selectAllRegion();
     }
+
 }
