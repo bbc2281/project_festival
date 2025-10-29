@@ -27,7 +27,6 @@ function sendMessage(){
         chat_message : message
     };//서버로 보낼 메시지 객체(자바스크립트 객체)
     if(stompClient && stompClient.connect){// 웹소켓으로 서버와 사용자가 연결된 경우
-        console.log(`메시지 전송: ${chatMessage}`);
         stompClient.send(`/app/chat/${roomId}`, {}, JSON.stringify(chatMessage));//서버로 메시지 전송
 
         chatInput.value = "";//입력창 초기화
