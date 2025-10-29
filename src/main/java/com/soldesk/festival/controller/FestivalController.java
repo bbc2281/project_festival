@@ -41,7 +41,7 @@ public class FestivalController {
         ChatRoomDTO chatRoom = chatService.getChatRoomById(id);
         model.addAttribute("chatRoom", chatRoom);
 
-        MemberDTO memberDTO = chatService.getMember(2);
+        MemberDTO memberDTO = chatService.getMember(3);
 
         model.addAttribute("loginMember", memberDTO);
 

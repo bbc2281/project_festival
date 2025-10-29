@@ -27,14 +27,20 @@ public class ChatController {
     public Map<String, Object> sendMessage(@DestinationVariable("roomId")int roomId, ChatDTO message){
 
         MemberDTO sender = chatService.getMember(message.getChat_sender());//채팅을 보낸 사용자 조회
-        String senderEmail = sender.getMember_email();
-
+        String senderName = "";
+        if(sender.getMember_nickname() != null){
+            senderName = sender.getMember_nickname();
+        }else if(sender.getMember_id() != null){
+            senderName = sender.getMember_id();
+        }else{
+            senderName = sender.getMember_email();
+        }
         Map<String, Object> response = new HashMap<>();
         response.put("chat_type", message.getChat_type());
         response.put("chat_room", message.getChat_room());
         response.put("chat_sender", message.getChat_sender());
         response.put("chat_message", message.getChat_message());
-        response.put("sender_email", senderEmail);
+        response.put("sender_name", senderName);
         return response;
 
     }
