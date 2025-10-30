@@ -8,16 +8,7 @@
   <script defer th:src="@{/js/joinpage.js}"></script>
 </head>
 <body>
-  <nav class="navbar">
-    <div class="container">
-      <div class="navbar-inner">
-        <a class="brand" th:href="@{/}"><div class="logo"></div><span>FesLite</span></a>
-        <div class="nav-actions">
-          <a th:href="@{/auth/login}" class="btn btn-secondary">로그인</a>
-        </div>
-      </div>
-    </div>
-  </nav>
+  <div th:replace="~{common/loginHeader :: loginHeader}"></div>
 
   <main class="center-screen">
     <section class="card signup-select-card">
@@ -28,7 +19,7 @@
         <div class="grid grid-2 mt-4">
           <!-- 일반회원 -->
           <div id="opt-user" class="option-card">
-            <img src="images/user_icon.png" alt="일반회원 아이콘" class="member-icon">
+            <img th:src="@{/images/member.png}" alt="일반회원 아이콘" class="member-icon">
             <div class="card-title mt-3">일반회원 가입</div>
             <div class="small">즐겨찾기, 리뷰, 티켓 구매 등을 위한 기본 계정</div>
               <li>축제 뉴스 조회</li>
@@ -38,7 +29,7 @@
 
           <!-- 기업회원 -->
           <div id="opt-company" class="option-card">
-            <img src="images/company_icon.png" alt="기업회원 아이콘" class="member-icon">
+            <img th:src="@{/images/company.png}" alt="기업회원 아이콘" class="member-icon">
             <div class="card-title mt-3">기업회원 가입</div>
             <div class="small">축제 등록, 공지 발행, 리포트 기능 제공</div>
             <ul class="service-list">
@@ -53,14 +44,12 @@
         </div>
 
         <div class="mt-5">
-          <a th:href="@{/}" class="btn btn-secondary">뒤로가기</a>
+          <a th:href="@{/}" class="btn btn-secondary">메인으로</a>
         </div>
       </div>
     </section>
   </main>
 
-  <footer class="footer">
-    <div class="container">© 2025 FesLite Demo</div>
-  </footer>
+  <div th:replace="~{common/LoginFooter :: LoginFooter}"></div>
 </body>
 </html>

@@ -8,16 +8,7 @@
   <script defer th:src="@{/js/sign.js}"></script>
 </head>
 <body>
-  <nav class="navbar">
-    <div class="container">
-      <div class="navbar-inner">
-        <a class="brand" th:href="@{/}"><div class="logo"></div><span>FesLite</span></a>
-        <div class="nav-actions">
-          <a th:href="@{/auth/login}" class="btn btn-secondary">로그인</a>
-        </div>
-      </div>
-    </div>
-  </nav>
+  <div th:replace="~{common/loginHeader :: loginHeader}"></div>
 
   <main class="container" style="padding:30px 0 50px">
     <section class="card" style="max-width:820px; margin:0 auto">
@@ -117,6 +108,6 @@
     </section>
   </main>
 
-  <footer class="footer"><div class="container">© 2025 FesLite Demo</div></footer>
+  <div th:replace="~{common/LoginFooter :: LoginFooter}"></div>
 </body>
 </html>
