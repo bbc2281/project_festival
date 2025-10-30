@@ -47,10 +47,10 @@ public interface MemberMapper {
 		@Result(property="member_name", column="member_name"),
 		@Result(property="role", column="role", typeHandler=MemberRoleTypeHandler.class)
 	})
-	Optional<MemberDTO> findUserById(@Param("member_id")String userId);
+	Optional<MemberDTO> findMemberById(@Param("member_id")String userId);
 
-
-
+    @Select("select count(*) from member where member_id=#{member_id}")
+    int checkIdExist(@Param("member_id")String member_id);
 
 	@Select("select member_id, member_name, member_pass, role from member where member_id=#{member_id}")
 	@Results({
@@ -64,7 +64,6 @@ public interface MemberMapper {
 	})
 	Optional<MemberDTO> findUserByIdforUser(@Param("member_id")String userId);
 	
-
 
 	@Select("select * from member where member_email=#{member_email}")
 	@Results({
