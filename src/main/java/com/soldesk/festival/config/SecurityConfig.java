@@ -63,7 +63,7 @@ public class SecurityConfig {
                                         .requestMatchers("/").permitAll()
                                         .requestMatchers("/api/v1/auth/admin/**").hasRole(MemberRole.ADMIN.name())
                                         .requestMatchers("/api/v1/auth/member/**").hasAnyRole(MemberRole.USER.name(), MemberRole.ADMIN.name(),
-                                                                                        CompanyRole.COMPANY.name(), CompanyRole.FESTIVAL_PLANNER.name())
+                                                                                        MemberRole.FESTIVAL_PLANNER.name(), MemberRole.COMPANY.name())
                                                                                   
                                         .anyRequest().authenticated()
                  
