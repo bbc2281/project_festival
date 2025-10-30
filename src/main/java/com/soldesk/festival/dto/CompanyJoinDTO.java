@@ -1,7 +1,7 @@
 package com.soldesk.festival.dto;
 import java.sql.Date;
 
-import com.soldesk.festival.config.CompanyRole;
+import com.soldesk.festival.config.MemberRole;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -20,13 +20,13 @@ public class CompanyJoinDTO {
 	private String company_name;
 	
 	@NotBlank(message="아이디를 입력해주세요")
-	private String company_id;
+	private String user_id;
 	
 	@NotBlank(message="비밀번호를 입력해주세요")
 	private String company_pass;
 	
-	@NotBlank(message="비밀번호확인입력을 해주세요")
-	private String company_pass2;
+	//@NotBlank(message="비밀번호확인입력을 해주세요")
+	//private String company_pass2;
 	
 	@Email(message="올바른 이메일 형식이 아닙니다")
 	private String company_email;
@@ -46,9 +46,10 @@ public class CompanyJoinDTO {
 	@NotBlank(message="회사 소재지 주소를 입력해주세요")
 	private String company_address;
 	
+	@NotBlank(message="계좌 번호를 입력해주세요")
 	private String company_account;
 	
-	private CompanyRole role;
+	private MemberRole role;
 	
 	//private boolean deleted;
 	//private LocalDateTime deletedAt;

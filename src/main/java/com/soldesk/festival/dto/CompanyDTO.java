@@ -1,6 +1,6 @@
 package com.soldesk.festival.dto;
 
-import com.soldesk.festival.config.CompanyRole;
+import com.soldesk.festival.config.MemberRole;
 
 import lombok.Getter;
 
@@ -16,7 +16,7 @@ public class CompanyDTO {
 	
 	private String company_pass;
 	
-	private String company_pass2;
+	//private String company_pass2;
 
 	private String company_email;
 
@@ -34,6 +34,6 @@ public class CompanyDTO {
 	
 	private String company_account;
 	
-	private CompanyRole role;
+	private MemberRole role;
 
 }

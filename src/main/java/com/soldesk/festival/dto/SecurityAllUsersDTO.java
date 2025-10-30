@@ -25,7 +25,6 @@ public class SecurityAllUsersDTO implements UserDetails, OAuth2User{
 		this.attributes = null;
 	}
 
-
 	//OAuth2,소셜 로그인용 생성자
 	public SecurityAllUsersDTO(MemberDTO member, CompanyDTO company, Map<String, Object> attributes){
 		this.member = member;
@@ -34,20 +33,21 @@ public class SecurityAllUsersDTO implements UserDetails, OAuth2User{
 		this.attributes = attributes;
 	}
 
-
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		Collection<GrantedAuthority> authority = new ArrayList<>();
 		
-		//1.MemberRole 권한 추가
-		String memberRole = member.getRole().getMemberRole();
-		authority.add(new SimpleGrantedAuthority(memberRole));
-		
+	
 		//2.CompanyRole 권한 추가(Company객체가 있을경우만 해당)
 		if(this.company != null && this.company.getRole() != null){
-			String companyRole = company.getRole().getCompanyRole();
+			String companyRole = company.getRole().getMemberRole();
 			authority.add(new SimpleGrantedAuthority(companyRole));
+		}else if (this.member != null && this.member.getRole() != null) {
+		    String memberRole = member.getRole().getMemberRole();
+		    authority.add(new SimpleGrantedAuthority(memberRole));
+			
 		}
+		
 		return authority;
 		
 	}//사용자의 권한
@@ -56,12 +56,26 @@ public class SecurityAllUsersDTO implements UserDetails, OAuth2User{
 
 	@Override
 	public String getPassword() {
-		return member.getMember_pass();
+		
+		if(this.company != null){
+			return company.getCompany_pass();
+		}else if(this.member != null){
+			return member.getMember_pass();
+		}
+		return null;
+		
 	} //사용자의 비밀번호
 
 	@Override
 	public String getUsername() {
-		return member.getMember_id();
+
+		if(this.company != null){
+			return company.getCompany_id();
+		}else if(this.member != null){
+			return member.getMember_id();
+		}
+		return null;
+		
 	}
 
 	@Override
@@ -71,7 +85,7 @@ public class SecurityAllUsersDTO implements UserDetails, OAuth2User{
 
 	@Override
 	public String getName() {
-		return member.getMember_id();
+		return getUsername();
 	} 
 
     @Override
