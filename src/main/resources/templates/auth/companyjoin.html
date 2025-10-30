@@ -6,6 +6,8 @@
   <title>기업회원 가입 — FesLite</title>
   <link rel="stylesheet" th:href="@{/css/loginStyle.css}" />
   <script defer th:src="@{/js/sign.js}"></script>
+  <script defer th:src="@{/js/cop_check.js}"></script>
+  <script defer th:src="@{/js/jquery-3.7.1.min.js}"></script>
 </head>
 <body>
   <div th:replace="~{common/loginHeader :: loginHeader}"></div>
@@ -56,9 +58,9 @@
           <div class="form-row">
             <div>
               <label for="company_reg_num">사업자등록번호</label>
-              <div style="display:flex; gap:8px; align-items:center;">
-                <input id="company_reg_num" name="company_reg_num" class="input" placeholder="000-00-00000" required />
-                <button type="button" class="btn btn-secondary check-btn" data-target="company_reg_num">사업자확인</button>
+              <div id="cop_check" style="display:flex; gap:8px; align-items:center;">
+                <input id="company_reg_num" name="company_reg_num" class="input" placeholder="숫자만 입력하세요" required />
+                <button onclick="cop_check()"  type="button" class="btn btn-secondary check-btn" data-target="company_reg_num">사업자확인</button>
               </div>
             </div>
             <div>

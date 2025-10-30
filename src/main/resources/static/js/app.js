@@ -93,7 +93,7 @@ function renderHome(){
 
   // Notices
   const ul = qs('#noticeList');
-  NOTICES.forEach(n=>{
+  NOTICES.slice(0,6).forEach(n=>{
     const li = document.createElement('li');
     li.className='list-group-item d-flex justify-content-between align-items-center';
     li.innerHTML = `<span>${n.title}</span><span class="text-secondary small">${n.date}</span>`;
