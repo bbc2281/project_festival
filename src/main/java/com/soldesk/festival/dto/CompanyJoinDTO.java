@@ -20,16 +20,16 @@ public class CompanyJoinDTO {
 	private String company_name;
 	
 	@NotBlank(message="아이디를 입력해주세요")
-	private String user_id;
+	private String member_id;
 	
 	@NotBlank(message="비밀번호를 입력해주세요")
-	private String company_pass;
+	private String member_pass;
 	
 	//@NotBlank(message="비밀번호확인입력을 해주세요")
 	//private String company_pass2;
 	
 	@Email(message="올바른 이메일 형식이 아닙니다")
-	private String company_email;
+	private String member_email;
 	
 	@NotBlank(message="회사 연락처를 입력해주세요")
 	private String company_phone;

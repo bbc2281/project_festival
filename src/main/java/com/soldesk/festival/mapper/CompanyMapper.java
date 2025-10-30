@@ -23,10 +23,11 @@ public interface CompanyMapper {
 		@Result(property="company_name", column="company_name"),
 		@Result(property="role", column= "role", typeHandler=MemberRoleTypeHandler.class)
 	})
+	
 	@Select("select * from company where member_id=#{member_id}")
 	Optional<CompanyDTO> findCompanyUserById(@Param("member_id")String member_id); //시스템 내부에서 조회용
     
-	@Select("select count(*) from member where member_id=#{member_id}")
+	@Select("select count(*) from company where member_id=#{member_id}")
 	int checkIdExist(@Param("member_id")String member_id);
    
 	@Results({
