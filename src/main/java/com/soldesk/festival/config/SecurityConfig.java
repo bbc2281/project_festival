@@ -62,7 +62,8 @@ public class SecurityConfig {
                                                             "/api/v1/auth/login", "/api/v1/auth/join", "/api/v1/auth/checkId","/api/v1/auth/memberjoin",
                                                             "/api/v1/auth/companyjoin").permitAll()
                                         //.requestMatchers("/", "/css/**", "/js/**", "/image/**").permitAll() 
-                                        .requestMatchers("/**").permitAll() //일단 모든 요청 접근가능하게함 나중에 정리해야댐
+                                        //.requestMatchers("/**").permitAll() //일단 모든 요청 접근가능하게함 나중에 정리해야댐
+                                        .requestMatchers("/api/data").permitAll()   //일단 맡은역할 해결한 후 다시 와서 수정예정
                                         .requestMatchers("/api/v1/auth/admin/**").hasRole(MemberRole.ADMIN.name())
                                         .requestMatchers("/api/v1/auth/member/**").hasAnyRole(MemberRole.USER.name(), MemberRole.ADMIN.name(),
                                                                                         CompanyRole.COMPANY.name(), CompanyRole.FESTIVAL_PLANNER.name())
