@@ -19,8 +19,8 @@ public class ReviewDAO {
         reviewMapper.writeProcess(reviewDTO);
     }
 
-    public List<ReviewDTO> selectAllReviews(int festival_idx,int start, int limit){
-        return reviewMapper.selectAllReviews(festival_idx,start,limit);
+    public List<ReviewDTO> selectAllReviews(int festival_idx){
+        return reviewMapper.selectAllReviews(festival_idx);
     }
 
     public int countReview(int festival_idx){
@@ -33,6 +33,10 @@ public class ReviewDAO {
 
     public void modifyProcess(ReviewDTO reviewDTO){
         reviewMapper.modifyProcess(reviewDTO);
+    }
+
+    public void deleteReview(int review_idx){
+        reviewMapper.deleteReview(review_idx);
     }
     
 }

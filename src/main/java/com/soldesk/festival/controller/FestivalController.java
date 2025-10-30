@@ -23,18 +23,15 @@ public class FestivalController {
     private final ReviewService reviewService;
     
     @GetMapping("/festivalInfo")
-    public String info(@RequestParam("id") int id, Model model,@RequestParam(name = "page", defaultValue = "1")int page){
+    public String info(@RequestParam("id") int id, Model model){
         
         FestivalDTO festival = festivalService.getFestival(id);
         model.addAttribute("festival", festival);
 
-        //리뷰 추가 , 페이징
-        if(page<1) page = 1;
+        //리뷰 추가 
         int festivalIdx = festival.getFestival_idx();
-        List<ReviewDTO> reviewList = reviewService.selectAllReviews(festivalIdx, page);
-        PageDTO pageDTO = reviewService.getPageDTO(festivalIdx,page);
+        List<ReviewDTO> reviewList = reviewService.selectAllReviews(festivalIdx );
         model.addAttribute("reviews", reviewList);
-        model.addAttribute("pageDTO", pageDTO);
 
 
         

@@ -23,10 +23,8 @@ public class ReviewService {
         reviewDAO.writeProcess(reviewDTO);
     }
 
-    public List<ReviewDTO> selectAllReviews(int festival_idx,int page){
-        int start = (page - 1 ) * 10 ;
-        int limit = 10;
-        return reviewDAO.selectAllReviews(festival_idx,start,limit);
+    public List<ReviewDTO> selectAllReviews(int festival_idx){
+        return reviewDAO.selectAllReviews(festival_idx);
     }
 
     public PageDTO getPageDTO(int festival_idx,int currentPage){
@@ -41,6 +39,10 @@ public class ReviewService {
 
     public void modifyProcess(ReviewDTO reviewDTO){
         reviewDAO.modifyProcess(reviewDTO);
+    }
+
+    public void deleteReview(int review_idx){
+        reviewDAO.deleteReview(review_idx);
     }
     
 }

@@ -2,6 +2,7 @@ package com.soldesk.festival.mapper;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -18,7 +19,7 @@ public interface ReviewMapper {
         @Select("select r.review_idx, r.review_content, r.review_reg_date, r.festival_idx, r.review_img_path, r.review_like, m.member_nickname "
                 + " from review r LEFT join member m on r.member_idx = m.member_idx"
                 + " where festival_idx = #{festival_idx}")
-        List<ReviewDTO> selectAllReviews(int festival_idx,int start,int limit);
+        List<ReviewDTO> selectAllReviews(int festival_idx);
         
         @Select("select count(*) from review where festival_idx = #{festival_idx}")
         int countReview(int festival_idx);
@@ -28,4 +29,8 @@ public interface ReviewMapper {
 
         @Update("update review set review_content=#{review_content}, review_img_path=#{review_img_path} where review_idx = #{review_idx}")
         void modifyProcess(ReviewDTO reviewDTO);
+
+        @Delete("delete from review where review_idx = #{review_idx}")
+        void deleteReview(int review_idx);
+
     }
