@@ -4,7 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class MemberViewController {
+public class UserViewController {
     
     //로그인품
     @GetMapping("/auth/loginPage")
@@ -57,11 +57,6 @@ public class MemberViewController {
 
 
        
-    //관리자 전용 페이지
-    @GetMapping("/auth/admin")
-    public String onlyAdminPage(){
-        return "auth/admin";
-    }
     
 
 }

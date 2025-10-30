@@ -17,12 +17,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.soldesk.festival.dto.CompanyJoinDTO;
+import com.soldesk.festival.dto.LoginDTO;
 import com.soldesk.festival.dto.MemberJoinDTO;
-import com.soldesk.festival.dto.MemberLoginDTO;
 import com.soldesk.festival.dto.SecurityAllUsersDTO;
 import com.soldesk.festival.dto.UserResponse;
 import com.soldesk.festival.exception.UserException;
 import com.soldesk.festival.service.AuthService;
+import com.soldesk.festival.service.CompanyService;
 import com.soldesk.festival.service.MemberService;
 
 import jakarta.validation.Valid;
@@ -31,10 +33,11 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/auth")
-public class MemberRestController {
+public class UserRestController {
 	
 	private final MemberService memberService;
 	private final AuthService authService;
+	private final CompanyService companyService;
 	private final AuthenticationManager authenticationManager;
 
 	@GetMapping("/checkId")
@@ -46,8 +49,7 @@ public class MemberRestController {
 			return ResponseEntity.badRequest().body(response);
 		}
 		
-		boolean exists = memberService.checkMemberIdExists(member_id);
-		
+		boolean exists = authService.isIdExists(member_id);
 		
 		response.put("exists", exists);
 		
@@ -55,10 +57,10 @@ public class MemberRestController {
 	}
     
 	@PostMapping("/login")
-	public ResponseEntity<UserResponse> login(@Valid @RequestBody MemberLoginDTO memberLogin){
+	public ResponseEntity<UserResponse> login(@Valid @RequestBody LoginDTO userLogin){
 
 		try {
-			Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(memberLogin.getMember_id(), memberLogin.getMember_pass()));
+			Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userLogin.getMember_id(), userLogin.getMember_pass()));
 
              SecurityContextHolder.getContext().setAuthentication(authentication);
 			 
@@ -108,7 +110,23 @@ public class MemberRestController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
 		}
 	}
+    
+	@PostMapping("/joinCompany")
+	public ResponseEntity<UserResponse> companyJoinProcess(@Valid @RequestBody CompanyJoinDTO companyJoin){
 
+		try {
+			companyService.joinCompany(companyJoin);
+			UserResponse response = UserResponse.successMessage("회원가입 성공");
+			return ResponseEntity.status(201).body(response);
+		} catch (UserException e) {
+			UserResponse response = UserResponse.error(e.getMessage());
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+		}catch (Exception e){
+			e.printStackTrace();
+			UserResponse response = UserResponse.error("회원가입 중 오류가 발생하였습니다");
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+		}
+	}
 
 	
 }  
