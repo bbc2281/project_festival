@@ -1,3 +1,5 @@
+
+
 function cop_check() {
     
     reg_num = document.getElementById("company_reg_num").value;
@@ -28,7 +30,7 @@ function cop_check() {
             if(result.match_cnt == "1") {
                 //성공
                 console.log("success");
-                document.getElementById("cop_check").innerHTML += '<span style="color: #03C75A;">등록 확인</span>';
+                document.getElementById("cop_check").innerHTML += '<br><span style="color: #03C75A;">등록 확인</span>';
             } else {
                 //실패
                 console.log("fail");

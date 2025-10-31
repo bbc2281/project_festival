@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>기업 제안서 승인 관리 | FesLite</title>
+  <link th:href="@{css/adminStyle.css}" rel="stylesheet">
+  <script defer th:src="@{/js/adminApp.js}"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    body{margin:0;font-family:'Pretendard',sans-serif;background:#f5f6fa;display:flex;height:100vh;}
+    .sidebar{width:240px;background:#1f1f2e;color:#fff;padding:20px 0;display:flex;flex-direction:column;}
+    .sidebar a{display:block;padding:12px 20px;color:#ccc;text-decoration:none;}
+    .sidebar a:hover,.active{background:linear-gradient(135deg,#b5fffc 0%,#ffdee9 100%);color:#000;font-weight:600;}
+    .main{flex:1;overflow-y:auto;}
+    header{background:#fff;box-shadow:0 1px 6px rgba(0,0,0,0.1);padding:15px 30px;display:flex;justify-content:space-between;}
+    table{background:#fff;margin:20px;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,0.08);}
+    .badge-pending{background:#ffe082;color:#5d4037;}
+    .badge-approved{background:#81c784;color:#fff;}
+    .badge-rejected{background:#ef9a9a;color:#fff;}
+
+    .sidebar h2 {
+  text-align: center;
+  font-size: 20px;       /* ✅ 고정 크기 */
+  font-weight: 700;
+  margin-bottom: 30px;
+  line-height: 1.2;
+  white-space: nowrap;   /* ✅ 글자 줄바꿈 방지 */
+}
+
+  </style>
+</head>
+<body>
+  <!-- 좌측 사이드바 -->
+  <div th:replace="~{common/adminAside :: aside}"></div>
+
+  <!-- 메인 영역 -->
+  <div class="main">
+    <header>
+      <h4>기업 제안서 승인 관리</h4>
+      <button class="btn btn-outline-danger btn-sm">로그아웃</button>
+    </header>
+
+    <div class="p-4">
+      <table class="table table-hover align-middle text-center">
+        <thead class="table-light">
+          <tr>
+            <th>제안ID</th>
+            <th>기업명</th>
+            <th>제안 축제명</th>
+            <th>제안일</th>
+            <th>예상 개최일</th>
+            <th>상태</th>
+            <th>승인/반려</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>401</td>
+            <td>한화리조트</td>
+            <td>한화 불빛정원 2025</td>
+            <td>2025-10-22</td>
+            <td>2025-12-01 ~ 2026-01-10</td>
+            <td><span class="badge badge-pending">승인대기</span></td>
+            <td>
+              <button class="btn btn-success btn-sm">승인</button>
+              <button class="btn btn-secondary btn-sm">반려</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</body>
+</html>

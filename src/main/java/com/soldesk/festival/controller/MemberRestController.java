@@ -88,6 +88,8 @@ public class MemberRestController {
             System.out.println("세션에 저장된 회원의 정보가 없습니다");
 		}
 			*/
+
+		
 	}
 
     @PostMapping("/join")
