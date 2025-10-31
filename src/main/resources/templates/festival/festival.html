@@ -80,7 +80,7 @@
                       <div class="fw-bold" id="weather_time_today"></div>
                       <div class="text-muted" id="weather_sky_today"></div>
                       <div class="mt-2">
-                        <span class="chip">🌡️최저<span id="weather_temp_min_today"></span>℃</span>
+                        <span class="chip">🌡️최저<span id="weather_temp_min_today"></span>℃</span> <br>
                         <span class="chip">🌡️최고<span id="weather_temp_max_today"></span>℃</span>
                       </div>
                     </div>
@@ -92,7 +92,7 @@
                       <div class="fw-bold" id="weather_time_tomorrow"></div>
                       <div class="text-muted" id="weather_sky_tomorrow"></div>
                       <div class="mt-2">
-                        <span class="chip">🌡️최저<span id="weather_temp_min_tomorrow"></span>℃</span>
+                        <span class="chip">🌡️최저<span id="weather_temp_min_tomorrow"></span>℃</span> <br>
                         <span class="chip">🌡️최고<span id="weather_temp_max_tomorrow"></span>℃</span>
                       </div>
                     </div>
@@ -104,7 +104,7 @@
                       <div class="fw-bold" id="weather_time_dat"></div>
                       <div class="text-muted" id="weather_sky_dat"></div>
                       <div class="mt-2">
-                        <span class="chip">🌡️최저<span id="weather_temp_min_dat"></span>℃</span>
+                        <span class="chip">🌡️최저<span id="weather_temp_min_dat"></span>℃</span> <br>
                         <span class="chip">🌡️최고<span id="weather_temp_max_dat"></span>℃</span>
                       </div>
                     </div>
@@ -182,22 +182,33 @@
   <!-- 채팅 -->
   <script th:inline="javascript">
         const roomId = `[[${chatRoom.chat_room_idx}]]`;
+        const isLogin = [[${loggedIn}]];
         function isValid(value) {
           return value != null && value !== "" && value !== "null";
         }
         //닉네임 없으면 아이디, 아이디 없으면 이메일 출력
-        let loginMember = isValid(`[[${loginMember.member_nickname}]]`) 
-                                  ? `[[${loginMember.member_nickname}]]`
-                                  : isValid(`[[${loginMember.member_id}]]`)
-                                  ? `[[${loginMember.member_id}]]`
-                                  : `[[${loginMember.member_email}]]`;
-        loginMember = loginMember.replace(/^"(.*)"$/, '$1');
-        const loginMemberIdx = `[[${loginMember.member_idx}]]`//현재 접속한 회원의 기본키
+        let loginMember;
+        let loginMemberIdx;
+        if(isLogin){
+          loginMember =  (isValid(`[[${loginMember.member_nickname}]]`) 
+                                    ? `[[${loginMember.member_nickname}]]`
+                                    : isValid(`[[${loginMember.member_id}]]`)
+                                    ? `[[${loginMember.member_id}]]`
+                                    : `[[${loginMember.member_email}]]`);
+          loginMember = loginMember.replace(/^"(.*)"$/, '$1');
+          loginMemberIdx =`[[${loginMember.member_idx}]]`;//현재 접속한 회원의 기본키
+        }else{
+          loginMember = null;
+          loginMemberIdx = null;
+        }
+
         const socket = new SockJS("/ws");//웹소켓 연결 객체
         let stompClient = Stomp.over(socket);//STOMP 프로토콜 이용
         
         const chatBox = document.getElementById("chatBox");
         const chatInput = document.getElementById("chatInput");
+        const btnSendChat = document.getElementById("btnSendChat");
+
         //웹소켓 연결, 구독 설정(수신)
         stompClient.connect({}, function(response){
           stompClient.subscribe(`/topic/chat/${roomId}`, function(message){
@@ -205,13 +216,19 @@
               //서버로부터 받은 메시지(JSON)를 자바스크립트 객체로 변환
               showMessage(chatMessage);
           });
-          let welcome = {
+          if(!isLogin){
+            chatInput.disabled = true;
+            btnSendChat.disabled = true;
+            chatInput.placeholder = "로그인 후 채팅이 가능합니다.";
+          }else{
+            let welcome = {
             chat_type : "SYSTEM",
             chat_room : parseInt(roomId),
             chat_sender : parseInt(loginMemberIdx),
             chat_message : `'${loginMember}'님이<br>입장하셨습니다`
-          };
-          stompClient.send(`/app/chat/${roomId}`, {}, JSON.stringify(welcome));
+            };
+            stompClient.send(`/app/chat/${roomId}`, {}, JSON.stringify(welcome));
+          }
         }, function(error){
           console.log(`웹소켓 연결 실패`);  
         });
