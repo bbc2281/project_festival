@@ -185,7 +185,7 @@ public String modifySubmit(@ModelAttribute("board_now") BoardDTO boardDTO) {
         if(deleteBaord.getMember_idx() == MemberDTO.getMember_idx()){
             String imgPath = deleteBaord.getBoard_img_path();
                 if (imgPath != null && !imgPath.isBlank()) {
-                     String extractedPath = fileUploadService.extractPathFromUrl(imgPath);
+                    String extractedPath = fileUploadService.extractPathFromUrl(imgPath);
                     fileUploadService.deleteFromFirebase(extractedPath);
                      }
             boardService.deleteProecess(board_idx);
