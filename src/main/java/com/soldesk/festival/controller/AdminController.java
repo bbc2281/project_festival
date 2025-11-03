@@ -15,6 +15,7 @@ import com.soldesk.festival.dto.MemberDTO;
 import com.soldesk.festival.service.BoardService;
 import com.soldesk.festival.service.FestivalService;
 import com.soldesk.festival.service.MemberService;
+import com.soldesk.festival.service.SegFestivalService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -26,10 +27,12 @@ public class AdminController {
     private final FestivalService festivalService;
     private final MemberService memberService;
     private final BoardService boardService;
+    private final SegFestivalService segFestivalService;
 
     @GetMapping("/main")
     public String main(){
-        return "/admin/admin";
+
+        return "/admin/main";
     }
     @GetMapping("/event")
     public String event(@RequestParam(name = "page" , defaultValue = "1") int page, Model model){
@@ -42,7 +45,7 @@ public class AdminController {
         model.addAttribute("boardList", boardList);
         model.addAttribute("pageDTO", pageDTO);
 
-        return "/admin/admin-event";
+        return "/admin/event";
     }
     @GetMapping("/festival")
     public String festival(Model model){
@@ -51,11 +54,11 @@ public class AdminController {
 
         model.addAttribute("festivals", festivals);
         
-        return "/admin/admin-festival";
+        return "/admin/festival";
     }
     @GetMapping("/inquiry")
     public String inquiry(){
-        return "/admin/admin-inquiry";
+        return "/admin/inquiry";
     }
     @GetMapping("/member")
     public String member(Model model){
@@ -64,11 +67,16 @@ public class AdminController {
 
         model.addAttribute("members", members);
 
-        return "/admin/admin-member";
+        return "/admin/member";
     }
     @GetMapping("/proposal")
-    public String proposal(){
-        return "/admin/admin-proposal";
+    public String proposal(Model model){
+
+        List<FestivalDTO> proposals = segFestivalService.selectAllFestivals();
+
+        model.addAttribute("proposals", proposals);
+
+        return "/admin/proposal";
     }
     
 }

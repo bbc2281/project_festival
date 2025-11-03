@@ -4,7 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>기업 제안서 승인 관리 | FesLite</title>
-  <link th:href="@{css/adminStyle.css}" rel="stylesheet">
+  <base href="/">
+  <link th:href="@{/css/adminStyle.css}" rel="stylesheet">
   <script defer th:src="@{/js/adminApp.js}"></script>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <style>
@@ -45,26 +46,26 @@
       <table class="table table-hover align-middle text-center">
         <thead class="table-light">
           <tr>
-            <th>제안ID</th>
             <th>기업명</th>
             <th>제안 축제명</th>
-            <th>제안일</th>
-            <th>예상 개최일</th>
+            <th>예상 시작일</th>
+            <th>예상 종료일</th>
+            <th>축제 예정장소</th>
             <th>상태</th>
             <th>승인/반려</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>401</td>
-            <td>한화리조트</td>
-            <td>한화 불빛정원 2025</td>
-            <td>2025-10-22</td>
-            <td>2025-12-01 ~ 2026-01-10</td>
+          <tr th:each="proposal : ${proposals}">
+            <td th:text="${proposal.festival_host}"></td>
+            <td th:text="${proposal.festival_name}"></td>
+            <td th:text="${proposal.festival_begin_date}"></td>
+            <td th:text="${proposal.festival_end_date}"></td>
+            <td th:text="${proposal.festival_address}"></td>
             <td><span class="badge badge-pending">승인대기</span></td>
             <td>
-              <button class="btn btn-success btn-sm">승인</button>
-              <button class="btn btn-secondary btn-sm">반려</button>
+              <a th:href="@{/festival/permit(festival_idx=${proposal.seg_festival_idx})}" class="btn btn-success btn-sm">승인</a>
+              <a class="btn btn-secondary btn-sm">반려</a>
             </td>
           </tr>
         </tbody>

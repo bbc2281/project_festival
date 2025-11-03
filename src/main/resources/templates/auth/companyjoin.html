@@ -4,7 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>기업회원 가입 — FesLite</title>
+  <base href="/">
   <link rel="stylesheet" th:href="@{/css/loginStyle.css}" />
+  <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+  <script defer th:src="@{/js/address.js}"></script>
   <script defer th:src="@{/js/sign.js}"></script>
   <script defer th:src="@{/js/cop_check.js}"></script>
   <script defer th:src="@{/js/jquery-3.7.1.min.js}"></script>
@@ -84,7 +87,11 @@
           <!-- 주소/계좌 -->
           <div>
             <label for="company_address">회사 주소</label>
-            <input id="company_address" name="company_address" class="input" placeholder="서울특별시 ..." />
+            <input type="hidden" id="sample6_postcode" placeholder="우편번호">
+            <input type="hidden" id="sample6_detailAddress" placeholder="상세주소">
+            <input type="hidden" id="sample6_extraAddress" placeholder="참고항목">
+            <input type="button" onclick="sample6_execDaumPostcode()" value="주소 찾기">
+            <input type="text" id="sample6_address" name="company_address" class="input" placeholder="서울특별시 ..." required/>
           </div>
 
           <div>

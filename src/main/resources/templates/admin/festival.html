@@ -4,7 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>축제정보 관리 | FesLite</title>
-  <link th:href="@{css/adminStyle.css}" rel="stylesheet">
+  <base href="/">
+  <link th:href="@{/css/adminStyle.css}" rel="stylesheet">
   <script defer th:src="@{/js/adminApp.js}"></script>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
@@ -36,10 +37,10 @@
     <div class="p-4">
       <table class="table table-hover align-middle text-center">
         <thead class="table-light">
-          <tr><th>축제명</th><th>개최지</th><th>시작일</th><th>종료일</th></tr>
+          <tr><th>축제명</th><th>개최지</th><th>시작일</th><th>종료일</th><th></th></tr>
         </thead>
         <tbody>
-          <tr th:each="festival : ${festivals}"><td th:text="${festival.festival_name}"></td><td th:text="${festival.region_name}"></td><td th:text="${festival.festival_begin_date}"></td>~<td th:text="${festival.festival_end_date}"></td></tr>
+          <tr th:each="festival : ${festivals}"><td th:text="${festival.festival_name}"></td><td th:text="${festival.region_name}"></td><td th:text="${festival.festival_begin_date}"></td><td th:text="${festival.festival_end_date}"></td><td><a th:href="@{/festival/delete(festival_idx=${festival.festival_idx})}" class="btn btn-success btn-sm">삭제</a></td></tr>
         </tbody>
       </table>
     </div>

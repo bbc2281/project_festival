@@ -20,5 +20,5 @@ public class ChatDAO {
     //임시
     public MemberDTO getMember(int i){
         return chatMapper.selectMember(i);
-    }
+    }//특정 멤버 조회
 }
