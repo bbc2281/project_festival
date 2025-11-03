@@ -6,7 +6,9 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
+import com.soldesk.festival.dto.FestivalCategoryDTO;
 import com.soldesk.festival.dto.FestivalDTO;
+import com.soldesk.festival.dto.RegionDTO;
 
 @Mapper
 public interface FestivalMapper {
@@ -19,9 +21,10 @@ public interface FestivalMapper {
     @Select("select * from festival where festival_idx = #{festival_idx}")
     FestivalDTO selectFestival(@Param("festival_idx") int id);
 
-    @Select("select festival_category_name from festival_category")
-    List<String> selectAllCategory();
+    @Select("select * from festival_category")
+    List<FestivalCategoryDTO> selectAllCategory();
 
-    @Select("select region_name from region order by region_idx asc")
-    List<String> selectAllRegion();
+    @Select("select * from region order by region_idx asc")
+    List<RegionDTO> selectAllRegion();
+
 }

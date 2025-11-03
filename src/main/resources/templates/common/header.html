@@ -9,10 +9,18 @@
         <li class="nav-item"><a class="nav-link" th:href="@{/}">홈</a></li>
         <li class="nav-item"><a class="nav-link" th:href="@{/search}">축제 찾기</a></li>
         <li class="nav-item"><a class="nav-link" th:href="@{/board/list}">게시판</a></li>
+        <li class="nav-item"><a class="nav-link" th:href="@{/festivalReg}">축제 등록</a></li>
       </ul>
       <div class="d-flex gap-2">
-        <button class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#loginModal">로그인</button>
-        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#signupModal">회원가입</button>
+        <a th:href="@{/auth/loginPage}" class="btn btn-outline-secondary" >로그인</a>
+        <a th:href="@{/auth/join}" class="btn btn-primary" >회원가입</a>
+        <!-- <div th:if="${session.loginMember != null}">
+          <li class="nav-item"><a class="nav-link" th:href="@{/logout}">로그아웃</a></li>
+        </div>
+        <div th:unless="${session.loginMember != null}">
+          <a th:href="@{/auth/loginPage}" class="btn btn-outline-secondary" >로그인</a>
+          <a th:href="@{/auth/join}" class="btn btn-primary" >회원가입</a>
+        </div> -->
       </div>
     </div>
   </div>

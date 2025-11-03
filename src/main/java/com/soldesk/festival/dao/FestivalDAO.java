@@ -4,7 +4,9 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
+import com.soldesk.festival.dto.FestivalCategoryDTO;
 import com.soldesk.festival.dto.FestivalDTO;
+import com.soldesk.festival.dto.RegionDTO;
 import com.soldesk.festival.mapper.FestivalMapper;
 
 import lombok.RequiredArgsConstructor;
@@ -23,11 +25,12 @@ public class FestivalDAO {
         return festivalMapper.selectFestival(id);
     }//getFestival
 
-    public List<String> getCategory(){
+    public List<FestivalCategoryDTO> getCategory(){
         return festivalMapper.selectAllCategory();
     }//getCategory
 
-    public List<String> getRegion(){
+    public List<RegionDTO> getRegion(){
         return festivalMapper.selectAllRegion();
     }
+
 }

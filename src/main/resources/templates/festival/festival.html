@@ -10,10 +10,14 @@
 <script th:inline="javascript">
   const festival_idx = [[${festival.festival_idx}]];
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 <script defer th:src="@{/js/app.js}"></script>
 <script defer th:src="@{/js/map.js}"></script>
 <script defer th:src="@{/js/weather.js}"></script>
 <script defer th:src="@{/js/locationInfo.js}"></script>
+<script defer th:src="@{/js/chat.js}"></script>
+<script th:src="@{/js/filtering.js}"></script>
 <script type="text/javascript" src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=u4pl1guhug"></script>
 
 </head>
@@ -58,7 +62,7 @@
 
             <!-- 지도 / 길찾기 -->
             <div class="section">
-              <h5 class="fw-bold mb-3">지도 / 길찾기 (임시)</h5>
+              <h5 class="fw-bold mb-3">지도</h5>
               <div class="gradient-card">
                 <div class="body">
                   <div id ="map" class="map"></div>
@@ -68,7 +72,7 @@
 
             <!-- 날씨 섹션 -->
             <div class="section">
-              <h5 class="fw-bold mb-3">날씨 (목데이터)</h5>
+              <h5 class="fw-bold mb-3">날씨</h5>
               <div class="row g-3">
                 <div class="col-md-4">
                   <div class="gradient-card">
@@ -76,7 +80,7 @@
                       <div class="fw-bold" id="weather_time_today"></div>
                       <div class="text-muted" id="weather_sky_today"></div>
                       <div class="mt-2">
-                        <span class="chip">🌡️최저<span id="weather_temp_min_today"></span>℃</span>
+                        <span class="chip">🌡️최저<span id="weather_temp_min_today"></span>℃</span> <br>
                         <span class="chip">🌡️최고<span id="weather_temp_max_today"></span>℃</span>
                       </div>
                     </div>
@@ -88,7 +92,7 @@
                       <div class="fw-bold" id="weather_time_tomorrow"></div>
                       <div class="text-muted" id="weather_sky_tomorrow"></div>
                       <div class="mt-2">
-                        <span class="chip">🌡️최저<span id="weather_temp_min_tomorrow"></span>℃</span>
+                        <span class="chip">🌡️최저<span id="weather_temp_min_tomorrow"></span>℃</span> <br>
                         <span class="chip">🌡️최고<span id="weather_temp_max_tomorrow"></span>℃</span>
                       </div>
                     </div>
@@ -100,7 +104,7 @@
                       <div class="fw-bold" id="weather_time_dat"></div>
                       <div class="text-muted" id="weather_sky_dat"></div>
                       <div class="mt-2">
-                        <span class="chip">🌡️최저<span id="weather_temp_min_dat"></span>℃</span>
+                        <span class="chip">🌡️최저<span id="weather_temp_min_dat"></span>℃</span> <br>
                         <span class="chip">🌡️최고<span id="weather_temp_max_dat"></span>℃</span>
                       </div>
                     </div>
@@ -116,6 +120,7 @@
                 <div class="col-md-12">
                   <div class="gradient-card">
                     <div class="body text-center" id="locationInfo_list">
+
                     </div>
                   </div>
                 </div>
@@ -128,15 +133,14 @@
 
       <!-- 오른쪽 패널 -->
       <div class="col-lg-4 d-flex flex-column justify-content-start" style="gap: 0.25rem;">
+       
+
         <!-- 채팅 -->
+        <div class="sticky-wrapper">
         <div class="gradient-card" style="max-height: 500px; height: 500px;">
           <div class="body d-flex flex-column h-100">
             <h5 class="fw-bold mb-3">채팅방</h5>
             <div class="chat-box flex-grow-1 overflow-auto" id="chatBox">
-              <div class="bubble other">
-                안녕하세요! 🎉
-                <small>관리자 · 12:30</small>
-              </div>
             </div>
             <div class="input-group mt-2">
               <input type="text" id="chatInput" class="form-control" placeholder="메시지 입력..." />
@@ -175,40 +179,64 @@
     </div>
   </main>
 
+
+
   <!-- 하단 푸터 -->
   <div th:replace="~{common/footer :: footer}"></div>
 
-   <script>
+  <!-- 채팅 -->
+  <script th:inline="javascript">
+        const roomId = `[[${chatRoom.chat_room_idx}]]`;
+        const isLogin = [[${loggedIn}]];
+        function isValid(value) {
+          return value != null && value !== "" && value !== "null";
+        }
+        //닉네임 없으면 아이디, 아이디 없으면 이메일 출력
+        let loginMember;
+        let loginMemberIdx;
+        if(isLogin){
+          loginMember =  (isValid(`[[${loginMember.member_nickname}]]`) 
+                                    ? `[[${loginMember.member_nickname}]]`
+                                    : isValid(`[[${loginMember.member_id}]]`)
+                                    ? `[[${loginMember.member_id}]]`
+                                    : `[[${loginMember.member_email}]]`);
+          loginMember = loginMember.replace(/^"(.*)"$/, '$1');
+          loginMemberIdx =`[[${loginMember.member_idx}]]`;//현재 접속한 회원의 기본키
+        }else{
+          loginMember = null;
+          loginMemberIdx = null;
+        }
 
-    // 채팅 기능 (그대로 유지)
-    const chatBox = document.getElementById("chatBox");
-    const chatInput = document.getElementById("chatInput");
+        const socket = new SockJS("/ws");//웹소켓 연결 객체
+        let stompClient = Stomp.over(socket);//STOMP 프로토콜 이용
+        
+        const chatBox = document.getElementById("chatBox");
+        const chatInput = document.getElementById("chatInput");
+        const btnSendChat = document.getElementById("btnSendChat");
 
-    function addMessage(text, sender = "me") {
-      const div = document.createElement("div");
-      div.className = `bubble ${sender}`;
-      const now = new Date();
-      const time = now.toLocaleTimeString("ko-KR", { hour: "2-digit", minute: "2-digit" });
-      div.innerHTML = `${text}<small>${sender === "me" ? "나" : "관리자"} · ${time}</small>`;
-      chatBox.appendChild(div);
-      chatBox.scrollTop = chatBox.scrollHeight;
-    }
-
-    function sendChat() {
-      const msg = chatInput.value.trim();
-      if (!msg) return;
-      addMessage(msg, "me");
-      chatInput.value = "";
-      setTimeout(() => addMessage("문의 감사합니다!", "other"), 700);
-    }
-
-    document.getElementById("btnSendChat").addEventListener("click", sendChat);
-    chatInput.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" && !e.shiftKey) {
-        e.preventDefault();
-        sendChat();
-      }
-    });
+        //웹소켓 연결, 구독 설정(수신)
+        stompClient.connect({}, function(response){
+          stompClient.subscribe(`/topic/chat/${roomId}`, function(message){
+              let chatMessage = JSON.parse(message.body);
+              //서버로부터 받은 메시지(JSON)를 자바스크립트 객체로 변환
+              showMessage(chatMessage);
+          });
+          if(!isLogin){
+            chatInput.disabled = true;
+            btnSendChat.disabled = true;
+            chatInput.placeholder = "로그인 후 채팅이 가능합니다.";
+          }else{
+            let welcome = {
+            chat_type : "SYSTEM",
+            chat_room : parseInt(roomId),
+            chat_sender : parseInt(loginMemberIdx),
+            chat_message : `'${loginMember}'님이<br>입장하셨습니다`
+            };
+            stompClient.send(`/app/chat/${roomId}`, {}, JSON.stringify(welcome));
+          }
+        }, function(error){
+          console.log(`웹소켓 연결 실패`);  
+        });
   </script>
   
   <script th:src="@{/js/review.js}"></script>

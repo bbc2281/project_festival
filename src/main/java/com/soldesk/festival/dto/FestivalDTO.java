@@ -7,21 +7,21 @@ import lombok.Setter;
 @Setter
 public class FestivalDTO {
 
-    int festival_idx;
-    int festival_category_idx;
-    int region_idx;
-    String festival_name;
-    String festival_fee;
-    String festival_begin_date;
-    String festival_end_date;
-    String festival_info;
-    String festival_host;
-    String festival_img_path;
-    String festival_address;
-    String festival_link;
-    double festival_lat;
-    double festival_lot;
+    private int festival_idx;
+    private int festival_category_idx;
+    private int region_idx;
+    private String festival_name;
+    private String festival_fee;
+    private String festival_begin_date;
+    private String festival_end_date;
+    private String festival_info;
+    private String festival_host;
+    private String festival_img_path;
+    private String festival_address;
+    private String festival_link;
+    private double festival_lat;
+    private double festival_lot;
 
-    String festival_category_name;
-    String region_name;
+    private String festival_category_name;
+    private String region_name;
 }

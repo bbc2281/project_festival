@@ -40,7 +40,7 @@ public class BoardController {
         
         //나중에 진짜 맴버 객체랑 연동 할 예정입니다.
         MemberDTO memberDTO = new MemberDTO();
-        memberDTO.setMember_idx(1);
+        //memberDTO.setMember_idx(1);
         session.setAttribute("loginMember", memberDTO);
         
         List<String> category = createCategoryList();
