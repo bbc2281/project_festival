@@ -1,19 +1,21 @@
-   document.getElementById("btnSendChat").addEventListener("click", async ()=>{
-      let msg = chatInput.value.trim();
-      chat_ok = await testMsg(msg);
-      if(!chat_ok) return;
+btnSendChat.addEventListener("click", async ()=>{
+    if(!isLogin) return;
+    let msg = chatInput.value.trim();
+    chat_ok = await testMsg(msg);
+    if(!chat_ok) return;
 
-      await sendMessage();
-    });
+    await sendMessage();
+});
 
-    chatInput.addEventListener("keydown", async (e) => {
-      if (e.key === "Enter" && !e.shiftKey) {
+chatInput.addEventListener("keydown", async (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+        if(!isLogin) return;
         let msg = chatInput.value.trim();
         chat_ok = await testMsg(msg);
         if(!chat_ok) return;
         await sendMessage();
-      }
-    });
+    }
+});
 
         
 //메시지 전송(발신)

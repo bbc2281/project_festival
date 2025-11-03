@@ -9,8 +9,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.soldesk.festival.dto.PageDTO;
+import com.soldesk.festival.dto.FestivalDTO;
+import com.soldesk.festival.dto.ReviewDTO;
+import com.soldesk.festival.service.FestivalService;
+import com.soldesk.festival.service.ReviewService;
 import com.soldesk.festival.dto.ChatRoomDTO;
 import com.soldesk.festival.dto.FestivalCategoryDTO;
 import com.soldesk.festival.dto.FestivalDTO;
@@ -29,20 +35,34 @@ public class FestivalController {
 
     private final SegFestivalService segFestivalService;
     private final FestivalService festivalService;
+    private final ReviewService reviewService;
     private final ChatService chatService;
     private final FileUploadService fileUploadService;
     
     @GetMapping("/festivalInfo")
-    public String info(@RequestParam("id") int id, Model model){
+    public String info(@RequestParam("id") int id, Model model, @SessionAttribute(name = "loginMember", required = false) MemberDTO loginMember){
         
         FestivalDTO festival = festivalService.getFestival(id);
         model.addAttribute("festival", festival);
+
+        //리뷰 추가 
+        int festivalIdx = festival.getFestival_idx();
+        List<ReviewDTO> reviewList = reviewService.selectAllReviews(festivalIdx );
+        model.addAttribute("reviews", reviewList);
+
+
         
         ChatRoomDTO chatRoom = chatService.getChatRoomById(id);
         model.addAttribute("chatRoom", chatRoom);
 
-        MemberDTO memberDTO = chatService.getMember(1);
-        model.addAttribute("loginMember", memberDTO);
+        if(loginMember != null){
+            model.addAttribute("loginMember", loginMember);
+            model.addAttribute("loggedIn", true);
+        }else{
+            loginMember = new MemberDTO();
+            model.addAttribute("loginMember", loginMember);
+            model.addAttribute("loggedIn", false);
+        }
 
         return "festival/info";
     }
