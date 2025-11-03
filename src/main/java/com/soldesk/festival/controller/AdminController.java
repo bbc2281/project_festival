@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.soldesk.festival.dto.BoardDTO;
-import com.soldesk.festival.dto.BoardPageDTO;
 import com.soldesk.festival.dto.FestivalDTO;
 import com.soldesk.festival.dto.MemberDTO;
+import com.soldesk.festival.dto.PageDTO;
 import com.soldesk.festival.service.BoardService;
 import com.soldesk.festival.service.FestivalService;
 import com.soldesk.festival.service.MemberService;
@@ -40,7 +40,7 @@ public class AdminController {
         boardService.selectAllBoard(page);
         if (page < 1) page = 1;
         List<BoardDTO> boardList = boardService.selectAllBoard(page);
-        BoardPageDTO pageDTO = boardService.getPageDTO(page);
+        PageDTO pageDTO = boardService.getPageDTO(page);
 
         model.addAttribute("boardList", boardList);
         model.addAttribute("pageDTO", pageDTO);

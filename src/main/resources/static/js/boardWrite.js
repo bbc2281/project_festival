@@ -40,12 +40,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const contentHTML = editor.getHTML();
+    //여기서부터 안 잡히는거고
     if (!contentHTML || contentHTML.trim() === "<p><br></p>") {
       alert("내용을 입력해주세요.");
       editor.focus();
       return false;
     }
 
+    console.log(contentHTML);
     contentHidden.value = contentHTML;
     return true;
   };

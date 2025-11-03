@@ -53,7 +53,7 @@
       opacity: 0.9;
     }
   </style>
-  <script th:src="@{/js/filtering.js}"></script>
+  <!-- <script th:src="@{/js/filtering.js}"></script> -->
 </head>
 
 <body>
@@ -98,12 +98,12 @@
     </div>
   </main>
 
-  <script src="/js/boardWrite.js"></script>
+  <script th:src="@{/js/boardWrite.js}"></script>
   <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
   <script src="https://uicdn.toast.com/editor/latest/i18n/ko-kr.js"></script>
 
 
-  <script>
+  <!-- <script>
     document.getElementById('submit-btn').addEventListener('click', async (e) => {
       e.preventDefault();
         let board_title = document.getElementById(`board_title`);
@@ -118,7 +118,7 @@
 
         e.target.closest('form').submit();
     });
-  </script>
+  </script> -->
 
   <!-- Footer -->
   <div th:replace="~{common/footer :: footer}"></div>
