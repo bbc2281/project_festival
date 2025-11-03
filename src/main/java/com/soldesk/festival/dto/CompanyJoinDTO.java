@@ -1,6 +1,4 @@
 package com.soldesk.festival.dto;
-import java.sql.Date;
-
 import com.soldesk.festival.config.MemberRole;
 
 import jakarta.validation.constraints.Email;
@@ -35,13 +33,13 @@ public class CompanyJoinDTO {
 	private String company_phone;
 	
 	@NotBlank(message="사업자 번호를 입력해주시길 바랍니다")
-	private Integer company_reg_num;
+	private String company_reg_num;
 	
 	@NotBlank(message="사업주 이름을 입력해주세요")
 	private String company_owner;
 	
 	@NotBlank(message="회사 창립날짜를 입력해주세요")
-	private Date company_open_date;
+	private String company_open_date;
 	
 	@NotBlank(message="회사 소재지 주소를 입력해주세요")
 	private String company_address;

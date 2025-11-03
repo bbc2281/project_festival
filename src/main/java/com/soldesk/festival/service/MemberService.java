@@ -26,7 +26,7 @@ public class MemberService {
 
 	public Optional<MemberDTO> findUserbyId(String userId){
 		
-		return memberMapper.findUserById(userId);
+		return memberMapper.findMemberById(userId);
 	}
 
     
@@ -68,7 +68,7 @@ public class MemberService {
 		
 		memberMapper.updateMember(updateMember);
 
-		Optional<MemberDTO> finalMemberDTO = memberMapper.findUserById(updateMember.getMember_id());
+		Optional<MemberDTO> finalMemberDTO = memberMapper.findMemberById(updateMember.getMember_id());
         
 		return finalMemberDTO.map(dto -> MemberDetailDTO.builder()
 		                                  .member_id(dto.getMember_id())

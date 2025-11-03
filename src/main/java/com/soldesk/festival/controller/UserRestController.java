@@ -111,11 +111,11 @@ public class UserRestController {
 		}
 	}
     
-	@PostMapping("/joinCompany")
+	@PostMapping("/joincompany")
 	public ResponseEntity<UserResponse> companyJoinProcess(@Valid @RequestBody CompanyJoinDTO companyJoin){
 
 		try {
-			companyService.joinCompany(companyJoin);
+			companyService.join(companyJoin);
 			UserResponse response = UserResponse.successMessage("회원가입 성공");
 			return ResponseEntity.status(201).body(response);
 		} catch (UserException e) {

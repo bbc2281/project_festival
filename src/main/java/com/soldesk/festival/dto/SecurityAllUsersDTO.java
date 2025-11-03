@@ -28,13 +28,14 @@ public class SecurityAllUsersDTO implements UserDetails, OAuth2User{
 	//OAuth2,소셜 로그인용 생성자
 	public SecurityAllUsersDTO(MemberDTO member, CompanyDTO company, Map<String, Object> attributes){
 		this.member = member;
-		
 		this.company = company;
 		this.attributes = attributes;
 	}
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
+
+		
 		Collection<GrantedAuthority> authority = new ArrayList<>();
 		
 	
@@ -46,11 +47,12 @@ public class SecurityAllUsersDTO implements UserDetails, OAuth2User{
 		    String memberRole = member.getRole().getMemberRole();
 		    authority.add(new SimpleGrantedAuthority(memberRole));
 			
-		}
-		
+		} 
 		return authority;
 		
-	}//사용자의 권한
+		//return Collections.singletonList(new SimpleGrantedAuthority(this.member.getRole().getMemberRole()));
+		
+	} //사용자의 권한
 
 
 
@@ -58,24 +60,23 @@ public class SecurityAllUsersDTO implements UserDetails, OAuth2User{
 	public String getPassword() {
 		
 		if(this.company != null){
-			return company.getCompany_pass();
+			return company.getMember_pass();
 		}else if(this.member != null){
 			return member.getMember_pass();
 		}
 		return null;
-		
-	} //사용자의 비밀번호
+	}
 
 	@Override
 	public String getUsername() {
 
+
 		if(this.company != null){
-			return company.getCompany_id();
+			return company.getMember_id();
 		}else if(this.member != null){
 			return member.getMember_id();
 		}
 		return null;
-		
 	}
 
 	@Override

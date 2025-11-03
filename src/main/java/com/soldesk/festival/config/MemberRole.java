@@ -8,7 +8,6 @@ public enum MemberRole {
 	
 	GUEST,
 	USER,
-	FESTIVAL_PLANNER,
 	COMPANY,
 	ADMIN;
 	
