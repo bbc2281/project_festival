@@ -1,10 +1,23 @@
 package com.soldesk.festival.controller;
 
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import com.soldesk.festival.dto.MemberDetailDTO;
+import com.soldesk.festival.dto.SecurityAllUsersDTO;
+import com.soldesk.festival.service.CompanyService;
+import com.soldesk.festival.service.MemberService;
+
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 @Controller
 public class UserViewController {
+
+    public final MemberService memberService;
+    public final CompanyService companyService;
     
     //로그인품
     @GetMapping("/auth/loginPage")
@@ -30,21 +43,38 @@ public class UserViewController {
         return "auth/companyjoin";
     }
     
-    //공용마이페이지(일반/회사-미정)
-    @GetMapping("/auth/mypage")
-    public String mypageForm(){
-        return "auth/mypage";
+    //일반회원 마이페이지(일반)
+    @GetMapping("/mypage/mypageuser")
+    public String mypageForm(@AuthenticationPrincipal SecurityAllUsersDTO userdetails, Model model){
+
+        if(userdetails == null){
+            return "redirect:/auth/loginPage";
+        }
+
+       MemberDetailDTO userInfo = memberService.getMemberDetails(userdetails.getUsername());
+
+       model.addAttribute("userInfo", userInfo);
+       model.addAttribute("displayName", userdetails.getUserDisplayName());
+
+       return "mypage/mypageuser";
+    }
+
+    
+
+    @GetMapping("/mypage/mypagecompany")
+    public String companyPageForm(){
+        return "mypage/mypagecompany";
     }
     
     
     //일반회원 정보수정
-    @GetMapping("/auth/modify")
+    @GetMapping("/mypage/mypageedit")
     public String mypageModifyForMember(){
-        return "auth/modify";
+        return "mypage/mypageedit";
     }
     
     //기업회원 정보수정
-    @GetMapping("/company/modify")
+    @GetMapping("/mypage/mypage")
     public String mypageModifyForCompany(){
         return "auth/company/modify";
     }

@@ -72,8 +72,7 @@ public interface MemberMapper {
 	})
 	Optional<MemberDTO> selectUserByEmail(@Param("member_email")String userEmail);
 	
-
-	
+    
 	@Select("select * from member")
 	List<MemberDTO> getMemberList();
 
@@ -83,11 +82,11 @@ public interface MemberMapper {
             + " #{member_phone}, #{member_address}, #{member_gender}, #{member_job}, #{member_birth}, #{role}, #{member_point})")		
 	void insertMember(MemberJoinDTO joinMember);
 	
-	@Update("update member set member_name=#{member_name},member_pass=#{member_pass}")
+	@Update("update member set member_name=#{member_name},member_pass=#{member_pass}, member_nickname=#{member_nickname}, member_email=#{member_email}, member_phone=#{member_phone}, member_address=#{member_address} where member_id=#{member_id}")
 	MemberDTO updateMember(MemberUpdateDTO updateMember); //아이디 제외
 	
 	//@Update("update ")
-	@Delete("delete from member where member_idx=#{member_idx}")
+	@Delete("delete from member where member_id=#{member_id}")
 	MemberDTO deleteMember(MemberDTO deleteMember);
 	
 	

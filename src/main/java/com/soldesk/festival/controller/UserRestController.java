@@ -76,21 +76,56 @@ public class UserRestController {
 			UserResponse response = UserResponse.error(errorMessage);
 
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
-
+           //로그인 페이지(login.html)에 아이디/ 비번찾기 기능 추가해야함
 
 		}
-        
-		//forUsingSessionAttribute
-		/* 
-		Optional<MemberDTO> opMember = memberService.findUserbyId(authUser.getUsername());
-		if(opMember.isPresent()){
-			MemberDTO loginMember = opMember.get();
-			session.setAttribute("loginMember", loginMember);
-		}else {
-            System.out.println("세션에 저장된 회원의 정보가 없습니다");
-		}
-			*/
+			
 	}
+
+
+	/* 
+	 @PostMapping("/login")
+	 public ResponseEntity<UserResponse> login(
+			@Valid @RequestBody LoginDTO userLogin, 
+			HttpSession session, // 👈 HttpSession 객체 추가
+			@Autowired MemberService memberService) { // 👈 MemberService는 주입 필요 (만약 멤버 정보를 DB에서 가져와야 한다면)
+
+		try {
+			Authentication authentication = authenticationManager.authenticate(
+				new UsernamePasswordAuthenticationToken(userLogin.getMember_id(), userLogin.getMember_pass()));
+
+			SecurityContextHolder.getContext().setAuthentication(authentication);
+			
+			SecurityAllUsersDTO user = (SecurityAllUsersDTO)authentication.getPrincipal();-
+		
+			String memberId = user.getUsername();
+			
+			Optional<MemberDTO> opMember = memberService.findUserbyId(memberId);
+			
+			if (opMember.isPresent()) {
+				MemberDTO loginMember = opMember.get();
+				session.setAttribute("loginMember", loginMember);
+				
+				System.out.println("세션에 저장된 회원 ID: " + loginMember.getMember_id());
+				
+			} else {
+				System.out.println("세션에 저장할 회원의 DB 정보(MemberDTO)를 찾을 수 없습니다.");
+				
+			}
+			UserResponse response = UserResponse.success("로그인 성공", user);
+
+			return ResponseEntity.ok(response);
+
+		} catch (AuthenticationException e) {
+			String errorMessage = "아이디 혹은 비밀번호가 올바르지 않습니다";
+			UserResponse response = UserResponse.error(errorMessage);
+
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+		}
+   }
+	  
+	  
+	 */
 
     @PostMapping("/join")
 	public ResponseEntity<UserResponse> join(@Valid @RequestBody MemberJoinDTO memberJoin){

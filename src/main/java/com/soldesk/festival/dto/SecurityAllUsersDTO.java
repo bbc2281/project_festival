@@ -9,6 +9,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
+import com.soldesk.festival.config.MemberRole;
+
 import lombok.Data;
 
 @Data
@@ -108,5 +110,43 @@ public class SecurityAllUsersDTO implements UserDetails, OAuth2User{
     public boolean isAccountNonExpired() {
         return true;
     }
+    
+    //유저의 idx값을 가져오는 메서드ㄴ
+	public long getUserIdx(){
+		if(this.member != null){
+			return this.member.getMember_idx();
+		}else if(this.company != null){
+			return this.company.getCompany_idx();
+		}
+		throw new IllegalStateException("로그인된 사용자의 고유 식별자를 찾을 수 없습니다");
+	
+	}
+
+	// 닉네임 설정되어있으면 닉네임 가져오고 없으면 이름 가져오기
+	public String getUserDisplayName(){   
+		if(this.member != null){
+			String nickname = this.member.getMember_nickname();
+
+			if(nickname != null && !nickname.trim().isBlank()){
+				return nickname;
+			}
+			return this.member.getMember_name();
+		}
+
+		else if(this.company != null){
+			return this.company.getCompany_name();
+		}
+
+		return getUsername();
+	}
+
+	public MemberRole getUserRole(){
+		if(this.member != null){
+			return this.member.getRole();
+		}else if(this.company != null){
+			return this.company.getRole();
+		}
+		return null;
+	}
 
 }

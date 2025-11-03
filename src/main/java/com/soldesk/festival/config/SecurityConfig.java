@@ -58,13 +58,12 @@ public class SecurityConfig {
                  //로그인 , 회원가입 , 정적리로스
                                         .requestMatchers("/auth/loginPage", "/auth/join","/auth/memberjoin" , "/auth/companyjoin",
                                                             "/api/v1/auth/login", "/api/v1/auth/join", "/api/v1/auth/checkId","/api/v1/auth/memberjoin",
-                                                            "/api/v1/auth/joincompany").permitAll()
+                                                            "/api/v1/auth/joincompany", "/mypage/mypageuser").permitAll()
                                         //.requestMatchers("/", "/css/**", "/js/**", "/image/**").permitAll() 
                                         .requestMatchers("/").permitAll()
                                         .requestMatchers("/api/v1/auth/admin/**").hasRole(MemberRole.ADMIN.name())
-                                        .requestMatchers("/api/v1/auth/member/**").hasAnyRole(MemberRole.USER.name(), MemberRole.ADMIN.name(),
-                                                                                         MemberRole.COMPANY.name())
-                                                                                  
+                                        .requestMatchers("/mypage/**").hasAnyRole(MemberRole.USER.name())
+                                        .requestMatchers("/mypagecom/**").hasAnyRole(MemberRole.COMPANY.name())                                       
                                         .anyRequest().authenticated()
                  
                 );
