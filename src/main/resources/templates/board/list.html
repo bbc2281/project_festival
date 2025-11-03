@@ -149,19 +149,20 @@
     </div>
 
     <!-- 페이징 영역 --> 
-    <div th:if="${pageDTO.pageCnt > 1}"> <div> 
-    <ul style="list-style: none; display: flex; gap: 8px; padding: 0;"> 
-            <!-- 이전 페이지 버튼 --> 
-            <li th:if="${pageDTO.prevPage >= 1}"> 
-            <a th:href="@{/board/list(page=${pageDTO.prevPage}, board_category=${param.board_category})}">이전</a> </li>
-            <!-- 페이지 번호 버튼 --> 
-            <li th:each="i : ${#numbers.sequence(pageDTO.min, pageDTO.max)}"> 
-            <a th:href="@{/board/list(page=${i}, board_category=${param.board_category})}" th:text="${i}" th:classappend="${i == pageDTO.currentPage} ? 'active-page' : ''"></a> </li> 
-            <!-- 다음 페이지 버튼 --> 
-            <li th:if="${pageDTO.nextPage > pageDTO.currentPage}"> <a th:href="@{/board/list(page=${pageDTO.nextPage}, board_category=${param.board_category})}">다음</a> 
-        </li> 
-        </ul> 
-    </div> 
+    <div th:if="${pageDTO.pageCnt > 1}"> 
+      <div> 
+          <ul style="list-style: none; display: flex; gap: 8px; padding: 0;"> 
+                  <!-- 이전 페이지 버튼 --> 
+                  <li th:if="${pageDTO.prevPage >= 1}"> 
+                  <a th:href="@{/board/list(page=${pageDTO.prevPage}, board_category=${param.board_category})}">이전</a> </li>
+                  <!-- 페이지 번호 버튼 --> 
+                  <li th:each="i : ${#numbers.sequence(pageDTO.min, pageDTO.max)}"> 
+                  <a th:href="@{/board/list(page=${i}, board_category=${param.board_category})}" th:text="${i}" th:classappend="${i == pageDTO.currentPage} ? 'active-page' : ''"></a> </li> 
+                  <!-- 다음 페이지 버튼 --> 
+                  <li th:if="${pageDTO.nextPage > pageDTO.currentPage}"> <a th:href="@{/board/list(page=${pageDTO.nextPage}, board_category=${param.board_category})}">다음</a> 
+              </li> 
+          </ul> 
+      </div> 
     </div>
 
 

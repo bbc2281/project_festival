@@ -109,11 +109,9 @@
         <span>카테고리: <span th:text="${board.board_category}"></span></span>
       </div>
 
-      <div th:if="${board.board_img_path}">
-        <img th:src="@{${board.board_img_path}}" alt="게시글 이미지" class="board-img">
-      </div>
 
-      <div class="board-content" th:text="${board.board_content}">
+
+      <div class="board-content" th:utext="${board.board_content}">
         게시글 내용이 표시됩니다.
       </div>
 

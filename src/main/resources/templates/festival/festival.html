@@ -133,19 +133,7 @@
 
       <!-- 오른쪽 패널 -->
       <div class="col-lg-4 d-flex flex-column justify-content-start" style="gap: 0.25rem;">
-        <!-- 리뷰 -->
-        <!-- <div class="gradient-card" style="max-height: 500px; height: 500px;">
-          <div class="body d-flex flex-column h-100">
-            <h5 class="fw-bold mb-3">리뷰</h5>
-            <div id="reviewList" class="vstack gap-2 mb-3 flex-grow-1 overflow-auto">
-              <div class="border rounded p-2 bg-light"><b>익명</b> — 정말 재밌었어요!</div>
-            </div>
-            <div class="input-group mt-auto">
-              <input type="text" class="form-control" id="reviewText" placeholder="한줄 리뷰 작성" />
-              <button class="btn-gradient" id="btnAddReview">등록</button>
-            </div>
-          </div>
-        </div> -->
+       
 
         <!-- 채팅 -->
         <div class="sticky-wrapper">
@@ -160,25 +148,42 @@
             </div>
           </div>
         </div>
+      </div>
+    </div>
+
+    <!-- 🟢 리뷰: 메인 맨 아래로 이동 -->
+    <div class="row mt-5">
+      <div class="col-12">
+        <div class="gradient-card" style="height: 650px;">
+          <div class="body d-flex flex-column h-100">
+                 <h5 class="fw-bold mb-3">리뷰</h5>
+                    <div th:each="review : ${reviews}" class="border rounded p-2 bg-light review-box">
+                       <b th:text="${review.member_nickname}"></b> — 
+                         <span class="review-content" th:text="${review.review_content}"></span><br>
+                           <img th:if="${review.review_img_path != null}" th:src="@{${review.review_img_path}}" class="img-fluid mt-2 review-image" style="max-height: 200px;">
+                          <button class="btnModifyReview"
+                              th:data-review-idx="${review.review_idx}"
+                              th:data-review-content="${review.review_content}">수정하기
+                          </button>
+                          <button class="btnDeleteReview" th:data-review-idx="${review.review_idx}">삭제하기</button>
+                          <button class="commentBtn" id="commentBtn" th:data-review-idx="${review.review_idx}">답글</button>
+                   </div>
+            <div class="mb-2">
+              <input type="file" id="reviewImage" class="form-control mb-2" accept="image/*">
+              <input type="text" class="form-control" id="reviewText" placeholder="한줄 리뷰 또는 댓글 입력" />
+            </div>
+            <button class="btn-gradient mt-auto" id="btnAddReview">등록</button>
+          </div>
         </div>
       </div>
-</main>
+    </div>
+  </main>
+
+
 
   <!-- 하단 푸터 -->
   <div th:replace="~{common/footer :: footer}"></div>
-<!-- 
-  <script>
-    // 리뷰 추가
-    document.getElementById("btnAddReview").addEventListener("click", () => {
-      const text = document.getElementById("reviewText").value.trim();
-      if (!text) return;
-      const div = document.createElement("div");
-      div.className = "border rounded p-2 bg-light";
-      div.innerHTML = `<b>익명</b> — ${text}`;
-      document.getElementById("reviewList").prepend(div);
-      document.getElementById("reviewText").value = "";
-    });
-  </script> -->
+
   <!-- 채팅 -->
   <script th:inline="javascript">
         const roomId = `[[${chatRoom.chat_room_idx}]]`;
@@ -233,5 +238,9 @@
           console.log(`웹소켓 연결 실패`);  
         });
   </script>
+  
+  <script th:src="@{/js/review.js}"></script>
+  <script th:src="@{/js/comment.js}"></script>
+
 </body>
 </html>

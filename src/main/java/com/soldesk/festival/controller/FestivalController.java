@@ -12,6 +12,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.soldesk.festival.dto.PageDTO;
+import com.soldesk.festival.dto.FestivalDTO;
+import com.soldesk.festival.dto.ReviewDTO;
+import com.soldesk.festival.service.FestivalService;
+import com.soldesk.festival.service.ReviewService;
 import com.soldesk.festival.dto.ChatRoomDTO;
 import com.soldesk.festival.dto.FestivalCategoryDTO;
 import com.soldesk.festival.dto.FestivalDTO;
@@ -30,6 +35,7 @@ public class FestivalController {
 
     private final SegFestivalService segFestivalService;
     private final FestivalService festivalService;
+    private final ReviewService reviewService;
     private final ChatService chatService;
     private final FileUploadService fileUploadService;
     
@@ -39,6 +45,13 @@ public class FestivalController {
         FestivalDTO festival = festivalService.getFestival(id);
         model.addAttribute("festival", festival);
 
+        //리뷰 추가 
+        int festivalIdx = festival.getFestival_idx();
+        List<ReviewDTO> reviewList = reviewService.selectAllReviews(festivalIdx );
+        model.addAttribute("reviews", reviewList);
+
+
+        
         ChatRoomDTO chatRoom = chatService.getChatRoomById(id);
         model.addAttribute("chatRoom", chatRoom);
 
