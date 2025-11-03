@@ -28,7 +28,6 @@ public enum MemberRole {
 	}
 	
 
-
     public boolean isAdmin(){
 		return this == ADMIN;
 	}
@@ -36,6 +35,10 @@ public enum MemberRole {
 
 	public boolean isCompany(){
 		return this == COMPANY;
+	}
+
+	public boolean isGuest(){
+		return this == GUEST;
 	}
 
 	public boolean hasHigherLevelThan(MemberRole otherRole){
