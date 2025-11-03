@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.soldesk.festival.dto.ChatRoomDTO;
@@ -33,7 +34,7 @@ public class FestivalController {
     private final FileUploadService fileUploadService;
     
     @GetMapping("/festivalInfo")
-    public String info(@RequestParam("id") int id, Model model){
+    public String info(@RequestParam("id") int id, Model model, @SessionAttribute(name = "loginMember", required = false) MemberDTO loginMember){
         
         FestivalDTO festival = festivalService.getFestival(id);
         model.addAttribute("festival", festival);
@@ -41,9 +42,14 @@ public class FestivalController {
         ChatRoomDTO chatRoom = chatService.getChatRoomById(id);
         model.addAttribute("chatRoom", chatRoom);
 
-        MemberDTO memberDTO = chatService.getMember(3);
-
-        model.addAttribute("loginMember", memberDTO);
+        if(loginMember != null){
+            model.addAttribute("loginMember", loginMember);
+            model.addAttribute("loggedIn", true);
+        }else{
+            loginMember = new MemberDTO();
+            model.addAttribute("loginMember", loginMember);
+            model.addAttribute("loggedIn", false);
+        }
 
         return "festival/festival";
     }
