@@ -20,30 +20,30 @@ public class PythonScriptRunner implements ApplicationRunner {
     }
 
     public void runPythonScript() throws IOException {
-        String pythonPath = "C:\\Users\\soldesk\\AppData\\Local\\Programs\\Python\\Python314\\python.exe";
+        //String pythonPath = "C:\\Users\\soldesk\\AppData\\Local\\Programs\\Python\\Python314\\python.exe";
         ClassPathResource resource_f = new ClassPathResource("static/py/festivalApi.py");
         ClassPathResource resource_s = new ClassPathResource("static/py/news.py");
         
         Path path1 = Paths.get(resource_f.getURI());
         Path path2 = Paths.get(resource_s.getURI());
 
-        ProcessBuilder pb1 = new ProcessBuilder(pythonPath, path1.toString());
+        ProcessBuilder pb1 = new ProcessBuilder("python", path1.toString());
         pb1.inheritIO();
         pb1.start();
 
-        ProcessBuilder pb2 = new ProcessBuilder(pythonPath, path2.toString());
+        ProcessBuilder pb2 = new ProcessBuilder("python", path2.toString());
         pb2.inheritIO();
         pb2.start();
     }
     
     public void runFastApiServer() throws IOException {
-        String uvicornPath = "C:\\Users\\soldesk\\AppData\\Local\\Programs\\Python\\Python314\\Scripts\\uvicorn.exe";
+        //String uvicornPath = "C:\\Users\\soldesk\\AppData\\Local\\Programs\\Python\\Python314\\Scripts\\uvicorn.exe";
         ClassPathResource resource = new ClassPathResource("static/py/runFastApi.py");
         Path path = Paths.get(resource.getURI());
         File workingDir = path.getParent().toFile();
 
         ProcessBuilder pb = new ProcessBuilder(
-            uvicornPath,
+            "uvicorn",
             "runFastApi:app",
             "--reload",
             "--port",

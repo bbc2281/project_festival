@@ -64,19 +64,36 @@ public class FestivalController {
             model.addAttribute("loggedIn", false);
         }
 
-        return "festival/festival";
+        return "festival/info";
     }
 
-    @GetMapping("/festivalReg")
-    public String register(@ModelAttribute("festival") FestivalDTO festivalDTO,Model model){
+    @GetMapping("/festival/search")
+    public String searchFestival(){
+
+        return "festival/search";
+    }
+
+    @GetMapping("/festival/registe")
+    public String registe(@ModelAttribute("festival") FestivalDTO festivalDTO,Model model){
         List<FestivalCategoryDTO> category = festivalService.getCategory();
         List<RegionDTO> regions = festivalService.getRegion();
         
         model.addAttribute("regions", regions);
         model.addAttribute("category", category);
 
-        return "festival/project_plan";
+        return "festival/segFestival";
     }
+
+    @GetMapping("/festival/permit")
+    public String permit(@RequestParam("festival_idx") int festival_idx){
+
+        FestivalDTO festival = segFestivalService.selectFestival(festival_idx);
+        festivalService.insertFestival(festival);
+
+        segFestivalService.deleteFestival(festival_idx);
+        return "redirect:/admin/proposal";
+    }
+
 
     @PostMapping("/festival/regSubData")
     public String regFestival(@ModelAttribute("festival") FestivalDTO festivalDTO, @RequestParam("upload_file") MultipartFile file){
@@ -99,16 +116,11 @@ public class FestivalController {
     }
 
 
-    @PostMapping("/festival/delete")
-    public String deleteFestival(@RequestParam("seg_festival_idx") int seg_festival_idx){
+    @GetMapping("/festival/delete")
+    public String deleteFestival(@RequestParam("festival_idx") int festival_idx){
         
-        FestivalDTO festival = segFestivalService.selectFestival(seg_festival_idx);
-        String imgPath = festival.getFestival_img_path();
-                if (imgPath != null && !imgPath.isBlank()) {
-                     String extractedPath = fileUploadService.extractPathFromUrl(imgPath);
-                    fileUploadService.deleteFromFirebase(extractedPath);
-                     }
-            segFestivalService.deleteFestival(seg_festival_idx);
-        return "";
+        festivalService.deleteFestival(festival_idx);
+
+        return "redirect:/";
     }
 }

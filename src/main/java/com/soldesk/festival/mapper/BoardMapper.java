@@ -54,9 +54,6 @@ public interface BoardMapper {
 
 
     
-
-
-    
     
 } 
     

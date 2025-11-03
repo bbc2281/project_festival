@@ -1,5 +1,6 @@
 package com.soldesk.festival.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -113,6 +114,8 @@ public class MemberService {
 			
 		}
 		
-
+		public List<MemberDTO> getMemberList(){
+			return memberMapper.getMemberList();
+		}
 
 }

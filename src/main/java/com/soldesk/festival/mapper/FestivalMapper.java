@@ -2,6 +2,8 @@ package com.soldesk.festival.mapper;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Delete;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -27,4 +29,9 @@ public interface FestivalMapper {
     @Select("select * from region order by region_idx asc")
     List<RegionDTO> selectAllRegion();
 
+    @Insert("insert into festival (festival_category_idx, region_idx, festival_name, festival_fee, festival_begin_date, festival_end_date, festival_info, festival_host, festival_img_path, festival_address, festival_link, festival_lat, festival_lot) values (#{festival_category_idx}, #{region_idx}, #{festival_name}, #{festival_fee}, #{festival_begin_date}, #{festival_end_date}, #{festival_info}, #{festival_host}, #{festival_img_path}, #{festival_address}, #{festival_link}, #{festival_lat}, #{festival_lot})")
+    void insertFestival(FestivalDTO festival);
+
+    @Delete("delete from festival where festival_idx = #{festival_idx}")
+    void deleteFestival(@Param("festival_idx") int festival_idx);
 }
