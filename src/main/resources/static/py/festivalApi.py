@@ -50,7 +50,7 @@ try:
     df['festival_category_name'] = df['festival_category_name'].str.replace('축제-', '', regex=False)
     df['festival_fee'] = df['festival_fee'].str.replace('없음', '무료', regex=False)
     df.loc[df['festival_fee'] == '', 'festival_fee'] = '무료'
-    df.loc[df['festival_info'] == '', 'festival_info'] = '상세내용은 공식 사이트를 참조해 주세요'
+    df.loc[df['festival_info'] == '', 'festival_info'] = '상세내용은 링크를 참조해 주세요'
     df.loc[df['region_name'] == '', 'region_name'] = '기타'
     df['festival_lat'] = df['festival_lat'].str.replace('~.*', '', regex=True)
     df['festival_lot'] = df['festival_lot'].str.replace('~.*', '', regex=True)
