@@ -12,6 +12,7 @@ import org.apache.ibatis.annotations.Select;
 
 import com.soldesk.festival.dto.CompanyDTO;
 import com.soldesk.festival.dto.CompanyJoinDTO;
+import com.soldesk.festival.dto.companyDetailDTO;
 import com.soldesk.festival.handler.MemberRoleTypeHandler;
 
 @Mapper
@@ -46,7 +47,10 @@ public interface CompanyMapper {
 	})
 	@Select("select * from company where member_id=#{member_id}")
 	Optional<CompanyDTO> findCompanyDetailAllById(@Param("member_id")String id);
-
+      
+    
+	
+	Optional<companyDetailDTO> getCompanyDetail(@Param("member_id")String id);
 
 	@Select("select * from company where company_reg_num=#{company_reg_num}")
 	CompanyDTO findCompanyUserByregNum(@Param("company_reg_num")Integer regNum); //사용자용

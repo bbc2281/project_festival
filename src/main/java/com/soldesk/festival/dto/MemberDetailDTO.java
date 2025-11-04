@@ -19,6 +19,7 @@ public class MemberDetailDTO {
     //private String member_pass;
     private String member_nickname;
     private String member_address;
+    private Integer member_point;
     private MemberRole role;
 
 
