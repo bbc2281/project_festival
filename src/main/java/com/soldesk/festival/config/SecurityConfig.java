@@ -16,7 +16,6 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
-import org.springframework.util.AntPathMatcher;
 
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -47,12 +46,14 @@ public class SecurityConfig {
 
       
         
-        RequestMatcher apiMatcher = AntPathRequestMatcher.antMatcher("/api/**");
+        RequestMatcher apiMatcher = AntPathRequestMatcher.antMatcher("/**");
+        
                                     
 
         http
             .csrf((csrf)-> csrf
                                .ignoringRequestMatchers(apiMatcher)
+                               
                            
             )
             .authorizeHttpRequests((auth)-> auth
@@ -66,6 +67,11 @@ public class SecurityConfig {
                                         .requestMatchers("/admin/**").hasRole(MemberRole.ADMIN.name())
                                         .requestMatchers("/member/**").hasAnyRole(MemberRole.USER.name())
                                         .requestMatchers("/company/**").hasAnyRole(MemberRole.COMPANY.name())                                       
+                                        .requestMatchers("/**").permitAll() //일단 모든 요청 접근가능하게함 나중에 정리해야댐
+                                        // .requestMatchers("/api/v1/auth/admin/**").hasRole(MemberRole.ADMIN.name())
+                                        // .requestMatchers("/api/v1/auth/member/**").hasAnyRole(MemberRole.USER.name(), MemberRole.ADMIN.name(),
+                                        //                                                 CompanyRole.COMPANY.name(), CompanyRole.FESTIVAL_PLANNER.name())
+                                                                                  
                                         .anyRequest().authenticated()
                  
                 );

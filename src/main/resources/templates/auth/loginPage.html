@@ -4,20 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>로그인 — FesLite</title>
+  <base href="/">
   <link rel="stylesheet" th:href="@{/css/loginStyle.css}" />
   <script defer th:src="@{/js/auth.js}"></script>
 </head>
 <body>
-  <nav class="navbar">
-    <div class="container">
-      <div class="navbar-inner">
-        <a class="brand" href="index.html"><div class="logo"></div><span>FesLite</span></a>
-        <div class="nav-actions">
-          <a th:href="@{/}" class="btn btn-secondary">메인으로</a>
-        </div>
-      </div>
-    </div>
-  </nav>
+  <div th:replace="~{common/loginHeader :: loginHeader}"></div>
 
   <main class="container" style="padding:30px 0 50px">
     <section class="card" style="max-width:520px; margin:0 auto">
@@ -38,7 +30,7 @@
           </div>
           <button class="btn btn-primary btn-block mt-3" type="submit">로그인</button>
           <div class="small mt-3">
-            계정이 없나요? <a th:href="@{/auth/signupSelect}" id="open-signup">회원가입</a>
+            계정이 없나요? <a th:href="@{/auth/join}" id="open-signup">회원가입</a>
           </div>
         </form>
 
@@ -55,9 +47,7 @@
     </section>
   </main>
 
-  <footer class="footer">
-    <div class="container">© 2025 FesLite Demo</div>
-  </footer>
+  <div th:replace="~{common/LoginFooter :: LoginFooter}"></div>
 
   <!-- Role Modal (re-usable on this page too) -->
   <div id="signupModal" class="modal-backdrop">

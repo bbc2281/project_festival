@@ -32,8 +32,8 @@
     }
 
 
+
 // Dataset (mock)
-/*
 const FESTIVALS = [ ];
 const NOTICES = [ ];
 
@@ -290,4 +290,6 @@ function renderPager(total, size, page) {
     });
     ul.appendChild(nextLi);
   }
-}*/
+}
+
+

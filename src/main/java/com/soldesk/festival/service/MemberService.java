@@ -1,5 +1,6 @@
 package com.soldesk.festival.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -130,6 +131,8 @@ public class MemberService {
 			
 		}
 		
-
+		public List<MemberDTO> getMemberList(){
+			return memberMapper.getMemberList();
+		}
 
 }
