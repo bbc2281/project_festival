@@ -30,7 +30,13 @@ public class AdminController {
     private final SegFestivalService segFestivalService;
 
     @GetMapping("/main")
-    public String main(){
+    public String main(Model model){
+
+        int countFestival = festivalService.countFestival();
+        model.addAttribute("countFestival", countFestival);
+
+        int countBoard = boardService.countBoard();
+        model.addAttribute("countBoard", countBoard);
 
         return "/admin/main";
     }

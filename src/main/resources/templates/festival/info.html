@@ -196,6 +196,7 @@
         //닉네임 없으면 아이디, 아이디 없으면 이메일 출력
         let loginMember;
         let loginMemberIdx;
+        
         if(isLogin){
           loginMember =  (isValid(`[[${loginMember.member_nickname}]]`) 
                                     ? `[[${loginMember.member_nickname}]]`

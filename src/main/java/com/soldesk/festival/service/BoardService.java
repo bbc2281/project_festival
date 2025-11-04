@@ -63,4 +63,7 @@ public class BoardService {
         boardDAO.deleteProecess(board_idx);
     }
 
+    public int countBoard(){
+        return boardDAO.countBoard();
+    }
 }
