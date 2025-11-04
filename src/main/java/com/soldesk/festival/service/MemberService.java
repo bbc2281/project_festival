@@ -3,7 +3,6 @@ package com.soldesk.festival.service;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,7 +27,7 @@ public class MemberService {
 
 	public Optional<MemberDTO> findUserbyId(String userId){
 		
-		return memberMapper.findMemberById(userId);
+		return memberMapper.findUserById(userId);
 	}
 
     
@@ -57,7 +56,6 @@ public class MemberService {
 		}
 	}
 	
-	/* 
 	@Transactional
 	public Optional<MemberDetailDTO> modifyMember(MemberUpdateDTO updateMember){
 		
@@ -71,7 +69,7 @@ public class MemberService {
 		
 		memberMapper.updateMember(updateMember);
 
-		Optional<MemberDTO> finalMemberDTO = memberMapper.findMemberById(updateMember.getMember_id());
+		Optional<MemberDTO> finalMemberDTO = memberMapper.findUserById(updateMember.getMember_id());
         
 		return finalMemberDTO.map(dto -> MemberDetailDTO.builder()
 		                                  .member_id(dto.getMember_id())
@@ -82,20 +80,7 @@ public class MemberService {
 										  .build()
 										  );
 					  
-		} */
-
-    @Transactional(rollbackFor= com.soldesk.festival.exception.UserException.class)
-	public void modifyMember(MemberUpdateDTO updateUser){
-
-		MemberDTO existingMember = findUserbyId(updateUser.getMember_id()).orElseThrow(()-> new UserException("아이디나 비밀번호가 일치하지 않습니다."));
-        if(updateUser.getMember_pass() != null && !updateUser.getMember_pass().isBlank()){
-			updateUser.setMember_pass(authUtil.encodedPassword(updateUser.getMember_pass()));
-		}else {
-			updateUser.setMember_pass(existingMember.getMember_pass());
 		}
-
-		memberMapper.updateMember(updateUser);
-	}
     
 	@Transactional
 	public void deleteMember(String userId, String password) {
@@ -111,23 +96,21 @@ public class MemberService {
 	}
 
 
-	public MemberDetailDTO getMemberDetails(String userId){
+    
+		public MemberDetailDTO getMemberDetails(String userId){
             
-			Optional<MemberDTO> opMember = memberMapper.findUserByIdforUser(userId);
-			if(opMember.isPresent()){
-				  MemberDTO member = opMember.get();
-                  return MemberDetailDTO.builder()
+				Optional<MemberDTO> opMember = memberMapper.findUserByIdforUser(userId);
+				MemberDTO member = opMember.get();
+                
+				return MemberDetailDTO.builder()
 				                       .member_idx(member.getMember_idx())
+									   .member_pass(member.getMember_pass())
 									   .member_id(member.getMember_id())
 									   .member_name(member.getMember_name())
 									   .member_email(member.getMember_email())
 									   .member_nickname(member.getMember_nickname())
 									   .role(member.getRole())
 									   .build();
-
-				}
-                
-			    throw new UsernameNotFoundException("해당하는 회원정보를 찾을 수 없습니다");
 			
 		}
 		

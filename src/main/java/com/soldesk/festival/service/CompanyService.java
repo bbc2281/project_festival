@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.soldesk.festival.config.AuthUtil;
-import com.soldesk.festival.config.MemberRole;
 import com.soldesk.festival.dto.CompanyDTO;
 import com.soldesk.festival.dto.CompanyJoinDTO;
 import com.soldesk.festival.exception.UserException;
@@ -39,15 +38,12 @@ public class CompanyService {
     @Transactional(rollbackFor= com.soldesk.festival.exception.UserException.class)
 	public void join(CompanyJoinDTO joinCompany){
 
-		joinCompany.setMember_pass(authUtil.encodedPassword(joinCompany.getMember_pass()));
-		if(joinCompany.getRole().name().isBlank() || !joinCompany.getRole().isCompany()){
-				joinCompany.setRole(MemberRole.COMPANY);
-		}
-		joinCompany.setRole(joinCompany.getRole());
-		companyMapper.insertCompany(joinCompany);
+		joinCompany.setCompany_pass(authUtil.encodedPassword(joinCompany.getCompany_pass()));
 		
+		String roleType = joinCompany.getRole().name();
       
-	       
+
+	
 		
 
 	}
@@ -56,7 +52,7 @@ public class CompanyService {
 	
 	public void deleteCompany(String companyId, String password) {
 		
-		CompanyDTO thisCompany = findCompanyUserById(companyId).filter(company -> authUtil.checkPassword(password, company.getMember_pass()))
+		CompanyDTO thisCompany = findCompanyUserById(companyId).filter(company -> authUtil.checkPassword(password, company.getCompany_pass()))
 				.orElseThrow(()-> new UserException("아이디나 비밀번호가 일치하지 않습니다"));
 		
 		

@@ -8,7 +8,6 @@ public enum MemberRole {
 	
 	GUEST,
 	USER,
-	COMPANY,
 	ADMIN;
 	
 	public String getMemberRole() {
@@ -28,17 +27,9 @@ public enum MemberRole {
 	}
 	
 
+
     public boolean isAdmin(){
 		return this == ADMIN;
-	}
-
-
-	public boolean isCompany(){
-		return this == COMPANY;
-	}
-
-	public boolean isGuest(){
-		return this == GUEST;
 	}
 
 	public boolean hasHigherLevelThan(MemberRole otherRole){

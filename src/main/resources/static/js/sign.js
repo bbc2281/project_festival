@@ -131,7 +131,6 @@ async function handleSignupSubmit(e) {
 
 document.addEventListener('DOMContentLoaded', () => {
     // HTML에 정의된 ID: 'sign-form'을 사용합니다.
-
     const signupForm = document.getElementById('sign-form'); 
     
     if (signupForm) {
