@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="_csrf" th:content="${_csrf.token}"/>
+  <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
   <title>로그인 — FesLite</title>
   <link rel="stylesheet" th:href="@{/css/loginStyle.css}" />
   <script defer th:src="@{/js/auth.js}"></script>
@@ -20,7 +22,7 @@
          <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/> 
           
          <div>
-            <label for="loginId">아이디 또는 이메일</label>
+            <label for="loginId">아이디</label>
             <input id="member_id" name="member_id" class="input" placeholder="example@feslite.kr" required />
           </div>
           <div>

@@ -93,7 +93,7 @@ async function handleSignupSubmit(e) {
 
     // 4. API 호출
     try {
-        const response = await fetch('/api/v1/auth/join', {
+        const response = await fetch('/api/v1/auth/joincompany', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

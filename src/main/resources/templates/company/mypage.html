@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="_csrf" th:content="${_csrf.token}"/>
+  <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+  <title>기업회원 마이페이지 — FesLite</title>
+  <link rel="stylesheet" />
+  <script defer th:src="@{js/app.js}"></script>
+
+  <style>
+    body {
+      background: linear-gradient(135deg, #ffdee9 0%, #b5fffc 100%);
+      font-family: 'Pretendard', sans-serif;
+    }
+
+    .mypage-wrapper {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: 24px;
+      max-width: 1100px;
+      margin: 40px auto;
+      padding: 0 16px;
+    }
+
+    /* 사이드바 높이 수정 */
+.sidebar {
+  background: #ffffffc9;
+  border-radius: 14px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+  padding: 20px 16px;
+  backdrop-filter: blur(6px);
+  align-self: start;              /* 메인 높이에 맞춰 정렬 */
+  max-height: 580px;              /* 너무 길지 않게 제한 */
+  overflow-y: auto;               /* 필요 시 내부 스크롤 */
+}
+
+/* 스크롤 디자인 (섬세하게) */
+.sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+.sidebar::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 10px;
+}
+.sidebar::-webkit-scrollbar-thumb:hover {
+  background: #a3a3a3;
+}
+
+    .menu {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .menu a {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      text-decoration: none;
+      color: #333;
+      padding: 10px 12px;
+      border-radius: 10px;
+      transition: background .15s ease, color .15s ease;
+      font-weight: 600;
+    }
+
+    .menu a:hover { background:#f0f2ff; color:#6b21a8; transform:translateX(1px); }
+    .menu a.active { background:#6b21a8; color:#fff; }
+    .menu a.text-danger { color:#ef4444; }
+
+    /* 메인 */
+    .main { display:flex; flex-direction:column; gap:24px; }
+
+    /* 프로필 카드 */
+    .profile-card {
+      background:#fff;
+      border-radius:20px;
+      box-shadow:0 4px 14px rgba(0,0,0,0.1);
+      padding:28px 32px;
+      display:flex;
+      flex-direction:column;
+      gap:18px;
+    }
+
+    .profile-top {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      flex-wrap:wrap;
+    }
+
+    .profile-left { display:flex; align-items:center; gap:18px; }
+    .profile-left img {
+  width: 92px;
+  height: 92px;
+  border-radius: 50%;       /* ← 둥근 프로필 이미지로 변경 */
+  object-fit: cover;
+  background: #f3f4f6;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+
+    .profile-info h3 { margin:0; font-size:22px; font-weight:800; }
+    .profile-info p { margin:4px 0; color:#555; font-size:14px; }
+    .extra-info { margin-top:6px; font-size:13px; color:#666; line-height:1.6; }
+
+    .profile-actions { display:flex; gap:10px; }
+    .profile-actions .btn {
+      padding:10px 14px;
+      border-radius:10px;
+      font-size:14px;
+      font-weight:700;
+    }
+
+    /* 현황 */
+    .section-title { font-size:18px; font-weight:800; margin:6px 2px; }
+    .dashboard {
+      display:grid;
+      gap:16px;
+      grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+    }
+
+    .dash-card {
+      background:#fff;
+      border-radius:16px;
+      box-shadow:0 4px 12px rgba(0,0,0,0.08);
+      padding:22px 24px;
+      transition:transform .15s ease;
+    }
+
+    .dash-card:hover { transform:translateY(-3px); }
+    .dash-title { font-size:13px; opacity:.8; margin-bottom:6px; }
+    .dash-value { font-size:26px; font-weight:900; }
+
+    .dash-purple{ background:#ede9fe; color:#5b21b6; }
+    .dash-orange{ background:#fff4e7; color:#b45309; }
+    .dash-blue{ background:#e0f2fe; color:#075985; }
+    .dash-green{ background:#dcfce7; color:#065f46; }
+    .dash-violet{ background:#f3e8ff; color:#6b21a8; }
+    .dash-yellow{ background:#fef9c3; color:#854d0e; }
+
+    /* 활동 내역 박스 */
+    .activity-box {
+      background:#ffffffc9;
+      border-radius:16px;
+      padding:20px 24px;
+      box-shadow:0 4px 10px rgba(0,0,0,0.06);
+    }
+
+    .activity-box h4 {
+      font-weight:800;
+      margin-bottom:12px;
+    }
+
+    .activity-box ul {
+      list-style:none;
+      padding:0;
+      margin:0;
+    }
+
+    .activity-box li {
+      padding:10px 0;
+      border-bottom:1px solid #eee;
+      font-size:14px;
+      display:flex;
+      justify-content:space-between;
+    }
+
+    @media (max-width:900px){
+      .mypage-wrapper{ grid-template-columns:1fr; }
+    }
+  </style>
+</head>
+
+<body>
+
+
+  <!-- 상단 네비바 -->
+  <div th:replace="~{common/header :: header}"></div>
+
+  <form style="display:none;" th:if="${_csrf}" th:action="@{/noop}">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+  </form>
+
+
+  <main class="mypage-wrapper">
+    <!-- 좌측 메뉴 -->
+    <aside class="sidebar">
+      <h2>마이페이지</h2>
+      <nav class="menu">
+        <a href="mypage-company-edit.html">회원정보 수정<span>›</span></a>
+        <a href="mypage-company-favorite.html">관심 있는 축제<span>›</span></a>
+        <a href="mypage-company-festival.html">나의 축제 조회<span>›</span></a>
+        <a href="mypage-company-sponsor.html">후원 조회<span>›</span></a>
+        <a href="mypage-company-delete.html" class="text-danger">회원탈퇴<span>›</span></a>
+      </nav>
+    </aside>
+
+    <!-- 메인 콘텐츠 -->
+    <section class="main">
+      <!-- 기업 프로필 -->
+      <section class="profile-card">
+        <div class="profile-top">
+          <div class="profile-left">
+            <img src="images/company_icon.png" alt="기업 로고">
+            <div class="profile-info">
+              <h3>주식회사 식스센스</h3>
+              <p>contact@feslite.co.kr</p>
+              <div class="extra-info">
+                가입일: 2024-10-18<br>
+                대표자: 홍길동<br>
+                활동 지역: 서울특별시
+              </div>
+            </div>
+          </div>
+          <div class="profile-actions">
+            <button class="btn btn-primary">기업정보 수정</button>
+            <button class="btn btn-accent">등록 축제 관리</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 현황 -->
+      <h3 class="section-title">기업 활동 현황</h3>
+      <section class="dashboard">
+        <div class="dash-card dash-purple">
+          <div class="dash-title">등록한 축제</div>
+          <div class="dash-value">5</div>
+        </div>
+        <div class="dash-card dash-orange">
+          <div class="dash-title">후원받은 금액</div>
+          <div class="dash-value">₩1,200,000</div>
+        </div>
+        <div class="dash-card dash-blue">
+          <div class="dash-title">관심 받은 수</div>
+          <div class="dash-value">24</div>
+        </div>
+        <div class="dash-card dash-green">
+          <div class="dash-title">이벤트 주최 수</div>
+          <div class="dash-value">3</div>
+        </div>
+        <div class="dash-card dash-violet">
+          <div class="dash-title">네트워크 연결 기업</div>
+          <div class="dash-value">7</div>
+        </div>
+        <div class="dash-card dash-yellow">
+          <div class="dash-title">신규 제안서</div>
+          <div class="dash-value">2</div>
+        </div>
+      </section>
+
+      <!-- 활동 내역 -->
+      <section class="activity-box">
+        <h4>최근 등록한 축제</h4>
+        <ul>
+          <li><span>🎪 서울 불빛정원 페스티벌</span><span>승인 대기</span></li>
+          <li><span>🌸 봄꽃 페스티벌</span><span>진행중</span></li>
+          <li><span>🍁 가을빛 음악제</span><span>종료</span></li>
+        </ul>
+      </section>
+
+      <section class="activity-box">
+        <h4>최근 후원 내역</h4>
+        <ul>
+          <li><span>서울 불빛정원</span><span>₩450,000</span></li>
+          <li><span>가을빛 음악제</span><span>₩300,000</span></li>
+          <li><span>봄꽃 페스티벌</span><span>₩450,000</span></li>
+        </ul>
+      </section>
+    </section>
+  </main>
+
+  <!-- ✅ 푸터 -->
+  <footer class="footer">
+    <div class="container">© 2025 FesLite — 모두의 축제를 연결합니다 🎪</div>
+  </footer>
+</body>
+</html>
