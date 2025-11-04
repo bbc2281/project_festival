@@ -3,12 +3,13 @@ package com.soldesk.festival.controller;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.soldesk.festival.dto.BoardDTO;
+import com.soldesk.festival.dto.PageDTO;
 import com.soldesk.festival.dto.FestivalDTO;
 import com.soldesk.festival.dto.MemberDTO;
 import com.soldesk.festival.dto.PageDTO;
@@ -23,6 +24,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @RequestMapping("/admin")
 public class AdminController {
+
+    //관리자 전용 페이지
+    @GetMapping("/auth/admin")
+    public String onlyAdminPage(){
+        return "auth/admin";
+    }
 
     private final FestivalService festivalService;
     private final MemberService memberService;

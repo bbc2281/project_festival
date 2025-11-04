@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>회원탈퇴 — FesLite</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    body {
+      background: linear-gradient(135deg,#ffdee9 0%,#b5fffc 100%);
+      font-family:'Pretendard',sans-serif;
+    }
+
+    .mypage-wrapper {
+      display:grid;
+      grid-template-columns:240px 1fr;
+      gap:24px;
+      max-width:1100px;
+      margin:40px auto;
+      padding:0 16px;
+    }
+
+    .sidebar {
+      background:#ffffffc9;
+      border-radius:14px;
+      box-shadow:0 4px 14px rgba(0,0,0,0.1);
+      padding:20px 16px;
+      backdrop-filter:blur(6px);
+      align-self:start;
+    }
+
+    .menu a {
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      text-decoration:none;
+      color:#333;
+      padding:10px 12px;
+      border-radius:10px;
+      font-weight:600;
+      transition:background .15s ease;
+    }
+
+    .menu a:hover { background:#f0f2ff; color:#6b21a8; }
+    .menu a.active { background:#6b21a8; color:#fff; }
+
+    .main {
+      display:flex;
+      flex-direction:column;
+      gap:24px;
+    }
+
+    .content-card {
+      background:#fff;
+      border-radius:20px;
+      box-shadow:0 4px 12px rgba(0,0,0,0.08);
+      padding:40px;
+      text-align:center;
+    }
+
+    h3 { font-weight:800; margin-bottom:18px; }
+    p { color:#444; line-height:1.6; margin-bottom:28px; }
+
+    /* 버튼 (핑크 + 흰색 글씨) */
+    .btn-pink {
+      padding:12px 20px;
+      border:none;
+      border-radius:10px;
+      background:#f472b6;
+      color:#fff;
+      font-weight:700;
+      cursor:pointer;
+      transition:opacity .2s;
+    }
+    .btn-pink:hover { opacity:0.9; }
+  </style>
+</head>
+
+<body>
+  <!-- ✅ 헤더 -->
+  <nav class="navbar">
+    <div class="container">
+      <div class="navbar-inner">
+        <div class="brand"><div class="logo"></div><span>FesLite</span></div>
+        <div class="nav-actions">
+          <a href="index.html" class="btn btn-secondary">홈으로</a>
+          <a href="login.html" class="btn btn-accent">로그아웃</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="mypage-wrapper">
+    <!-- ✅ 좌측 메뉴 -->
+    <aside class="sidebar">
+      <h2>마이페이지</h2>
+      <nav class="menu">
+        <a href="mypage-company-edit.html">회원정보 수정<span>›</span></a>
+        <a href="mypage-company-favorite.html">관심 있는 축제<span>›</span></a>
+        <a href="mypage-company-festival.html">나의 축제 조회<span>›</span></a>
+        <a href="mypage-company-sponsor.html">후원 조회<span>›</span></a>
+        <a href="mypage-company-delete.html" class="active" style="color:#ef4444;">회원탈퇴<span>›</span></a>
+      </nav>
+    </aside>
+
+    <!-- ✅ 우측 콘텐츠 -->
+    <section class="main">
+      <div class="content-card">
+        <h3>회원탈퇴</h3>
+        <p>정말 탈퇴하시겠습니까?<br>
+           탈퇴 시 등록된 축제 및 후원 내역이 모두 삭제됩니다.</p>
+        <button class="btn-pink">탈퇴하기</button>
+      </div>
+    </section>
+  </main>
+
+  <!-- ✅ 푸터 -->
+  <footer class="footer">
+    <div class="container">© 2025 FesLite — 모두의 축제를 연결합니다 🎪</div>
+  </footer>
+</body>
+</html>

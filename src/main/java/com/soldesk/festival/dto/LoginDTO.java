@@ -8,9 +8,9 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public class MemberLoginDTO {
+public class LoginDTO {
 
-	private Integer member_idx;
+	//private Integer member_idx;
     
 	//@Size(min=4, max=20, message="아이디는 영어 대소문자와 숫자만 사용가능하며 4~20글자여야합니다")
     @NotBlank(message="아이디를 입력해주세요")

@@ -1,3 +1,37 @@
+ window.logout = async function() {
+        try {
+            const csrfInput = document.querySelector('input[name="_csrf"]');
+            const csrfToken = csrfInput ? csrfInput.value : null;
+            const csrfHeader = 'X-CSRF-TOKEN'; 
+            
+            // API 호출을 위한 헤더 설정 (로그인 로직과 동일)
+            const headers = { 'Content-Type': 'application/json' };
+            if (csrfToken) headers[csrfHeader] = csrfToken;
+
+            // 로그아웃 REST API 호출
+            const res = await fetch('/api/v1/auth/logout', {
+                method: 'POST',
+                headers: headers,
+                // 로그아웃은 body가 필요하지 않습니다.
+            });
+
+            console.log('로그아웃 서버 응답 상태 코드:', res.status);
+            const data = await res.json();
+
+            if (data.success) {
+                alert(data.message || '로그아웃 성공!');
+                window.location.href = '/';
+            } else {
+                alert('로그아웃 실패: ' + (data.message || '서버 오류'));
+            }
+
+        } catch (error) {
+            console.error('로그아웃 중 오류 발생:', error);
+            alert('네트워크 오류로 로그아웃에 실패했습니다.');
+        }
+    }
+
+
 
 // Dataset (mock)
 const FESTIVALS = [ ];
