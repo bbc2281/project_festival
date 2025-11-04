@@ -36,7 +36,7 @@
       <section class="profile-card"> 
         <div class="profile-top">
           <div class="profile-left">
-            <img src="images/user_icon.png" alt="프로필 이미지">
+            <img th:src="@{/images/user_icon.png}" alt="프로필 이미지">
             <div class="profile-info">
               <h3>[[${displayName}]] 님</h3>
               <p th:text="${userInfo.member_email}"></p> 
