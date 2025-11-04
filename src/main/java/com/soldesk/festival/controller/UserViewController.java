@@ -44,7 +44,7 @@ public class UserViewController {
     }
     
     //일반회원 마이페이지(일반)
-    @GetMapping("/mypage/mypageuser")
+    @GetMapping("/member/mypage")
     public String mypageForm(@AuthenticationPrincipal SecurityAllUsersDTO userdetails, Model model){
 
         if(userdetails == null){
@@ -56,33 +56,33 @@ public class UserViewController {
        model.addAttribute("userInfo", userInfo);
        model.addAttribute("displayName", userdetails.getUserDisplayName());
 
-       return "mypage/mypageuser";
+       return "member/mypage";
     }
 
     
 
-    @GetMapping("/mypage/mypagecompany")
+    @GetMapping("/company/mypage")
     public String companyPageForm(){
-        return "mypage/mypagecompany";
+        return "company/mypage";
     }
     
     
     //일반회원 정보수정
-    @GetMapping("/mypage/mypageedit")
+    @GetMapping("/mypage/edit")
     public String mypageModifyForMember(){
-        return "mypage/mypageedit";
+        return "member/edit";
     }
     
     //기업회원 정보수정
-    @GetMapping("/mypage/mypage")
+    @GetMapping("/company/edit")
     public String mypageModifyForCompany(){
-        return "auth/company/modify";
+        return "company/edit";
     }
     
-    //공용회원탈퇴페이지
-    @GetMapping("/auth/delete")
+    //일반회원탈퇴페이지
+    @GetMapping("/member/delete")
     public String accountWithdrawal(){
-        return "auth/delete";
+        return "member/delete";
     }
 
 
