@@ -3,9 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="_csrf" th:content="${_csrf.token}"/>
+  <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
   <title>기업회원 마이페이지 — FesLite</title>
-  <link rel="stylesheet" href="css/style.css" />
-  <script defer src="js/app.js"></script>
+  <link rel="stylesheet" />
+  <script defer th:src="@{js/app.js}"></script>
 
   <style>
     body {
@@ -174,21 +176,15 @@
 </head>
 
 <body>
-  <!-- ✅ 헤더 -->
-  <nav class="navbar">
-    <div class="container">
-      <div class="navbar-inner">
-        <div class="brand">
-          <div class="logo"></div>
-          <span>FesLite</span>
-        </div>
-        <div class="nav-actions">
-          <a href="index.html" class="btn btn-secondary">홈으로</a>
-          <a href="login.html" class="btn btn-accent">로그아웃</a>
-        </div>
-      </div>
-    </div>
-  </nav>
+
+
+  <!-- 상단 네비바 -->
+  <div th:replace="~{common/header :: header}"></div>
+
+  <form style="display:none;" th:if="${_csrf}" th:action="@{/noop}">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+  </form>
+
 
   <main class="mypage-wrapper">
     <!-- 좌측 메뉴 -->

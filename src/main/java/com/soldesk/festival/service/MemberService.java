@@ -2,7 +2,6 @@ package com.soldesk.festival.service;
 
 import java.util.Optional;
 
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -110,25 +109,26 @@ public class MemberService {
 	}
 
 
-	public MemberDetailDTO getMemberDetails(String userId){
+	public Optional <MemberDetailDTO> getMemberDetails(String userId){
             
-			Optional<MemberDTO> opMember = memberMapper.findUserByIdforUser(userId);
-			if(opMember.isPresent()){
-				  MemberDTO member = opMember.get();
-                  return MemberDetailDTO.builder()
-				                       .member_idx(member.getMember_idx())
-									   .member_id(member.getMember_id())
-									   .member_name(member.getMember_name())
-									   .member_email(member.getMember_email())
-									   .member_nickname(member.getMember_nickname())
-									   .role(member.getRole())
-									   .build();
+		Optional<MemberDTO> opMember = memberMapper.findUserByIdforUser(userId);
+		if(opMember.isPresent()){
+			 MemberDTO member = opMember.get();
+             return Optional.of(
+			            MemberDetailDTO.builder()
+				                .member_idx(member.getMember_idx())
+								.member_id(member.getMember_id())
+								.member_name(member.getMember_name())
+								.member_nickname(member.getMember_nickname())
+								.member_email(member.getMember_email())
+								.member_address(member.getMember_address())
+								.role(member.getRole())
+								.build()
+			 );			 
 
-				}
-                
-			    throw new UsernameNotFoundException("해당하는 회원정보를 찾을 수 없습니다");
-			
 		}
+        return Optional.empty();
+	}
 		
 
 

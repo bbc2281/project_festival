@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="_csrf" th:content="${_csrf.token}"/>
+  <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
   <title>마이페이지 — FesLite</title>
   <link rel="stylesheet" th:href="@{/css/mystyle.css}" />
   <script defer th:src="@{/js/myuser.js}"></script>
@@ -39,9 +41,10 @@
               <h3>[[${displayName}]] 님</h3>
               <p th:text="${userInfo.member_email}"></p> 
               <div class="extra-info">
-              가입일: <span th:text="${userInfo.member_regdate}"></span><br> 
-              회원 유형: <span th:text="${userInfo.role.displayRole}"></span><br> 
-              활동 지역: <span th:text="${userInfo.member_region}"></span>
+              <!-- 🚨 가입일 필드 (member_regdate)를 완전히 제거하여 템플릿 파싱 오류를 방지합니다. -->
+              회원 유형: <span th:text="${userInfo.role}"></span><br> 
+              <!-- 활동 지역도 DTO의 카멜 케이스 필드명 (memberRegion)을 따르도록 수정했습니다. -->
+              활동 지역: <span th:text="${userInfo.member_address}"></span>
              </div>
               </div>
             </div>

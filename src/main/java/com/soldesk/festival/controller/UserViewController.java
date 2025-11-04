@@ -1,5 +1,7 @@
 package com.soldesk.festival.controller;
 
+import java.util.Optional;
+
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -50,8 +52,18 @@ public class UserViewController {
         if(userdetails == null){
             return "redirect:/auth/loginPage";
         }
+        String userId = userdetails.getUsername();
+        System.out.println("인증된 사용자 : " + userId);
 
-       MemberDetailDTO userInfo = memberService.getMemberDetails(userdetails.getUsername());
+        Optional<MemberDetailDTO> opDetail = memberService.getMemberDetails(userId);
+
+        if(opDetail.isEmpty()){
+
+            return "redirect:/auth/loginPage?error=dataError";
+        }
+
+        MemberDetailDTO userInfo = opDetail.get();
+      
 
        model.addAttribute("userInfo", userInfo);
        model.addAttribute("displayName", userdetails.getUserDisplayName());
@@ -62,7 +74,12 @@ public class UserViewController {
     
 
     @GetMapping("/company/mypage")
-    public String companyPageForm(){
+    public String companyPageForm(@AuthenticationPrincipal SecurityAllUsersDTO userdetails, Model model){
+        
+        if(userdetails == null){
+            return "redirect:/auth/loginPage";
+        }
+
         return "company/mypage";
     }
     
