@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -17,6 +18,7 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import org.springframework.util.AntPathMatcher;
 
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 @Configuration
@@ -58,16 +60,21 @@ public class SecurityConfig {
                  //로그인 , 회원가입 , 정적리로스
                                         .requestMatchers("/auth/loginPage", "/auth/join","/auth/memberjoin" , "/auth/companyjoin",
                                                             "/api/v1/auth/login", "/api/v1/auth/join", "/api/v1/auth/checkId","/api/v1/auth/memberjoin",
-                                                            "/api/v1/auth/joincompany", "/mypage/mypageuser").permitAll()
+                                                            "/api/v1/auth/joincompany").permitAll()
                                         //.requestMatchers("/", "/css/**", "/js/**", "/image/**").permitAll() 
                                         .requestMatchers("/").permitAll()
-                                        .requestMatchers("/api/v1/auth/admin/**").hasRole(MemberRole.ADMIN.name())
-                                        .requestMatchers("/mypage/**").hasAnyRole(MemberRole.USER.name())
-                                        .requestMatchers("/mypagecom/**").hasAnyRole(MemberRole.COMPANY.name())                                       
+                                        .requestMatchers("/admin/**").hasRole(MemberRole.ADMIN.name())
+                                        .requestMatchers("/member/**").hasAnyRole(MemberRole.USER.name())
+                                        .requestMatchers("/company/**").hasAnyRole(MemberRole.COMPANY.name())                                       
                                         .anyRequest().authenticated()
                  
                 );
         http
+            .formLogin(AbstractHttpConfigurer::disable)
+            .logout(AbstractHttpConfigurer::disable);
+            //.formLogin(form->form.disable())
+            //.logout(logout->logout.disable());
+              /* 
             .formLogin((form)-> form
                                     .loginPage("/auth/loginPage")
                                     .loginProcessingUrl("/auth/loginPage")
@@ -77,15 +84,20 @@ public class SecurityConfig {
                                     .failureUrl("/auth/loginPage?error")
                                     .permitAll()
                                     
-                      )
-            .logout((logout)-> logout
-                                     .logoutUrl("/auth/logout")
-                                     .logoutSuccessUrl("/")
+                      )*/
+          /*  .logout((logout)-> logout
+                                     .logoutUrl("/api/v1/auth/logout")
+                                     //.logoutSuccessUrl("/")
+                                     .logoutSuccessHandler((req, res, auth)-> {
+                                        res.setStatus(HttpServletResponse.SC_OK);
+                                        res.setContentType("application/json;charset=UTF-8");
+                                        res.getWriter().write("{\"success\":true, \"message\":\"로그아웃 성공\"}");
+                                     })
                                      .invalidateHttpSession(true)
                                      .deleteCookies("JSESSIONID")
                                      .permitAll()
                    );          
-     
+        */
              
         return http.build();        
                

@@ -9,7 +9,10 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,6 +30,9 @@ import com.soldesk.festival.service.AuthService;
 import com.soldesk.festival.service.CompanyService;
 import com.soldesk.festival.service.MemberService;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -57,13 +63,20 @@ public class UserRestController {
 	}
     
 	@PostMapping("/login")
-	public ResponseEntity<UserResponse> login(@Valid @RequestBody LoginDTO userLogin){
+	public ResponseEntity<UserResponse> login(@Valid @RequestBody LoginDTO userLogin, HttpServletRequest request, HttpServletResponse res){
 
 		try {
 			Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userLogin.getMember_id(), userLogin.getMember_pass()));
 
-             SecurityContextHolder.getContext().setAuthentication(authentication);
-			 
+             //SecurityContextHolder.getContext().setAuthentication(authentication);
+	         SecurityContext securityContext = SecurityContextHolder.getContext();
+			 securityContext.setAuthentication(authentication);		 
+
+			 HttpSession session = request.getSession(true);
+			 session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, securityContext);
+   
+
+
 			 SecurityAllUsersDTO user = (SecurityAllUsersDTO)authentication.getPrincipal();
 
 		    UserResponse response = UserResponse.success("로그인 성공", user);
@@ -80,6 +93,17 @@ public class UserRestController {
 
 		}
 			
+	}
+
+    @PostMapping("/logout")
+	public ResponseEntity<UserResponse> logout(HttpServletRequest request, HttpServletResponse res){
+		 
+		SecurityContextLogoutHandler logoutHandler = new SecurityContextLogoutHandler();
+		 logoutHandler.logout(request, res, SecurityContextHolder.getContext().getAuthentication());
+		 UserResponse response = UserResponse.successMessage("로그아웃 성공");
+
+		 return ResponseEntity.ok(response);
+
 	}
 
 
