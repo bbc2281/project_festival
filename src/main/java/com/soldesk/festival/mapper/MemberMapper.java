@@ -52,14 +52,14 @@ public interface MemberMapper {
     @Select("select count(*) from member where member_id=#{member_id}")
     int checkIdExist(@Param("member_id")String member_id);
 
-	@Select("select member_id, member_name, member_pass, role from member where member_id=#{member_id}")
+	@Select("select member_idx, member_id, member_name, member_nickname, member_email, member_address, role from member where member_id=#{member_id}")
 	@Results({
 		@Result(property="member_idx", column="member_idx"),
 		@Result(property="member_id", column="member_id"),
 		@Result(property="member_name", column="member_name"),
-		@Result(property="member_pass", column="member_pass"),
 		@Result(property="member_nickname", column="member_nickname"),
 		@Result(property="member_email", column="member_email"),
+		@Result(property="member_address", column="member_address"),
 		@Result(property="role", column="role", typeHandler=MemberRoleTypeHandler.class)
 	})
 	Optional<MemberDTO> findUserByIdforUser(@Param("member_id")String userId);
