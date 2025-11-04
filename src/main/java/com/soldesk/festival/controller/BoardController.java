@@ -1,5 +1,4 @@
 package com.soldesk.festival.controller;
-import java.io.IOException;
 import java.util.Base64;
 import java.util.List;
 
@@ -116,6 +115,7 @@ public class BoardController {
 
 @PostMapping("/modify")
 public String modifySubmit(@ModelAttribute("board_now") BoardDTO boardDTO) {
+    
     BoardDTO modifyBoard = boardService.infoProcess(boardDTO.getBoard_idx());
 
     Document doc = Jsoup.parse(boardDTO.getBoard_content());

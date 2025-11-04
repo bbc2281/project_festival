@@ -41,4 +41,7 @@ public class FestivalDAO {
         festivalMapper.deleteFestival(festival_idx);
     }//deleteFestival 축제정보 삭제
 
+    public int countFestival(){
+        return festivalMapper.countFestival();
+    }
 }

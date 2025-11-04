@@ -34,4 +34,7 @@ public interface FestivalMapper {
 
     @Delete("delete from festival where festival_idx = #{festival_idx}")
     void deleteFestival(@Param("festival_idx") int festival_idx);
+
+    @Select("select count(festival_idx) from festival")
+    int countFestival();
 }

@@ -12,18 +12,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.soldesk.festival.dto.PageDTO;
 import com.soldesk.festival.dto.FestivalDTO;
 import com.soldesk.festival.dto.ReviewDTO;
 import com.soldesk.festival.service.FestivalService;
 import com.soldesk.festival.service.ReviewService;
 import com.soldesk.festival.dto.ChatRoomDTO;
 import com.soldesk.festival.dto.FestivalCategoryDTO;
-import com.soldesk.festival.dto.FestivalDTO;
 import com.soldesk.festival.dto.MemberDTO;
 import com.soldesk.festival.dto.RegionDTO;
 import com.soldesk.festival.service.ChatService;
-import com.soldesk.festival.service.FestivalService;
 import com.soldesk.festival.service.FileUploadService;
 import com.soldesk.festival.service.SegFestivalService;
 

@@ -12,6 +12,7 @@ import com.soldesk.festival.dto.BoardDTO;
 import com.soldesk.festival.dto.PageDTO;
 import com.soldesk.festival.dto.FestivalDTO;
 import com.soldesk.festival.dto.MemberDTO;
+import com.soldesk.festival.dto.PageDTO;
 import com.soldesk.festival.service.BoardService;
 import com.soldesk.festival.service.FestivalService;
 import com.soldesk.festival.service.MemberService;
@@ -36,7 +37,13 @@ public class AdminController {
     private final SegFestivalService segFestivalService;
 
     @GetMapping("/main")
-    public String main(){
+    public String main(Model model){
+
+        int countFestival = festivalService.countFestival();
+        model.addAttribute("countFestival", countFestival);
+
+        int countBoard = boardService.countBoard();
+        model.addAttribute("countBoard", countBoard);
 
         return "/admin/main";
     }

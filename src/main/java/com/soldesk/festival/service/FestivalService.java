@@ -44,4 +44,7 @@ public class FestivalService {
         festivalDAO.deleteFestival(festival_idx);
     }
     
+    public int countFestival(){
+        return festivalDAO.countFestival();
+    }
 }

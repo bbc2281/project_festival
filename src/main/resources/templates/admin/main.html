@@ -251,9 +251,9 @@
     <!-- 통계 카드 -->
     <section class="stats">
       <div class="card"><h3>전체 회원 수</h3><div class="number">1,243명</div></div>
-      <div class="card"><h3>등록된 축제 수</h3><div class="number">86개</div></div>
+      <div class="card"><h3>등록된 축제 수</h3><div class="number" th:text="${countFestival}"></div></div>
       <div class="card"><h3>신규 문의</h3><div class="number">12건</div></div>
-      <div class="card"><h3>공지사항 수</h3><div class="number">5개</div></div>
+      <div class="card"><h3>공지사항 수</h3><div class="number" th:text="${countBoard}"></div></div>
     </section>
 
     <!-- 대시보드 본문 -->
@@ -279,17 +279,17 @@
         </table>
       </div>
 
-      <div class="card admin-info">
+      <!-- <div class="card admin-info">
         <div class="admin-profile">
           <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="admin">
           <h5>관리자</h5>
           <p>admin@feslite.com</p>
           <small class="text-muted">가입일: 2024-01-15</small>
         </div>
-      </div>
+      </div> -->
     </section>
 
-    <!-- ✅ 새 회원 + 공지·이벤트 반응 섹션 -->
+    <!-- ✅ 새 회원 + 공지·이벤트 섹션 -->
     <section class="bottom-section">
       <div class="card new-members">
         <h5>새 회원</h5>
@@ -302,7 +302,7 @@
       </div>
 
       <div class="card event-feedback">
-        <h5>공지·이벤트 반응</h5>
+        <h5>공지·이벤트 </h5>
         <ul>
           <li><strong>[공지]</strong> 사이트 점검 안내 <small>2025-10-25</small></li>
           <li><strong>[이벤트]</strong> 가을 축제 포토 콘테스트 참여  <small>2025-10-24</small></li>
