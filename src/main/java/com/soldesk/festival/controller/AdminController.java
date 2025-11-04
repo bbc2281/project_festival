@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.soldesk.festival.dto.BoardDTO;
 import com.soldesk.festival.dto.PageDTO;
+import com.soldesk.festival.mapper.BoardMapper;
 import com.soldesk.festival.dto.FestivalDTO;
 import com.soldesk.festival.dto.MemberDTO;
 import com.soldesk.festival.dto.PageDTO;
@@ -25,15 +26,10 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/admin")
 public class AdminController {
 
-    //관리자 전용 페이지
-    @GetMapping("/auth/admin")
-    public String onlyAdminPage(){
-        return "auth/admin";
-    }
-
     private final FestivalService festivalService;
     private final MemberService memberService;
     private final BoardService boardService;
+    private final BoardMapper boardMapper;
     private final SegFestivalService segFestivalService;
 
     @GetMapping("/main")
@@ -45,18 +41,23 @@ public class AdminController {
         int countBoard = boardService.countBoard();
         model.addAttribute("countBoard", countBoard);
 
+        List<BoardDTO> boardList = boardService.selectAllBoard(1);
+        model.addAttribute("boardList", boardList.stream().limit(5).toList());
+
+        List<MemberDTO> memberList = memberService.getMemberList();
+        int countMember = memberService.countMember();
+        model.addAttribute("memberList", memberList.stream().limit(5).toList());
+        model.addAttribute("countMember", countMember);
+
         return "/admin/main";
     }
     @GetMapping("/event")
-    public String event(@RequestParam(name = "page" , defaultValue = "1") int page, Model model){
+    public String event(Model model){
 
-        boardService.selectAllBoard(page);
-        if (page < 1) page = 1;
-        List<BoardDTO> boardList = boardService.selectAllBoard(page);
-        PageDTO pageDTO = boardService.getPageDTO(page);
+        List<BoardDTO> boardList = boardMapper.selectAllBoardNoLimits();
 
         model.addAttribute("boardList", boardList);
-        model.addAttribute("pageDTO", pageDTO);
+        
 
         return "/admin/event";
     }

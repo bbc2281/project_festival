@@ -73,7 +73,7 @@ public interface MemberMapper {
 	Optional<MemberDTO> selectUserByEmail(@Param("member_email")String userEmail);
 	
     
-	@Select("select * from member")
+	@Select("select * from member order by member_idx desc")
 	List<MemberDTO> getMemberList();
 
 	@Options(useGeneratedKeys=true, keyProperty="member_idx")
@@ -90,6 +90,8 @@ public interface MemberMapper {
 	MemberDTO deleteMember(MemberDTO deleteMember);
 	
 	
+	@Select("select count(member_idx) from member")
+	int countMember();
 	
 	
 

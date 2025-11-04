@@ -135,4 +135,8 @@ public class MemberService {
 			return memberMapper.getMemberList();
 		}
 
+
+	public int countMember(){
+		return memberMapper.countMember();
+	}
 }

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8" />
   <title>기업정보 수정 — FesLite</title>
@@ -86,31 +86,13 @@
 
 <body>
   <!-- ✅ 헤더 -->
-  <nav class="navbar">
-    <div class="container">
-      <div class="navbar-inner">
-        <div class="brand">
-          <div class="logo"></div><span>FesLite</span>
-        </div>
-        <div class="nav-actions">
-          <a href="index.html" class="btn btn-secondary">홈으로</a>
-          <a href="login.html" class="btn btn-accent">로그아웃</a>
-        </div>
-      </div>
-    </div>
-  </nav>
+  <div th:replace="~{common/companyHeader :: header}"></div>
 
   <main class="mypage-wrapper">
     <!-- ✅ 좌측 메뉴 -->
     <aside class="sidebar">
      <h2><a href="mypage_company.html" style="text-decoration:none; color:#111;">마이페이지</a></h2>
-      <nav class="menu">
-        <a href="mypage-company-edit.html" class="active">회원정보 수정<span>›</span></a>
-        <a href="mypage-company-favorite.html">관심 있는 축제<span>›</span></a>
-        <a href="mypage-company-festival.html">나의 축제 조회<span>›</span></a>
-        <a href="mypage-company-sponsor.html">후원 조회<span>›</span></a>
-        <a href="mypage-company-delete.html" style="color:#ef4444;">회원탈퇴<span>›</span></a>
-      </nav>
+      <div th:replace="~{common/companyAside :: nav}"></div>
     </aside>
 
     <!-- ✅ 우측 콘텐츠 -->
