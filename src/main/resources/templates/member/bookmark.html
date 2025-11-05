@@ -22,29 +22,10 @@
   </style>
 </head>
 <body>
-  <nav class="navbar">
-    <div class="container">
-      <div class="navbar-inner">
-        <div class="brand"><span>FesLite</span></div>
-        <div class="nav-actions">
-          <a href="index.html" class="btn btn-secondary">홈으로</a>
-          <a href="login.html" class="btn btn-accent">로그아웃</a>
-        </div>
-      </div>
-    </div>
-  </nav>
+  <div th:replace="~{common/memberHeader :: header}"></div>
 
   <main class="mypage-wrapper">
-    <aside class="sidebar">
-        <h2><a href="mypage.html" style="text-decoration:none; color:inherit;">마이페이지</a></h2>
-      <nav class="menu">
-        <a href="mypage-edit.html">회원정보 수정<span>›</span></a>
-        <a href="mypage-bookmark.html">내가 찜한 페이지<span>›</span></a>
-        <a href="mypage-review.html">나의 리뷰<span>›</span></a>
-        <a href="mypage-inquiry.html">1:1 문의<span>›</span></a>
-        <a href="mypage-delete.html" style="color:#ef4444;">회원탈퇴<span>›</span></a>
-      </nav>
-    </aside>
+    <div th:replace="~{common/memberAside :: aside}"></div>
 
     <section class="main">
       <h3>내가 찜한 축제</h3>

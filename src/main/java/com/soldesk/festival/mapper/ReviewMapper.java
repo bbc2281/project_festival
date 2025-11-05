@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
@@ -33,4 +34,6 @@ public interface ReviewMapper {
         @Delete("delete from review where review_idx = #{review_idx}")
         void deleteReview(int review_idx);
 
+        @Select("select count(*) from review where board_regDate = #{date}")
+        int countReviewNow(@Param("date") String date);
     }

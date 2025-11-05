@@ -39,4 +39,7 @@ public class ReviewDAO {
         reviewMapper.deleteReview(review_idx);
     }
     
+    public int countReviewNow(String date){
+        return reviewMapper.countReviewNow(date);
+    }
 }

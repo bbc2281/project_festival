@@ -45,4 +45,5 @@ out/
 # API Key와 같은 민감 정보 제외
 ####################################
 /src/main/resources/application-secret.properties
-src/main/resources/firebase/firebase-key.json
+/src/main/resources/firebase/firebase-key.json
+/src/main/resources/static/google/*

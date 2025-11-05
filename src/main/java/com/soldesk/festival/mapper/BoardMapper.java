@@ -57,7 +57,8 @@ public interface BoardMapper {
     @Delete("delete from board where board_idx=#{board_idx}")
     void deleteProecess(int board_idx);
 
-
+    @Select("select count(*) from board where board_regDate = #{date}")
+    int countBoardNow(@Param("date") String date);
     
     
 } 

@@ -23,9 +23,12 @@ public class PythonScriptRunner implements ApplicationRunner {
         //String pythonPath = "C:\\Users\\soldesk\\AppData\\Local\\Programs\\Python\\Python314\\python.exe";
         ClassPathResource resource_f = new ClassPathResource("static/py/festivalApi.py");
         ClassPathResource resource_s = new ClassPathResource("static/py/news.py");
+        ClassPathResource resource_a = new ClassPathResource("static/py/analytics.py");
+
         
         Path path1 = Paths.get(resource_f.getURI());
         Path path2 = Paths.get(resource_s.getURI());
+        Path path3 = Paths.get(resource_a.getURI());
 
         ProcessBuilder pb1 = new ProcessBuilder("python", path1.toString());
         pb1.inheritIO();
@@ -34,6 +37,10 @@ public class PythonScriptRunner implements ApplicationRunner {
         ProcessBuilder pb2 = new ProcessBuilder("python", path2.toString());
         pb2.inheritIO();
         pb2.start();
+
+        ProcessBuilder pb3 = new ProcessBuilder("python", path3.toString());
+        pb3.inheritIO();
+        pb3.start();
     }
     
     public void runFastApiServer() throws IOException {

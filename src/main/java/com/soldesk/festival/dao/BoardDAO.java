@@ -51,6 +51,8 @@ public class BoardDAO {
         boardMapper.deleteProecess(board_idx);
     } //게시글 삭제
 
- 
+    public int countBoardNow(String date){
+        return boardMapper.countBoardNow(date);
+    }
 
 }

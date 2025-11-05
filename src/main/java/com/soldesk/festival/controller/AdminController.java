@@ -1,22 +1,26 @@
 package com.soldesk.festival.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.soldesk.festival.dto.BoardDTO;
-import com.soldesk.festival.dto.PageDTO;
+import com.soldesk.festival.dto.CountDTO;
 import com.soldesk.festival.mapper.BoardMapper;
+import com.soldesk.festival.mapper.ReviewMapper;
 import com.soldesk.festival.dto.FestivalDTO;
 import com.soldesk.festival.dto.MemberDTO;
-import com.soldesk.festival.dto.PageDTO;
 import com.soldesk.festival.service.BoardService;
 import com.soldesk.festival.service.FestivalService;
 import com.soldesk.festival.service.MemberService;
+import com.soldesk.festival.service.ReviewService;
 import com.soldesk.festival.service.SegFestivalService;
 
 import lombok.RequiredArgsConstructor;
@@ -31,6 +35,7 @@ public class AdminController {
     private final BoardService boardService;
     private final BoardMapper boardMapper;
     private final SegFestivalService segFestivalService;
+    private final ReviewService reviewService;
 
     @GetMapping("/main")
     public String main(Model model){
@@ -93,4 +98,17 @@ public class AdminController {
         return "/admin/proposal";
     }
     
+    @GetMapping("/analytics")
+    @ResponseBody
+    public CountDTO analysics(@RequestParam("date") String date){
+        
+        CountDTO countDTO = new CountDTO();
+        int boardCount = boardService.countBoardNow(date);
+        int reviewCount= reviewService.countReviewNow(date);
+
+        countDTO.setBoardCount(boardCount);
+        countDTO.setReviewCount(reviewCount);
+        
+        return countDTO;
+    }
 }
