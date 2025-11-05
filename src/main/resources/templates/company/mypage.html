@@ -8,9 +8,10 @@
   <title>기업회원 마이페이지 — FesLite</title>
   <link rel="stylesheet" />
   <script defer th:src="@{/js/app.js}"></script>
+    <script defer th:src="@{/js/myuser.js}"></script>
 
   <style>
-    /* (CSS 동일 — 생략 없이 그대로 유지) */
+    /* 기존 CSS 유지 (생략) */
     body {
       background: linear-gradient(135deg, #ffdee9 0%, #b5fffc 100%);
       font-family: 'Pretendard', sans-serif;
@@ -23,6 +24,7 @@
       margin: 40px auto;
       padding: 0 16px;
     }
+    /* 사이드바 */
     .sidebar {
       background: #ffffffc9;
       border-radius: 14px;
@@ -38,11 +40,12 @@
     .menu a:hover { background:#f0f2ff; color:#6b21a8; transform:translateX(1px); }
     .menu a.active { background:#6b21a8; color:#fff; }
     .menu a.text-danger { color:#ef4444; }
+    /* 메인 */
     .main { display:flex; flex-direction:column; gap:24px; }
     .profile-card { background:#fff; border-radius:20px; box-shadow:0 4px 14px rgba(0,0,0,0.1); padding:28px 32px; display:flex; flex-direction:column; gap:18px; }
     .profile-top { display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; }
     .profile-left { display:flex; align-items:center; gap:18px; }
-    .profile-left img { width:92px; height:92px; border-radius:50%; object-fit:cover; background:#f3f4f6; box-shadow:0 4px 10px rgba(0,0,0,0.1); }
+    .profile-left img { width: 92px; height: 92px; border-radius: 50%; object-fit: cover; background: #f3f4f6; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); }
     .profile-info h3 { margin:0; font-size:22px; font-weight:800; }
     .profile-info p { margin:4px 0; color:#555; font-size:14px; }
     .extra-info { margin-top:6px; font-size:13px; color:#666; line-height:1.6; }
@@ -69,10 +72,9 @@
 </head>
 
 <body>
-  <!-- 상단 네비바 -->
+  <!-- 헤더 -->
   <div th:replace="~{common/header :: header}"></div>
 
-  <!-- ✅ CSRF 숨김 유지 -->
   <form style="display:none;" th:if="${_csrf}" th:action="@{/noop}">
     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
   </form>
@@ -92,24 +94,23 @@
 
     <!-- 메인 콘텐츠 -->
     <section class="main">
-      <!-- 기업 프로필 -->
+      <!-- 프로필 카드 -->
       <section class="profile-card">
         <div class="profile-top">
           <div class="profile-left">
             <img th:src="@{/images/company_icon.png}" alt="기업 로고">
             <div class="profile-info">
-              <h3>[[${displayName}]] 님</h3>
-              <p th:text="${companyInfo.company_email}"></p>
+              <h3 th:text="${userInfo.member_id}"> 님</h3>
+              <p>contact@feslite.co.kr</p>
               <div class="extra-info">
-                기업이름: <span th:text="${companyInfo.company_name}"></span><br>
-                설립일: <span th:text="${companyInfo.company_open_date}"></span>
-                회원 유형: <span th:text="${companyInfo.role}"></span><br> 
+                회원 유형: <span th:text="${userInfo.role}"></span><br> 
+                회사명: <span th:text="${userInfo.company_name}"></span><br>
+                회사이메일: <span th:text="${userInfo.member_email}"></span>
               </div>
             </div>
           </div>
           <div class="profile-actions">
             <a th:href="@{/company/edit}" class="btn btn-primary">기업정보 수정</a>
-            <a th:href="@{/company/festival}" class="btn btn-accent">등록 축제 관리</a>
           </div>
         </div>
       </section>
@@ -119,55 +120,52 @@
       <section class="dashboard">
         <div class="dash-card dash-purple">
           <div class="dash-title">등록한 축제</div>
-          <div class="dash-value" th:text="${stats.registeredFestivals}">5</div>
+          <div class="dash-value">5</div>
         </div>
         <div class="dash-card dash-orange">
           <div class="dash-title">후원받은 금액</div>
-          <div class="dash-value" th:text="'₩' + ${#numbers.formatInteger(stats.totalSponsored, 3, 'COMMA')}">₩1,200,000</div>
+          <div class="dash-value">₩1,200,000</div>
         </div>
         <div class="dash-card dash-blue">
           <div class="dash-title">관심 받은 수</div>
-          <div class="dash-value" th:text="${stats.likes}">24</div>
+          <div class="dash-value">24</div>
         </div>
         <div class="dash-card dash-green">
           <div class="dash-title">이벤트 주최 수</div>
-          <div class="dash-value" th:text="${stats.eventsHosted}">3</div>
+          <div class="dash-value">3</div>
         </div>
         <div class="dash-card dash-violet">
           <div class="dash-title">네트워크 연결 기업</div>
-          <div class="dash-value" th:text="${stats.networks}">7</div>
+          <div class="dash-value">7</div>
         </div>
         <div class="dash-card dash-yellow">
           <div class="dash-title">신규 제안서</div>
-          <div class="dash-value" th:text="${stats.newProposals}">2</div>
+          <div class="dash-value">2</div>
         </div>
       </section>
 
-      <!-- 최근 등록한 축제 -->
+      <!-- 활동 내역 -->
       <section class="activity-box">
         <h4>최근 등록한 축제</h4>
         <ul>
-          <li th:each="f : ${recentFestivals}">
-            <span th:text="${f.name}">🎪 서울 불빛정원 페스티벌</span>
-            <span th:text="${f.status}">승인 대기</span>
-          </li>
+          <li><span>🎪 서울 불빛정원 페스티벌</span><span>승인 대기</span></li>
+          <li><span>🌸 봄꽃 페스티벌</span><span>진행중</span></li>
+          <li><span>🍁 가을빛 음악제</span><span>종료</span></li>
         </ul>
       </section>
 
-      <!-- 최근 후원 내역 -->
       <section class="activity-box">
         <h4>최근 후원 내역</h4>
         <ul>
-          <li th:each="s : ${recentSponsors}">
-            <span th:text="${s.festivalName}">서울 불빛정원</span>
-            <span th:text="'₩' + ${#numbers.formatInteger(s.amount, 3, 'COMMA')}">₩450,000</span>
-          </li>
+          <li><span>서울 불빛정원</span><span>₩450,000</span></li>
+          <li><span>가을빛 음악제</span><span>₩300,000</span></li>
+          <li><span>봄꽃 페스티벌</span><span>₩450,000</span></li>
         </ul>
       </section>
     </section>
   </main>
 
-  <!-- ✅ 푸터 -->
+  <!-- 푸터 -->
   <footer class="footer">
     <div class="container">© 2025 FesLite — 모두의 축제를 연결합니다 🎪</div>
   </footer>

@@ -12,7 +12,6 @@ import org.apache.ibatis.annotations.Select;
 
 import com.soldesk.festival.dto.CompanyDTO;
 import com.soldesk.festival.dto.CompanyJoinDTO;
-import com.soldesk.festival.dto.companyDetailDTO;
 import com.soldesk.festival.handler.MemberRoleTypeHandler;
 
 @Mapper
@@ -47,10 +46,7 @@ public interface CompanyMapper {
 	})
 	@Select("select * from company where member_id=#{member_id}")
 	Optional<CompanyDTO> findCompanyDetailAllById(@Param("member_id")String id);
-      
-    
 	
-	Optional<companyDetailDTO> getCompanyDetail(@Param("member_id")String id);
 
 	@Select("select * from company where company_reg_num=#{company_reg_num}")
 	CompanyDTO findCompanyUserByregNum(@Param("company_reg_num")Integer regNum); //사용자용
@@ -60,4 +56,17 @@ public interface CompanyMapper {
 	@Insert("insert into company(company_name, member_id, member_pass, member_email, company_phone, company_reg_num, company_owner, company_open_date, role, company_address, company_account) "
 	+"values(#{company_name}, #{member_id}, #{member_pass}, #{member_email}, #{company_phone}, #{company_reg_num}, #{company_owner}, #{company_open_date}, #{role}, #{company_address}, #{company_account})")
 	void insertCompany(CompanyJoinDTO joinCompany);
+    
+	@Results({
+		@Result(property="company_idx", column="company_idx"),
+		@Result(property="company_name", column="company_name"),
+		@Result(property="member_id", column="member_id"),
+		@Result(property="member_email", column="member_email"),
+		@Result(property="company_owner", column="company_owner"),
+		@Result(property="company_open_date", column="company_open_date"),
+		@Result(property="company_address", column="company_address"),
+		@Result(property="role", column= "role", typeHandler=MemberRoleTypeHandler.class)
+	})
+	@Select("select company_idx, company_name, member_id, member_email, company_owner, company_open_date, company_address, role from company where member_id=#{member_id}")
+	Optional<CompanyDTO> findUserIdforUser(@Param("member_id")String userId);
 }

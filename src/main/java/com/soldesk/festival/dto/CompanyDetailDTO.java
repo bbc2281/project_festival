@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class companyDetailDTO {
+public class CompanyDetailDTO {
 
     private Integer company_idx;
 	

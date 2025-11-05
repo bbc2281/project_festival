@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.soldesk.festival.config.AuthUtil;
 import com.soldesk.festival.config.MemberRole;
 import com.soldesk.festival.dto.CompanyDTO;
+import com.soldesk.festival.dto.CompanyDetailDTO;
 import com.soldesk.festival.dto.CompanyJoinDTO;
 import com.soldesk.festival.exception.UserException;
 import com.soldesk.festival.mapper.CompanyMapper;
@@ -45,10 +46,30 @@ public class CompanyService {
 		}
 		joinCompany.setRole(joinCompany.getRole());
 		companyMapper.insertCompany(joinCompany);
+
+	}
+
+    
+	public Optional<CompanyDetailDTO> getDetails(String userId){
+
+		Optional<CompanyDTO> opCom = companyMapper.findUserIdforUser(userId);
 		
-      
-	       
-		
+		if(opCom.isPresent()){
+			CompanyDTO company = opCom.get();
+			return Optional.of(
+				CompanyDetailDTO.builder()
+				.company_idx(company.getCompany_idx())
+				.company_name(company.getCompany_name())
+				.member_id(company.getMember_id())
+				.member_email(company.getMember_email())
+				.company_owner(company.getCompany_owner())
+				.company_open_date(company.getCompany_open_date())
+				.company_address(company.getCompany_address())
+				.role(company.getRole())
+				.build()
+			);
+		}
+		return Optional.empty();
 
 	}
 
