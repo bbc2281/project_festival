@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.soldesk.festival.dto.BoardDTO;
 import com.soldesk.festival.dto.FestivalDTO;
-import com.soldesk.festival.dto.MemberDetailDTO;
 import com.soldesk.festival.dto.PageDTO;
 import com.soldesk.festival.mapper.MemberMapper;
 import com.soldesk.festival.service.BoardService;
@@ -79,8 +78,8 @@ public class AdminController {
     @GetMapping("/member")
     public String member(Model model){
 
-        List<MemberDetailDTO> members = memberService.getMemberListforAdmin();
-        model.addAttribute("members", members);
+        //List<MemberDetailDTO> members = memberService.getMemberListforAdmin(); -> I'll do this after take a sleep.(?)
+        //model.addAttribute("members", members);
 
         return "/admin/member";
     }
