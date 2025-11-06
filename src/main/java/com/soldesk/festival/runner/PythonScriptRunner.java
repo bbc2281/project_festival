@@ -23,7 +23,11 @@ public class PythonScriptRunner implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
 
-          System.out.println("DEBUG: Python Path Injected: " + pythonPath);
+        // 로드된 경로의 공백을 제거합니다. (가장 중요한 수정)
+        this.pythonPath = this.pythonPath.trim();
+        this.uvicornPath = this.uvicornPath.trim();
+        
+        System.out.println("DEBUG: Python Path Injected: " + pythonPath);
         System.out.println("DEBUG: Uvicorn Path Injected: " + uvicornPath);
         
         // 경로 값이 비어있거나 기본값이라면 실행을 중단하고 에러 메시지를 출력합니다.
@@ -37,33 +41,30 @@ public class PythonScriptRunner implements ApplicationRunner {
     }
 
     public void runPythonScript() throws IOException {
-        //String pythonPath = "C:\\Users\\soldesk\\AppData\\Local\\Programs\\Python\\Python314\\python.exe";
         ClassPathResource resource_f = new ClassPathResource("static/py/festivalApi.py");
         ClassPathResource resource_s = new ClassPathResource("static/py/news.py");
         
-        //Path path1 = Paths.get(resource_f.getURI());
-        //Path path2 = Paths.get(resource_s.getURI());
-
         String path1 = resource_f.getFile().getAbsolutePath();
         String path2 = resource_s.getFile().getAbsolutePath();
 
-        ProcessBuilder pb1 = new ProcessBuilder(pythonPath, path1.toString());
+        // 수정된 pythonPath(공백 제거됨) 사용
+        ProcessBuilder pb1 = new ProcessBuilder(pythonPath, path1.toString()); 
         pb1.inheritIO();
         pb1.start();
 
+        // 수정된 pythonPath(공백 제거됨) 사용
         ProcessBuilder pb2 = new ProcessBuilder(pythonPath, path2.toString());
         pb2.inheritIO();
         pb2.start();
     }
     
     public void runFastApiServer() throws IOException {
-        //String uvicornPath = "C:\\Users\\soldesk\\AppData\\Local\\Programs\\Python\\Python314\\Scripts\\uvicorn.exe";
         ClassPathResource resource = new ClassPathResource("static/py/runFastApi.py");
-        //Path path = Paths.get(resource.getURI());
         File workingDir = resource.getFile().getParentFile();
 
         ProcessBuilder pb = new ProcessBuilder(
-            uvicornPath,
+            // 수정된 uvicornPath(공백 제거됨) 사용
+            uvicornPath, 
             "runFastApi:app",
             "--reload",
             "--port",
