@@ -1,5 +1,6 @@
 package com.soldesk.festival.service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -136,14 +137,22 @@ public class MemberService {
 		}
         return Optional.empty();
 	}
+
+	
     
 
 	
-	public List<MemberDetailDTO> getMemberListforAdmin(){
-
-		List<MemberDetailDTO> list = memberMapper.getMemberList();
+	public List<MemberDetailDTO> getMemberListforAdmin(String userId){
         
-		return list.stream()
+       Optional<MemberDTO> opAdmin = memberMapper.findUserByIdforUser(userId);
+	   if(opAdmin.isPresent()){
+		  MemberDTO admin = opAdmin.get();
+		  
+		  if(admin.getRole().isAdmin()){
+
+			List<MemberDetailDTO> list = memberMapper.getMemberList();
+        
+		    return list.stream()
 		            .map(member ->  MemberDetailDTO.builder()
 					.member_id(member.getMember_id())
 					.member_name(member.getMember_name())
@@ -153,6 +162,11 @@ public class MemberService {
 					.build()
 					)
 					.collect(Collectors.toList());
+
+		  }
+	   }
+	   return Collections.emptyList();
+      
 		
 	}
 		
