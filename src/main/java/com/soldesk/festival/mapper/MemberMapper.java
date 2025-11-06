@@ -84,7 +84,7 @@ public interface MemberMapper {
             + " #{member_phone}, #{member_address}, #{member_gender}, #{member_job}, #{member_birth}, #{role}, #{member_point})")		
 	void insertMember(MemberJoinDTO joinMember);
 	
-	@Update("update member set member_name=#{member_name},member_pass=#{member_pass}, member_nickname=#{member_nickname}, member_email=#{member_email}, member_job=#{member_job}, member_address=#{member_address} where member_id=#{member_id}")
+	@Update("update member set member_name=#{member_name},member_pass=#{member_pass}, member_nickname=#{member_nickname}, member_email=#{member_email}, member_phone=#{member_phone}, member_address=#{member_address}, member_gender=#{member_gender}, member_job=#{member_job} where member_id=#{member_id}")
 	void updateMember(MemberUpdateDTO updateMember); //아이디 제외
 	
 	//@Update("update ")

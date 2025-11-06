@@ -1,3 +1,39 @@
+ window.logout = async function() {
+        try {
+            const csrfInput = document.querySelector('input[name="_csrf"]');
+            const csrfToken = csrfInput ? csrfInput.value : null;
+            const csrfHeader = 'X-CSRF-TOKEN'; 
+            
+            // API 호출을 위한 헤더 설정 (로그인 로직과 동일)
+            const headers = { 'Content-Type': 'application/json' };
+            if (csrfToken) headers[csrfHeader] = csrfToken;
+
+            // 로그아웃 REST API 호출
+            const res = await fetch('/api/v1/auth/logout', {
+                method: 'POST',
+                headers: headers,
+                // 로그아웃은 body가 필요하지 않습니다.
+            });
+
+            console.log('로그아웃 서버 응답 상태 코드:', res.status);
+            const data = await res.json();
+
+            if (data.success) {
+                alert(data.message || '로그아웃 성공!');
+                window.location.href = '/';
+            } else {
+                alert('로그아웃 실패: ' + (data.message || '서버 오류'));
+            }
+
+        } catch (error) {
+            console.error('로그아웃 중 오류 발생:', error);
+            alert('네트워크 오류로 로그아웃에 실패했습니다.');
+        }
+    }
+
+
+
+
 document.addEventListener('DOMContentLoaded', () => {
 
     // ----------------------------------------------------------------------
@@ -16,12 +52,14 @@ document.addEventListener('DOMContentLoaded', () => {
     } 
     // 백업: 숨겨진 입력 필드에서 토큰 읽기
     else {
-        const csrfInput = document.querySelector('input[name="_csrf"]');
+        // CSRF 토큰은 로그인 폼이나 다른 폼에 hidden field로 존재할 수 있음
+        const csrfInput = document.querySelector('input[name="_csrf"]'); 
         if (csrfInput) {
              csrfToken = csrfInput.value;
              csrfHeaderName = 'X-CSRF-TOKEN'; 
         }
     }
+
 
     // ----------------------------------------------------------------------
     // 🌟 회원정보 수정 로직 (MyInfo Update) 🌟
@@ -30,65 +68,48 @@ document.addEventListener('DOMContentLoaded', () => {
     
     if (myEditForm) {
         
-        // 1. 에러 메시지 컨테이너 생성 및 추가 (기존 HTML 구조에 맞춤)
+        // 1. 에러 메시지 컨테이너 생성 및 추가
         const editErrorMessageContainer = document.createElement('p');
-        editErrorMessageContainer.style.color = 'red';
-        editErrorMessageContainer.style.fontWeight = 'bold';
-        editErrorMessageContainer.style.marginTop = '15px';
+        editErrorMessageContainer.className = 'text-danger fw-bold mt-3';
         myEditForm.prepend(editErrorMessageContainer);
         
         myEditForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             editErrorMessageContainer.textContent = ''; // 에러 메시지 초기화
             
-            // 2. 데이터 수집
+            // 2. 데이터 수집 (기존 값이 채워져 있으므로 trim()만 수행)
             const member_name = document.getElementById('member_name').value.trim();
+            const member_nickname = document.getElementById('member_nickname').value.trim();
             const member_email = document.getElementById('member_email').value.trim();
             const member_pass = document.getElementById('member_pass').value; 
             const member_pass2 = document.getElementById('member_pass2').value;
-            const member_nickname = document.getElementById('member_nickname').value.trim();
-            const member_region = document.getElementById('member_address').value.trim(); // 주소 필드
+            const member_phone = document.getElementById('member_phone').value.trim();
+            const member_address = document.getElementById('member_address').value.trim(); // 주소 필드
+            const member_gender = document.getElementById('member_gender').value.trim();
             const member_job = document.getElementById('member_job').value.trim();
 
-            // 3. 유효성 검사 (Validation)
-            
-            // 필수 필드 검사
-            if (!member_name || !member_email || !member_nickname || !member_region) {
-                editErrorMessageContainer.textContent = '필수 정보(이름, 이메일, 닉네임, 주소)를 모두 입력해야 합니다.';
-                return;
-            }
-
-            // 이메일 형식 검사
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(member_email)) {
-                editErrorMessageContainer.textContent = '유효한 이메일 주소를 입력해주세요.';
-                return;
-            }
-
-            // 비밀번호 변경 시 일치 여부 및 유효성 검사
+            // 3. 클라이언트 최소 유효성 검사: 비밀번호 일치 여부만 확인
             if (member_pass || member_pass2) {
                 if (member_pass !== member_pass2) {
                     editErrorMessageContainer.textContent = '새로운 비밀번호와 확인 비밀번호가 일치하지 않습니다.';
                     return;
                 }
-                
-                // 비밀번호 길이 검사 (8~20자 가정)
-                if (member_pass.length < 8 || member_pass.length > 20) {
-                    editErrorMessageContainer.textContent = '비밀번호는 8자 이상 20자 이하여야 합니다.';
-                    return;
-                }
             }
             
             // 4. 서버 전송 데이터 준비
-            // member_pass가 빈 문자열이면 전송하지 않아서 기존 비밀번호를 유지하도록 함
+            // 기존 값이 채워져 있으므로, 변경하지 않아도 기존 값이 서버로 전송됨.
+            // 백엔드 DTO/Service에서 유효성 검사를 완화하고, 값이 변경되었을 때만 반영해야 함.
             const updateData = {
                 member_name,
-                member_email,
                 member_nickname,
+                member_email,
+                member_phone,
                 member_address, 
+                member_gender,
                 member_job
             };
             
+            // 🌟 비밀번호는 입력되었을 때만 전송합니다. (부분 업데이트 핵심) 🌟
             if (member_pass) {
                 updateData.member_pass = member_pass;
             }
@@ -98,23 +119,31 @@ document.addEventListener('DOMContentLoaded', () => {
             if (csrfToken && csrfHeaderName) headers[csrfHeaderName] = csrfToken; 
 
             try {
-                // REST API 엔드포인트: PUT /api/v1/member/update
-                const res = await fetch('/api/v1/member/update', { 
+                // REST API 엔드포인트: PUT /api/v1/auth/modifymember
+                const res = await fetch('/api/v1/auth/modifymember', { 
                     method: 'PUT',
                     headers: headers,
                     body: JSON.stringify(updateData)
                 });
 
-                const data = await res.json(); 
+                const data = await res.json().catch(()=>({})); // JSON 파싱 오류 방지
 
                 if (res.ok && data.success) {
                     // 성공 처리
                     console.log('회원정보가 성공적으로 수정되었습니다.');
-                    // Custom Modal로 대체 필요
-                    alert('회원정보가 성공적으로 수정되었습니다.'); 
+                    alert(data.message || '회원정보가 성공적으로 수정되었습니다.'); 
                     window.location.href = '/member/mypage'; 
-                } else {
-                    // 서버에서 받은 오류 메시지 표시
+                } else if (!res.ok && data.errors) {
+                     // 백엔드 DTO @Valid 오류 처리
+                    const message = Object.entries(data.errors)
+                        .map(([field, msg]) => `- ${field}: ${msg}`)
+                        .join('\n');
+                    alert('입력 오류:\n' + message);
+                    editErrorMessageContainer.textContent = '입력 정보를 다시 확인해주세요.';
+                    console.error('백엔드 유효성 검사 오류:', data.errors);
+                }
+                else {
+                    // 기타 서버 오류 메시지 표시
                     editErrorMessageContainer.textContent = data.message || `회원정보 수정에 실패했습니다. (상태 코드: ${res.status})`;
                 }
                 
