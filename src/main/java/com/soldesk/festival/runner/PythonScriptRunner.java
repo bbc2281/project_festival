@@ -41,17 +41,12 @@ public class PythonScriptRunner implements ApplicationRunner {
     }
 
     public void runPythonScript() throws IOException {
-<<<<<<< HEAD
-=======
-        //String pythonPath = "C:\\Users\\soldesk\\AppData\\Local\\Programs\\Python\\Python314\\python.exe";
->>>>>>> origin/main
         ClassPathResource resource_f = new ClassPathResource("static/py/festivalApi.py");
         ClassPathResource resource_s = new ClassPathResource("static/py/news.py");
         
         String path1 = resource_f.getFile().getAbsolutePath();
         String path2 = resource_s.getFile().getAbsolutePath();
 
-<<<<<<< HEAD
         // 수정된 pythonPath(공백 제거됨) 사용
         ProcessBuilder pb1 = new ProcessBuilder(pythonPath, path1.toString()); 
         pb1.inheritIO();
@@ -59,32 +54,17 @@ public class PythonScriptRunner implements ApplicationRunner {
 
         // 수정된 pythonPath(공백 제거됨) 사용
         ProcessBuilder pb2 = new ProcessBuilder(pythonPath, path2.toString());
-=======
-        ProcessBuilder pb1 = new ProcessBuilder("python", path1.toString());
-        pb1.inheritIO();
-        pb1.start();
-
-        ProcessBuilder pb2 = new ProcessBuilder("python", path2.toString());
->>>>>>> origin/main
         pb2.inheritIO();
         pb2.start();
     }
     
     public void runFastApiServer() throws IOException {
-<<<<<<< HEAD
-=======
-        //String uvicornPath = "C:\\Users\\soldesk\\AppData\\Local\\Programs\\Python\\Python314\\Scripts\\uvicorn.exe";
->>>>>>> origin/main
         ClassPathResource resource = new ClassPathResource("static/py/runFastApi.py");
         File workingDir = resource.getFile().getParentFile();
 
         ProcessBuilder pb = new ProcessBuilder(
-<<<<<<< HEAD
             // 수정된 uvicornPath(공백 제거됨) 사용
             uvicornPath, 
-=======
-            "uvicorn",
->>>>>>> origin/main
             "runFastApi:app",
             "--reload",
             "--port",
