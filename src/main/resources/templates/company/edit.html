@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>기업정보 수정 — FesLite</title>
-  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" th:href="@{/css/style.css}" />
   <style>
     body {
       background: linear-gradient(135deg,#ffdee9 0%,#b5fffc 100%);
@@ -90,10 +90,7 @@
 
   <main class="mypage-wrapper">
     <!-- ✅ 좌측 메뉴 -->
-    <aside class="sidebar">
-     <h2><a href="mypage_company.html" style="text-decoration:none; color:#111;">마이페이지</a></h2>
-      <div th:replace="~{common/companyAside :: nav}"></div>
-    </aside>
+    <div th:replace="~{common/companyAside :: aside}"></div>
 
     <!-- ✅ 우측 콘텐츠 -->
     <section class="main">

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>후원 조회 — FesLite</title>
-  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" th:href="@{/css/style.css}" />
   <style>
     body{background:linear-gradient(135deg,#ffdee9 0%,#b5fffc 100%);font-family:'Pretendard',sans-serif;}
     .mypage-wrapper{display:grid;grid-template-columns:240px 1fr;gap:24px;max-width:1100px;margin:40px auto;padding:0 16px;}
@@ -20,10 +20,7 @@
   <div th:replace="~{common/companyHeader :: header}"></div>
 
   <main class="mypage-wrapper">
-    <aside class="sidebar">
-      <h2><a href="mypage_company.html" style="text-decoration:none; color:#111;">마이페이지</a></h2>
-      <div th:replace="~{common/companyAside :: nav}"></div>
-    </aside>
+    <div th:replace="~{common/companyAside :: aside}"></div>
 
     <section class="main">
       <h3>후원 내역</h3>

@@ -34,6 +34,6 @@ public interface ReviewMapper {
         @Delete("delete from review where review_idx = #{review_idx}")
         void deleteReview(int review_idx);
 
-        @Select("select count(*) from review where board_regDate = #{date}")
+        @Select("select count(*) from review where review_reg_date = #{date}")
         int countReviewNow(@Param("date") String date);
     }

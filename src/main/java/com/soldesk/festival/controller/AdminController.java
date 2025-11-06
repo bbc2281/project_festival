@@ -16,9 +16,11 @@ import com.soldesk.festival.dto.CountDTO;
 import com.soldesk.festival.mapper.BoardMapper;
 import com.soldesk.festival.mapper.ReviewMapper;
 import com.soldesk.festival.dto.FestivalDTO;
+import com.soldesk.festival.dto.InquiryDTO;
 import com.soldesk.festival.dto.MemberDTO;
 import com.soldesk.festival.service.BoardService;
 import com.soldesk.festival.service.FestivalService;
+import com.soldesk.festival.service.InquiryService;
 import com.soldesk.festival.service.MemberService;
 import com.soldesk.festival.service.ReviewService;
 import com.soldesk.festival.service.SegFestivalService;
@@ -36,6 +38,7 @@ public class AdminController {
     private final BoardMapper boardMapper;
     private final SegFestivalService segFestivalService;
     private final ReviewService reviewService;
+    private final InquiryService inquiryService;
 
     @GetMapping("/main")
     public String main(Model model){
@@ -76,7 +79,12 @@ public class AdminController {
         return "/admin/festival";
     }
     @GetMapping("/inquiry")
-    public String inquiry(){
+    public String inquiry(Model model){
+
+        List<InquiryDTO> list = inquiryService.selectAllInquiry();
+
+        model.addAttribute("list", list);
+
         return "/admin/inquiry";
     }
     @GetMapping("/member")

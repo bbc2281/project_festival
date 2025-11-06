@@ -44,7 +44,7 @@ public class FestivalController {
 
         //리뷰 추가 
         int festivalIdx = festival.getFestival_idx();
-        List<ReviewDTO> reviewList = reviewService.selectAllReviews(festivalIdx );
+        List<ReviewDTO> reviewList = reviewService.selectAllReviews(festivalIdx);
         model.addAttribute("reviews", reviewList);
 
 

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>회원탈퇴 — FesLite</title>
-  <link rel="stylesheet" th:href="@{css/style.css}" />
+  <link rel="stylesheet" th:href="@{/css/style.css}" />
   <style>
     body {
       background: linear-gradient(135deg,#ffdee9 0%,#b5fffc 100%);
@@ -81,10 +81,7 @@
 
   <main class="mypage-wrapper">
     <!-- ✅ 좌측 메뉴 -->
-    <aside class="sidebar">
-      <h2>마이페이지</h2>
-      <div th:replace="~{common/companyAside :: nav}"></div>
-    </aside>
+    <div th:replace="~{common/companyAside :: aside}"></div>
 
     <!-- ✅ 우측 콘텐츠 -->
     <section class="main">

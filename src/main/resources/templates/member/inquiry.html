@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>1:1 문의 — FesLite</title>
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" th:href="@{/css/style.css}">
   <style>
     body{background:linear-gradient(135deg,#ffdee9 0%,#b5fffc 100%);font-family:'Pretendard',sans-serif;}
     .mypage-wrapper{display:grid;grid-template-columns:240px 1fr;gap:24px;max-width:1100px;margin:40px auto;padding:0 16px;}
@@ -27,11 +27,11 @@
 
     <section class="main">
       <h3>1:1 문의</h3>
-      <form id="inquiryForm">
+      <form id="inquiryForm" th:action="@{/mypage/regInquiry}" method="post" th:object="${inquiry}">
         <label>문의 제목</label>
-        <input type="text" id="title" placeholder="예: 축제 등록 관련 문의" required>
+        <input type="text" id="title" placeholder="예: 축제 등록 관련 문의" th:field="*{inquiry_title}" required>
         <label>문의 내용</label>
-        <textarea id="content" rows="5" required></textarea>
+        <textarea id="content" rows="5" th:field="*{inquiry_content}" required></textarea>
         <button type="submit">문의 보내기</button>
       </form>
       <p id="resultMsg" style="margin-top:20px;color:#6b21a8;font-weight:600;"></p>
@@ -52,11 +52,27 @@
     });
 
     // ✅ 문의 전송 시 가짜 알림
-    document.getElementById('inquiryForm').addEventListener('submit',e=>{
-      e.preventDefault();
-      document.getElementById('resultMsg').innerText="문의가 성공적으로 접수되었습니다! (임시 메시지)";
+    document.getElementById('inquiryForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const formData = new FormData(e.target);
+
+  fetch(e.target.action, {
+    method: 'POST',
+    body: formData
+  })
+  .then(res => {
+    if (res.ok) {
+      document.getElementById('resultMsg').innerText = "문의가 성공적으로 접수되었습니다!";
       e.target.reset();
-    });
+    } else {
+      document.getElementById('resultMsg').innerText = "문의 전송에 실패했습니다. 다시 시도해주세요.";
+    }
+  })
+  .catch(() => {
+    document.getElementById('resultMsg').innerText = "서버 오류가 발생했습니다.";
+  });
+  });
+    
   </script>
 </body>
 </html>
