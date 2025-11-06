@@ -127,7 +127,23 @@ public class UserViewController {
     
     //일반회원 정보수정
     @GetMapping("/member/edit")
-    public String mypageModifyForMember(){
+    public String mypageModifyForMember(@AuthenticationPrincipal SecurityAllUsersDTO userdetails, Model model){
+
+        if(userdetails == null){
+            return "redirect:/auth/loginPage";
+        }
+        String userId = userdetails.getUsername();
+        System.out.println("인증된 사용자가 회원정보 수정 페이지 진입");
+
+        Optional<MemberDTO> opDetail = memberService.getAllDetails(userId);
+
+        if(opDetail.isEmpty()){
+            return "redirect:/auth/loginPage?error=dataError";
+        }
+        MemberDTO userInfo = opDetail.get();
+
+        model.addAttribute("userInfo", userInfo);
+        
         return "member/edit";
     }
     
