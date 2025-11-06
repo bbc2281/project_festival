@@ -10,7 +10,7 @@ import com.soldesk.festival.dto.PageDTO;
 import com.soldesk.festival.dto.ReviewDTO;
 
 import lombok.RequiredArgsConstructor;
-
+/* 
 @Service
 @RequiredArgsConstructor
 public class ReviewService {
@@ -45,4 +45,4 @@ public class ReviewService {
         reviewDAO.deleteReview(review_idx);
     }
     
-}
+*/

@@ -14,6 +14,7 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 import com.soldesk.festival.dto.MemberDTO;
+import com.soldesk.festival.dto.MemberDetailDTO;
 import com.soldesk.festival.dto.MemberJoinDTO;
 import com.soldesk.festival.dto.MemberUpdateDTO;
 import com.soldesk.festival.handler.MemberRoleTypeHandler;
@@ -74,8 +75,8 @@ public interface MemberMapper {
 	Optional<MemberDTO> selectUserByEmail(@Param("member_email")String userEmail);
 	
     
-	@Select("select member_id, member_name, role  from member")
-	List<MemberDTO> getMemberList();
+	@Select("select member_name, member_nickname, member_email, role  from member")
+	List<MemberDetailDTO> getMemberList();
 
 	@Options(useGeneratedKeys=true, keyProperty="member_idx")
 	@Insert("insert into member(member_id, member_name, member_pass, member_nickname, member_email, member_phone, member_address,"

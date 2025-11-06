@@ -9,7 +9,8 @@ import lombok.Setter;
 public class MemberUpdateDTO {
 
 	private Integer member_idx;
-
+    
+	@Setter
 	private String member_id;
 	
 
@@ -21,10 +22,6 @@ public class MemberUpdateDTO {
 	@Setter
 	private String member_pass;
 	
-    @NotBlank
-	@Setter
-	private String member_pass2;
-	
 	@Setter
 	private String member_nickname;
 	
@@ -32,11 +29,11 @@ public class MemberUpdateDTO {
 	@Setter
 	private String member_email;
 	
-    @NotBlank
+   // @NotBlank
 	@Setter
 	private String member_phone;
 	
-    @NotBlank
+   // @NotBlank
 	@Setter
 	private String member_address;
 	
@@ -46,7 +43,7 @@ public class MemberUpdateDTO {
 	@Setter
 	private String member_job;
   
-    @NotBlank
+    //@NotBlank
 	@Setter
 	private String member_birth;
 

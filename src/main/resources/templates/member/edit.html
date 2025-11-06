@@ -8,6 +8,7 @@
   <title>회원정보 수정 — FesLite</title>
   <link rel="stylesheet" />
   <script defer th:src="@{/js/app.js}"></script>
+    <script defer th:src="@{/js/myedit.js}"></script>
   <style>
     body{background:linear-gradient(135deg,#ffdee9 0%,#b5fffc 100%);font-family:'Pretendard',sans-serif;}
     .mypage-wrapper{display:grid;grid-template-columns:240px 1fr;gap:24px;max-width:1100px;margin:40px auto;padding:0 16px;}
@@ -35,7 +36,8 @@
     <aside class="sidebar">
     <h2><a th:href="@{/member/mypage}" style="text-decoration:none; color:inherit;">마이페이지</a></h2>
       <nav class="menu">
-    <a th:href="@{/member/info}">회원정보 보기<span>›</span></a>
+    <!-- 현재 페이지를 active로 설정 -->
+    <a th:href="@{/member/info}" class="active">회원정보 수정<span>›</span></a>
     <a th:href="@{/member/bookmark}">내가 찜한 페이지<span>›</span></a>
     <a th:href="@{/member/eview}">나의 리뷰<span>›</span></a>
     <a th:href="@{/member/inquiry}">1:1 문의<span>›</span></a>
@@ -46,26 +48,39 @@
     <section class="main">
       <h3>회원정보 수정</h3>
       <form method="post" id="myedit-form" class="form">
-        <label>이름</label>
-        <input id="member_name" name="member_name" class="input" placeholder="홍길동" required />
+        
+        <!-- 이름 (기존 값 채우기) -->
+        <label for="member_name">이름</label>
+        <input id="member_name" name="member_name" class="input" placeholder="홍길동" required 
+               th:value="${userInfo.member_name}" />
 
-        <label>이메일</label>
-        <input type="email" value="example@feslite.kr">
+        <!-- 이메일 (기존 값 채우기) -->
+        <label for="member_email">이메일</label>
+        <input id="member_email" name="member_email" type="email" class="input" placeholder="you@feslite.kr" required 
+               th:value="${userInfo.member_email}" />
 
-        <label>비밀번호 변경</label>
+        <!-- 비밀번호 (보안상 빈 칸 유지) -->
+        <label for="member_pass">비밀번호 변경</label>
         <input id="member_pass" name="member_pass" type="password" class="input" placeholder="영문/숫자/특수 8~20자" />
 
-         <label>비밀번호 변경확인</label>
+         <!-- 비밀번호 확인 (빈 칸 유지) -->
+        <label for="member_pass2">비밀번호 변경확인</label>
         <input id="member_pass2" name="member_pass2" type="password" class="input" placeholder="다시 입력" />
 
-        <label>닉네임</label>
-        <input id="member_nickname" name="member_nickname" class="input" placeholder="축제왕" />
+        <!-- 닉네임 (기존 값 채우기) -->
+        <label for="member_nickname">닉네임</label>
+        <input id="member_nickname" name="member_nickname" class="input" placeholder="축제왕" 
+               th:value="${userInfo.member_nickname}" />
 
-        <label>주소</label>
-        <input id="member_address" name="member_address" class="input" placeholder="서울특별시 ..." />
+        <!-- 주소 (기존 값 채우기 - member_region 사용 가정) -->
+        <label for="member_address">주소</label>
+        <input id="member_address" name="member_address" class="input" placeholder="서울특별시 ..." 
+               th:value="${userInfo.member_region}" />
         
-        <label>직업</label>
-        <input id="member_job" name="member_job" class="input" placeholder="예: 학생, 개발자, 디자이너" />
+        <!-- 직업 (기존 값 채우기 - 필드명 미확인, 임시로 빈 값) -->
+        <label for="member_job">직업</label>
+        <input id="member_job" name="member_job" class="input" placeholder="예: 학생, 개발자, 디자이너" 
+               th:value="${userInfo.member_job ?: ''}" />
         
         <button type="submit">저장하기</button>
       </form>
@@ -81,12 +96,17 @@
       const links=document.querySelectorAll('.menu a');
       const currentPath=window.location.pathname.split("/").pop();
       links.forEach(link=>{
-        const href=link.getAttribute('href');
-        if(currentPath===href){link.classList.add('active');}
-        else{link.classList.remove('active');}
+        const href=link.getAttribute('href').split("/").pop();
+        // 'info'와 'mypage'를 제외한 정확한 경로 일치 확인
+        if(currentPath==='info' && href==='info'){
+            link.classList.add('active');
+        } else if (currentPath === href){
+            link.classList.add('active');
+        } else {
+            link.classList.remove('active');
+        }
       });
     });
   </script>
 </body>
 </html>
-

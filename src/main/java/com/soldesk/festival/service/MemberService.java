@@ -2,6 +2,7 @@ package com.soldesk.festival.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -135,9 +136,24 @@ public class MemberService {
 		}
         return Optional.empty();
 	}
+    
+
+	
+	public List<MemberDetailDTO> getMemberListforAdmin(){
+
+		List<MemberDetailDTO> list = memberMapper.getMemberList();
+        
+		return list.stream()
+		            .map(member ->  MemberDetailDTO.builder()
+					.member_name(member.getMember_name())
+					.member_nickname(member.getMember_nickname())
+					.member_email(member.getMember_email())
+					.role(member.getRole())
+					.build()
+					)
+					.collect(Collectors.toList());
 		
-		public List<MemberDTO> getMemberList(){
-			return memberMapper.getMemberList();
-		}
+	}
+		
 
 }

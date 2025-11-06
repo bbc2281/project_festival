@@ -40,7 +40,7 @@
           <tr><th>회원아이디</th><th>이름</th><th>이메일</th><th>생년월일</th><th>등급</th></tr>
         </thead>
         <tbody>
-          <tr th:each="member : ${members}"><td th:text="${member.member_id}"></td><td th:text="${member.member_name}"></td><td th:text="${member.member_email}"></td><td th:text="${member.member_birth}"></td><td th:text="${member.role}"></td></tr>
+          <tr th:each="member : ${members}"><td th:text="${member.member_nickname}"></td><td th:text="${member.member_name}"></td><td th:text="${member.member_email}"></td><td th:text="${member.member_birth}"></td><td th:text="${member.role}"></td></tr>
         </tbody>
       </table>
     </div>

@@ -9,6 +9,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.soldesk.festival.dto.CompanyJoinDTO;
 import com.soldesk.festival.dto.LoginDTO;
 import com.soldesk.festival.dto.MemberJoinDTO;
+import com.soldesk.festival.dto.MemberUpdateDTO;
 import com.soldesk.festival.dto.SecurityAllUsersDTO;
 import com.soldesk.festival.dto.UserResponse;
 import com.soldesk.festival.exception.UserException;
@@ -186,6 +188,34 @@ public class UserRestController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
 		}
 	}
+
+    
+	@PostMapping("/modifymember")
+	public ResponseEntity<UserResponse> modifyMemberInfo(@AuthenticationPrincipal SecurityAllUsersDTO userdetails, @Valid @RequestBody MemberUpdateDTO updateMember){
+
+		if(userdetails == null) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(UserResponse.error("인증되지 않은 사용자 입니다"));
+		}
+
+		try {
+
+			updateMember.setMember_id(userdetails.getUsername());
+			memberService.modifyMember(updateMember);
+
+			UserResponse response = UserResponse.successMessage("회원정보 수정 성공");
+			return ResponseEntity.ok(response);
+		} catch (jdk.jshell.spi.ExecutionControl.UserException e) {
+			UserResponse response = UserResponse.error(e.getMessage());
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+		}catch(Exception e){
+			e.printStackTrace();
+			UserResponse response = UserResponse.error("회원정보 수정중 오류가 발생하였습니다");
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+		}
+
+	}
+
+
 
 	
 }  
