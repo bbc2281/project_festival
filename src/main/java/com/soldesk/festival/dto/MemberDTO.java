@@ -3,8 +3,10 @@ package com.soldesk.festival.dto;
 import com.soldesk.festival.config.MemberRole;
 
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
 public class MemberDTO { 
     //DB 연결용 MemberDTO
 	//일반회원 &  관리자

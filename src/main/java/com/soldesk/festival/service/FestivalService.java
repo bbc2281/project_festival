@@ -34,5 +34,17 @@ public class FestivalService {
         return festivalDAO.getRegion();
     }
 
+    public void insertFestival(FestivalDTO festival){
+        festival.setSeg_festival_idx((Integer) null);
+        
+        festivalDAO.insertFestival(festival);
+    }
+
+    public void deleteFestival(int festival_idx){
+        festivalDAO.deleteFestival(festival_idx);
+    }
     
+    public int countFestival(){
+        return festivalDAO.countFestival();
+    }
 }

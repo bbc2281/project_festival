@@ -7,7 +7,10 @@
   <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 
   <title>일반회원 가입 — FesLite</title>
+  <base href="/">
   <link rel="stylesheet" th:href="@{/css/loginStyle.css}" />
+  <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+  <script defer th:src="@{/js/address.js}"></script>
   <script defer th:src="@{/js/sign.js}"></script>
 </head>
 <body>
@@ -92,8 +95,12 @@
           </div>
 
           <div>
-            <label for="member_address">주소 (선택)</label>
-            <input id="member_address" name="member_address" class="input" placeholder="서울특별시 ..." />
+            <label>주소 (선택)</label>
+            <input type="hidden" id="sample6_postcode" placeholder="우편번호">
+            <input type="hidden" id="sample6_detailAddress" placeholder="상세주소">
+            <input type="hidden" id="sample6_extraAddress" placeholder="참고항목">
+            <input type="button" onclick="sample6_execDaumPostcode()" value="주소 찾기">
+            <input type="text" id="sample6_address" name="member_address" class="input" placeholder="서울특별시 ..." required/>
           </div>
 
           <button class="btn btn-primary btn-block mt-3" type="submit">가입 완료</button>

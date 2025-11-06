@@ -32,8 +32,12 @@
     }
 
 
+
 // Dataset (mock)
+<<<<<<< HEAD
 /*
+=======
+>>>>>>> origin/main
 const FESTIVALS = [ ];
 const NOTICES = [ ];
 
@@ -77,9 +81,7 @@ document.addEventListener("DOMContentLoaded", function(){
   fetch("/index/board")
   .then(response => response.json())
   .then(BoardList =>{
-    console.log(BoardList)
     BoardList.forEach(board => {
-      console.log(board.board_regDate)
       const board_date = new Date(board.board_regDate)
       formattedDate = board_date.toISOString().split('T')[0]
       const formattedBoard = {
@@ -290,4 +292,10 @@ function renderPager(total, size, page) {
     });
     ul.appendChild(nextLi);
   }
+<<<<<<< HEAD
 }*/
+=======
+}
+
+
+>>>>>>> origin/main
