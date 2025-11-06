@@ -7,6 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import com.soldesk.festival.dto.CompanyDetailDTO;
+import com.soldesk.festival.dto.MemberDTO;
 import com.soldesk.festival.dto.MemberDetailDTO;
 import com.soldesk.festival.dto.SecurityAllUsersDTO;
 import com.soldesk.festival.service.CompanyService;
@@ -67,25 +69,64 @@ public class UserViewController {
 
        model.addAttribute("userInfo", userInfo);
        model.addAttribute("displayName", userdetails.getUserDisplayName());
+        // model.addAttribute("userIDX", userdetails.getUserIdx()); 이렇게해서도 idx가져올수있음
 
        return "member/mypage";
     }
 
     
-
+    //기업회원 마이페이지
     @GetMapping("/company/mypage")
     public String companyPageForm(@AuthenticationPrincipal SecurityAllUsersDTO userdetails, Model model){
         
         if(userdetails == null){
             return "redirect:/auth/loginPage";
         }
+        String userId = userdetails.getUsername();
+        System.out.println("인증된 기업회원" + userId);
+        Optional<CompanyDetailDTO> opDetail = companyService.getDetails(userId);
+
+        if(opDetail.isEmpty()){
+
+            return "redirect:/auth/loginPage?error=dataError";
+        }
+
+        CompanyDetailDTO userInfo = opDetail.get();
+
+        model.addAttribute("userInfo", userInfo);
 
         return "company/mypage";
     }
     
+
+
+    //일반회원 정보보기
+    
+    @GetMapping("/member/info")
+    public String myinfo(@AuthenticationPrincipal SecurityAllUsersDTO userdetails, Model model){
+
+        if(userdetails == null){
+            return "redirect:/auth/loginPage";
+        }
+        String userId = userdetails.getUsername();
+        System.out.println("인증된 사용자 : " + userId);
+
+        Optional<MemberDTO> opDetail = memberService.getAllDetails(userId);
+
+        if(opDetail.isEmpty()){
+
+            return "redirect:/auth/loginPage?error=dataError";
+        }
+
+        MemberDTO userInfo = opDetail.get();
+      
+       model.addAttribute("userInfo", userInfo);
+        // model.addAttribute("userIDX", userdetails.getUserIdx()); 이렇게해서도 idx가져올수있음
+        return "member/info";
+    }
     
     //일반회원 정보수정
-    @GetMapping("/mypage/edit")
+    @GetMapping("/member/edit")
     public String mypageModifyForMember(){
         return "member/edit";
     }

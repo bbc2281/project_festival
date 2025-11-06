@@ -24,11 +24,11 @@
     <aside class="sidebar">
   <h2>마이페이지</h2>
   <nav class="menu">
-    <a th:href="@{/mypage/edit}">회원정보 수정<span>›</span></a>
-    <a th:href="@{/mypage/bookmark}">내가 찜한 페이지<span>›</span></a>
-    <a th:href="@{/mypage/eview}">나의 리뷰<span>›</span></a>
-    <a th:href="@{/mypage/inquiry}">1:1 문의<span>›</span></a>
-    <a th:href="@{/mypage/delete}" style="color:#ef4444;">회원탈퇴<span>›</span></a>
+    <a th:href="@{/member/info}">회원정보 수정<span>›</span></a>
+    <a th:href="@{/member/bookmark}">내가 찜한 페이지<span>›</span></a>
+    <a th:href="@{/member/review}">나의 리뷰<span>›</span></a>
+    <a th:href="@{/member/inquiry}">1:1 문의<span>›</span></a>
+    <a th:href="@{/member/delete}" style="color:#ef4444;">회원탈퇴<span>›</span></a>
   </nav>
 </aside>
 
@@ -36,23 +36,20 @@
       <section class="profile-card"> 
         <div class="profile-top">
           <div class="profile-left">
-            <img src="images/user_icon.png" alt="프로필 이미지">
+            <img th:src="@{/images/user_icon.png}" alt="프로필 이미지">
             <div class="profile-info">
               <h3>[[${displayName}]] 님</h3>
               <p th:text="${userInfo.member_email}"></p> 
-              <div class="extra-info">
+              <div class="extra-info">  
               <!-- 🚨 가입일 필드 (member_regdate)를 완전히 제거하여 템플릿 파싱 오류를 방지합니다. -->
-              회원 유형: <span th:text="${userInfo.role}"></span><br> 
+                회원 유형: <span th:text="${userInfo.role}"></span><br> 
               <!-- 활동 지역도 DTO의 카멜 케이스 필드명 (memberRegion)을 따르도록 수정했습니다. -->
-              활동 지역: <span th:text="${userInfo.member_address}"></span>
+                활동 지역: <span th:text="${userInfo.member_address}"></span><br>
+                포인트: <span th:text="${userInfo.member_point}"></span>
              </div>
               </div>
             </div>
           </div> 
-          <div class="profile-actions">
-            <button class="btn btn-primary" id="edit" role="button">회원정보 수정</button>
-            <button class="btn btn-accent" id="myreview" role="button">내 리뷰 보기</button>
-          </div>
         </div>
       </section>
 

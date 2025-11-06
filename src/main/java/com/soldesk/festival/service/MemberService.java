@@ -30,6 +30,10 @@ public class MemberService {
 		return memberMapper.findMemberById(userId);
 	}
 
+	public Optional<MemberDTO> getAllDetails(String userId){
+		return memberMapper.findUserDetailAllById(userId);
+	} //시스템용
+
     
 	@Transactional(rollbackFor= com.soldesk.festival.exception.UserException.class)
 	public void join(MemberJoinDTO joinMember) {
@@ -123,6 +127,7 @@ public class MemberService {
 								.member_nickname(member.getMember_nickname())
 								.member_email(member.getMember_email())
 								.member_address(member.getMember_address())
+								.member_point(member.getMember_point())
 								.role(member.getRole())
 								.build()
 			 );			 

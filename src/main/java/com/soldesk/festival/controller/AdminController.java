@@ -26,9 +26,11 @@ import lombok.RequiredArgsConstructor;
 public class AdminController {
 
     //관리자 전용 페이지
-    @GetMapping("/auth/admin")
+    @GetMapping("/admin/main")
     public String onlyAdminPage(){
-        return "auth/admin";
+        return "admin/main";
+        
+
     }
 
     private final FestivalService festivalService;
