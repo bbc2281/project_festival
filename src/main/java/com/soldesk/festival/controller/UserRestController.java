@@ -204,7 +204,7 @@ public class UserRestController {
 
 			UserResponse response = UserResponse.successMessage("회원정보 수정 성공");
 			return ResponseEntity.ok(response);
-		} catch (jdk.jshell.spi.ExecutionControl.UserException e) {
+		} catch (UserException e) {
 			UserResponse response = UserResponse.error(e.getMessage());
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
 		}catch(Exception e){

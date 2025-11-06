@@ -1,20 +1,32 @@
+.navbar {
+    /* 🚨 FIX: position: fixed 제거. 일반적인 문서 흐름을 따릅니다. */
+    position: relative; 
+    top: auto;          
+    left: auto;
+    right: auto;
+    width: 100%;
+    z-index: 110; 
+    /* Bootstrap shadow-sm 대신 명시적인 그림자 추가 */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
+}
 
+
+/* ========================================================== */
+/* --- 2. Sidebar (FIXED 해제 및 일반 흐름) --- */
+/* ========================================================== */
 .sidebar {
   background-color: #ffffff; /* 흰색 배경 */
-  position: relative; /* 🚨 Fixed를 Relative로 변경! */
-  left: auto; /* 왼쪽 위치 고정 해제 */
-  width: 280px;
+  /* 🚨 FIX: position: fixed 제거. 일반적인 문서 흐름을 따르는 flex item이 됩니다. */
+  position: relative; 
+  left: auto;
+  width: 280px; /* 너비는 유지 */
   z-index: 100;
-  top: auto; /* top 고정 해제 */
-  height: auto; /* 높이 고정 해제 */
+  top: auto; /* fixed 해제 */
+  height: auto; /* fixed 해제 */
   overflow-y: auto; 
+  /* 메뉴 글자를 밑으로 내리기 위해 내부 상단 패딩 추가 */
   padding: 30px 20px; 
-  
-  /* 데스크톱 환경에서 좌측에 배치하기 위한 추가 스타일 */
-  flex-shrink: 0; /* 너비가 줄어들지 않도록 */
-  margin-right: 40px; /* 메인 콘텐츠와의 간격 */
-  border-radius: 14px; /* 보기 좋게 모서리 둥글게 */
-  box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+  flex-shrink: 0; /* flex item으로 작동 시 너비(280px) 유지 */
 }
 
 
@@ -26,35 +38,41 @@ body {
 }
 
 /* ========================================================== */
-/* --- 3. 레이아웃 및 크기 조정 (Wrapper - 중앙 정렬 FIX) --- */
+/* --- 3. 레이아웃 및 크기 조정 (Wrapper - 데스크톱) --- */
 /* ========================================================== */
 .mypage-wrapper {
   max-width: 1600px;
   
-  /* 🚨 FIX: 전체 래퍼 중앙 정렬 및 상단 여백만 확보 */
-  /* 헤더가 sticky-top이므로, 헤더 높이(약 70px) + 원하는 여백(40px) = 110px */
-  margin: 110px auto 40px auto; 
-  /* margin-left: 320px; 제거됨! */
+  /* 🚨 FIX: Fixed Header 보정(110px) 제거. 일반적인 상단 여백만 50px로 유지 */
+  margin-top: 50px; 
   
+  /* 중앙 정렬 유지 */
+  margin-left: auto;
+  margin-right: auto; 
+  
+  margin-bottom: 40px;
+
+  /* padding은 래퍼의 최대 너비(1600px)가 적용된 후에 적용되어야 함 */
   padding: 0 32px;
-  
-  /* Sidebar와 Main Content를 가로로 배치하기 위한 Flexbox */
   display: flex; 
-  flex-direction: row; /* 🚨 row로 변경! (가로 배치) */
-  align-items: flex-start; /* 상단 정렬 */
-  gap: 0; /* Sidebar와 Main Content 사이의 간격은 Sidebar에서 처리 */
+  flex-direction: row; /* Sidebar와 Main이 가로로 나란히 배치되도록 수정 */
+  gap: 48px;
 }
 
-/* Main Content가 남은 공간을 모두 차지하도록 */
+/* --- 우측 메인 콘텐츠 (Sidebar 공간 확보 마진 제거) --- */
 .main {
+  /* 🚨 FIX: Fixed Sidebar 보정 margin-left: 320px; 제거 */
+  margin-left: 0; 
+  
+  /* 메인 콘텐츠는 남은 공간을 모두 차지하도록 flex-grow 설정 */
+  flex-grow: 1;
+
   display:flex; 
   flex-direction:column; 
   gap:48px; 
-  flex-grow: 1; /* 남은 공간 모두 차지 */
 }
 
 
-/* --- Sidebar 내부 스타일 (유지) --- */
 .sidebar h2 {
   text-align: center;
   font-size: 22px; 
@@ -77,6 +95,9 @@ body {
   color: #333; 
   padding: 12px 20px; 
   border-radius: 0; 
+  transition: background 0.2s, color 0.2s;
+  font-weight: 600;
+  font-size: 17px;
 }
 
 .menu a:hover {
@@ -93,8 +114,6 @@ body {
     color: #ef4444; 
 }
 
-
-/* --- 우측 메인 콘텐츠 (유지) --- */
 
 /* 프로필 카드 (1.5배 수직 크기 확장 유지) */
 .profile-card {
@@ -158,43 +177,58 @@ body {
 /* --- 4. 반응형 (1100px 이하 - 모바일/태블릿) --- */
 /* ========================================================== */
 @media (max-width:1100px){ 
-  /* Sidebar를 메인 콘텐츠 위로 전체 너비로 배치 */
-  .mypage-wrapper {
-      flex-direction: column; /* 세로 배치로 변경 */
-      align-items: center; /* 중앙 정렬 */
-      margin-top: 110px;
-      margin-left: auto;
-      margin-right: auto;
-      padding: 0 24px;
-  }
-  
-  /* Sidebar가 전체 너비를 차지하도록 */
+  /* 모바일/태블릿에서는 fixed를 해제하고 sidebar를 상단에 배치 */
   .sidebar {
       position: relative;
       width: 100%;
-      margin-right: 0;
-      margin-bottom: 24px; /* 아래 메인 콘텐츠와 간격 */
       height: auto;
+      top: auto; 
+      border-radius: 14px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+      padding: 20px 16px;
+      z-index: 1;
   }
-
   .sidebar h2 { color: #333; } 
 
   .menu { 
       flex-direction: row; 
       flex-wrap: wrap; 
-      justify-content: center; /* 메뉴 가로 배치 및 중앙 정렬 */
-      gap: 12px 8px; /* 위아래, 좌우 간격 추가 */
+      justify-content: center; 
+      gap: 12px 8px; 
   }
   .menu a { 
       padding: 10px 15px; 
       border-radius: 8px; 
-      flex: 1 1 150px; /* 메뉴 항목의 최소 너비 설정 */
+      flex: 1 1 150px; 
       justify-content: center; 
   }
   .menu a.active {
       border-radius: 8px;
   }
 
+
+  /* 🚨 FIX: wrapper의 마진 수정 및 flex-direction 변경 */
+  .mypage-wrapper{ 
+    /* Fixed Header 보정 110px 대신 일반적인 상단 여백 50px로 통일 */
+    margin-top: 50px; 
+    margin-left: auto; 
+    margin-right: auto;
+    margin-bottom: 40px;
+
+    padding: 0 24px;
+    
+    /* 1100px 이하에서는 다시 세로로 배치 */
+    flex-direction: column; 
+  } 
+
+  /* 🚨 FIX: .main의 왼쪽 마진 제거 */
+  .main {
+    margin-left: 0;
+    flex-grow: 1;
+    display:flex; 
+    flex-direction:column; 
+    gap:48px;
+  }
 }
 @media (max-width:600px){
     .profile-card { padding: 24px; }
