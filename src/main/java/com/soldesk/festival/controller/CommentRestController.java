@@ -19,6 +19,7 @@ import com.soldesk.festival.service.CommentService;
 
 import lombok.RequiredArgsConstructor;
 
+/* 
 @RestController
 @RequestMapping("/comment")
 @RequiredArgsConstructor
@@ -76,3 +77,4 @@ public class CommentRestController {
     }
 
 }
+*/

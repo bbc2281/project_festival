@@ -1,30 +1,14 @@
+
 package com.soldesk.festival.controller;
-import java.util.Base64;
-import java.util.List;
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttribute;
-import org.springframework.web.multipart.MultipartFile;
 
-import com.soldesk.festival.dto.BoardDTO;
-import com.soldesk.festival.dto.PageDTO;
-import com.soldesk.festival.file.Base64MultipartFile;
-import com.soldesk.festival.dto.MemberDTO;
 import com.soldesk.festival.service.BoardService;
 import com.soldesk.festival.service.FileUploadService;
 
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
+/* 
 @Controller
 @RequestMapping("/board")
 @RequiredArgsConstructor
@@ -32,15 +16,15 @@ public class BoardController {
     
     private final BoardService boardService;
     private final FileUploadService fileUploadService;
-
+    
     @GetMapping("/list")
     public String listForm(Model model, @RequestParam(name = "page" , defaultValue = "1") int page , 
         @RequestParam(name = "board_category" ,defaultValue = "") String board_category , HttpSession session){
         
-        //나중에 진짜 맴버 객체랑 연동 할 예정입니다.
+        나중에 진짜 맴버 객체랑 연동 할 예정입니다.
         MemberDTO memberDTO = new MemberDTO();
-        memberDTO.setMember_idx(1);
-        session.setAttribute("loginMember", memberDTO);
+       memberDTO.setMember_idx(1);
+       session.setAttribute("loginMember", memberDTO);
         
         List<String> category = createCategoryList();
         model.addAttribute("categories", category);
@@ -58,16 +42,16 @@ public class BoardController {
         model.addAttribute("pageDTO", pageDTO);
         return"board/list";
     }
-
+    
     @GetMapping("/write")
     public String writeFrom(Model model , BoardDTO boardDTO,  @SessionAttribute("loginMember")MemberDTO memberDTO){   
-        boardDTO.setBoard_category(""); 
+       // boardDTO.setBoard_category(""); 
         model.addAttribute("categories", createCategoryList());
         model.addAttribute("writeBoard", boardDTO);
         model.addAttribute("loginMember", memberDTO);
         return"/board/write";
     }
-
+   
     @PostMapping("/write")
     public String writeSubmit(@ModelAttribute("writeBoard")BoardDTO boardDTO , @SessionAttribute("loginMember")MemberDTO memberDTO ){
         boardDTO.setMember_idx(memberDTO.getMember_idx());
@@ -95,7 +79,8 @@ public class BoardController {
         boardService.writeProcess(boardDTO);     
         return "redirect:/board/list";
         }
-
+      
+      
     @GetMapping("/info")
     public String infoForm(@RequestParam("board_idx")int board_idx , Model model){
         boardService.updateViews(board_idx);        
@@ -113,6 +98,7 @@ public class BoardController {
         return"/board/modify";
     }
 
+    
 @PostMapping("/modify")
 public String modifySubmit(@ModelAttribute("board_now") BoardDTO boardDTO) {
     
@@ -179,7 +165,7 @@ public String modifySubmit(@ModelAttribute("board_now") BoardDTO boardDTO) {
 }
 
 
-    @PostMapping("/delete")
+  @PostMapping("/delete")
     public String deleteSubmit(@RequestParam("board_idx")int board_idx ,@SessionAttribute("loginMember")MemberDTO MemberDTO){
         BoardDTO deleteBaord = boardService.infoProcess(board_idx);
         if(deleteBaord.getMember_idx() == MemberDTO.getMember_idx()){
@@ -192,9 +178,9 @@ public String modifySubmit(@ModelAttribute("board_now") BoardDTO boardDTO) {
         }
         return "redirect:/board/list";
     }
-      
- public List<String> createCategoryList() {
-    return List.of("공지사항", "이벤트", "기타");
+        
+    public List<String> createCategoryList() {
+        return List.of("공지사항", "이벤트", "기타");
+    }
 }
-
-}
+*/

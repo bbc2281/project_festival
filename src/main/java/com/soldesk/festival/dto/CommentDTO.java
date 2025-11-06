@@ -8,7 +8,7 @@ import lombok.Setter;
 public class CommentDTO {
     
     private int comment_idx;
-    private int member_idx;
+    private Integer member_idx;
     private int review_idx;
     private String comment_content;
     private String comment_regDate;

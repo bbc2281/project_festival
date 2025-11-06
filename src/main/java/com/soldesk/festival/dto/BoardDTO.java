@@ -9,7 +9,7 @@ import lombok.Setter;
 public class BoardDTO {
     
     private int board_idx;
-    private int member_idx;
+    private Integer member_idx;
     private int festival_idx;
     private int festival_category_idx;
     private String board_title;

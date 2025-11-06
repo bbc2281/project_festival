@@ -12,16 +12,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.soldesk.festival.dto.FestivalDTO;
-import com.soldesk.festival.dto.ReviewDTO;
-import com.soldesk.festival.service.FestivalService;
-import com.soldesk.festival.service.ReviewService;
 import com.soldesk.festival.dto.ChatRoomDTO;
 import com.soldesk.festival.dto.FestivalCategoryDTO;
+import com.soldesk.festival.dto.FestivalDTO;
 import com.soldesk.festival.dto.MemberDTO;
 import com.soldesk.festival.dto.RegionDTO;
 import com.soldesk.festival.service.ChatService;
+import com.soldesk.festival.service.FestivalService;
 import com.soldesk.festival.service.FileUploadService;
+import com.soldesk.festival.service.ReviewService;
 import com.soldesk.festival.service.SegFestivalService;
 
 import lombok.RequiredArgsConstructor;
@@ -43,9 +42,9 @@ public class FestivalController {
         model.addAttribute("festival", festival);
 
         //리뷰 추가 
-        int festivalIdx = festival.getFestival_idx();
-        List<ReviewDTO> reviewList = reviewService.selectAllReviews(festivalIdx );
-        model.addAttribute("reviews", reviewList);
+        //int festivalIdx = festival.getFestival_idx();
+        //List<ReviewDTO> reviewList = reviewService.selectAllReviews(festivalIdx );
+        //model.addAttribute("reviews", reviewList);
 
 
         
@@ -101,7 +100,7 @@ public class FestivalController {
             System.out.println("파일 이름: " + file.getOriginalFilename());
             System.out.println("파일 크기: " + file.getSize());
             imageUrl = fileUploadService.uploadToFirebase(file);
-            festivalDTO.setFestival_img_path(imageUrl);
+            //festivalDTO.setFestival_img_path(imageUrl);
             
             } catch (IOException e) {
                 e.printStackTrace();
