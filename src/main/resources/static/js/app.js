@@ -34,10 +34,7 @@
 
 
 // Dataset (mock)
-<<<<<<< HEAD
-/*
-=======
->>>>>>> origin/main
+
 const FESTIVALS = [ ];
 const NOTICES = [ ];
 
@@ -292,10 +289,4 @@ function renderPager(total, size, page) {
     });
     ul.appendChild(nextLi);
   }
-<<<<<<< HEAD
-}*/
-=======
 }
-
-
->>>>>>> origin/main
