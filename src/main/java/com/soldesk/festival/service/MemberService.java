@@ -145,6 +145,7 @@ public class MemberService {
         
 		return list.stream()
 		            .map(member ->  MemberDetailDTO.builder()
+					.member_id(member.getMember_id())
 					.member_name(member.getMember_name())
 					.member_nickname(member.getMember_nickname())
 					.member_email(member.getMember_email())

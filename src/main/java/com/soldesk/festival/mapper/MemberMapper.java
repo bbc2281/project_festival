@@ -75,7 +75,7 @@ public interface MemberMapper {
 	Optional<MemberDTO> selectUserByEmail(@Param("member_email")String userEmail);
 	
     
-	@Select("select member_name, member_nickname, member_email, role  from member")
+	@Select("select member_id, member_name, member_nickname, member_email, role  from member")
 	List<MemberDetailDTO> getMemberList();
 
 	@Options(useGeneratedKeys=true, keyProperty="member_idx")

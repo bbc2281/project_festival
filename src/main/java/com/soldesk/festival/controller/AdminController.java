@@ -79,8 +79,8 @@ public class AdminController {
     @GetMapping("/member")
     public String member(Model model){
 
-        List<MemberDetailDTO> list = memberService.getMemberListforAdmin();
-        model.addAttribute("members", list);
+        List<MemberDetailDTO> members = memberService.getMemberListforAdmin();
+        model.addAttribute("members", members);
 
         return "/admin/member";
     }
