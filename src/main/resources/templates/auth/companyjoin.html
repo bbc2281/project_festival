@@ -9,7 +9,7 @@
   <title>기업회원 가입 — FesLite</title>
   <base href="/">
   <link rel="stylesheet" th:href="@{/css/loginStyle.css}" />
-  <script defer th:src="@{/js/companysign.js}"></script> 
+  <script defer th:src="@{/authjs/companysign.js}"></script> 
 </head>
 <body>
   <div th:replace="~{common/loginHeader :: loginHeader}"></div>
@@ -117,6 +117,6 @@
   <div th:replace="~{common/LoginFooter :: LoginFooter}"></div>
   
   <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-  <script defer th:src="@{/js/myAddress.js}"></script>
+  <script defer th:src="@{/authjs/myAddress.js}"></script>
 </body>
 </html>
