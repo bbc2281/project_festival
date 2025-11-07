@@ -36,4 +36,5 @@ public class FavoriteService {
     public int countFavoriteByFestival(int festival_idx){
         return favoriteMapper.countFavoriteByFestival(festival_idx);
     }
+
 }

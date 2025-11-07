@@ -22,4 +22,5 @@ public interface FavoriteMapper {
 
     @Select("select count(favorite_idx) from favorite where festival_idx = #{festival_idx}")
     int countFavoriteByFestival(@Param("festival_idx") int festival_idx);
+
 }
