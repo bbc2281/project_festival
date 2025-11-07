@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.soldesk.festival.config.AuthUtil;
 import com.soldesk.festival.config.MemberRole;
+import com.soldesk.festival.dto.LoginDTO;
 import com.soldesk.festival.dto.MemberDTO;
 import com.soldesk.festival.dto.MemberDetailDTO;
 import com.soldesk.festival.dto.MemberJoinDTO;
@@ -102,16 +103,20 @@ public class MemberService {
 		memberMapper.updateMember(updateUser);
 	}
     
-	@Transactional
-	public void deleteMember(String userId, String password) {
+	@Transactional(rollbackFor= com.soldesk.festival.exception.UserException.class)
+	public void deleteMember(LoginDTO deleteUser) {
 		
-		MemberDTO currentMember = findUserbyId(userId).filter(member -> authUtil.checkPassword(password, member.getMember_pass()))
+		String id = deleteUser.getMember_id();
+		String pass = deleteUser.getMember_pass();
+
+		MemberDTO currentMember = findUserbyId(id).filter(member -> authUtil.checkPassword(pass, member.getMember_pass()))
 				.orElseThrow(()-> new UserException("아이디나 비밀번호가 일치하지 않습니다"));
 		
+        				
 		//currentMember.setDeleted(true);
 		//currentMember.setDeletedAt(LocalDateTime.now());
 		
-		memberMapper.deleteMember(currentMember);
+		memberMapper.deleteMember(currentMember);   //탈퇴기능 보류 -> db에 isdeleted로 논리탈퇴 할지 말지 고민중 
 		
 	}
 

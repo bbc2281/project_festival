@@ -1,10 +1,12 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="_csrf" th:content="${_csrf.token}"/>
+  <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
   <title>회원탈퇴 — FesLite</title>
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" /> 
   <style>
     body{background:linear-gradient(135deg,#ffdee9 0%,#b5fffc 100%);font-family:'Pretendard',sans-serif;}
     .mypage-wrapper{display:grid;grid-template-columns:240px 1fr;gap:24px;max-width:1100px;margin:40px auto;padding:0 16px;}
@@ -13,60 +15,63 @@
     .menu a:hover{background:#f0f2ff;color:#6b21a8;}
     .menu a.active{background:#6b21a8;color:#fff;font-weight:700;}
     .main{background:#fff;border-radius:20px;box-shadow:0 4px 14px rgba(0,0,0,.1);padding:40px;text-align:center;}
-    button{margin-top:20px;padding:10px 16px;border:none;border-radius:8px;background:#ef4444;color:#fff;font-weight:700;}
+    
+    /* 탈퇴 폼 스타일 */
+    .delete-form-container { max-width: 350px; margin: 20px auto; padding: 20px; border: 1px solid #ffdee9; border-radius: 12px; text-align: left; }
+    .delete-form-container label { display: block; font-weight: 600; margin-bottom: 5px; color: #333; }
+    .delete-form-container input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 8px; margin-bottom: 15px; box-sizing: border-box; }
+    
+    /* 버튼 스타일 */
+    #deleteBtn{width:100%; margin-top:10px;padding:12px 16px;border:none;border-radius:8px;background:#ef4444;color:#fff;font-weight:700;transition: background-color 0.2s;}
+    #deleteBtn:hover { background-color: #d83a3a; }
+
+    #deleteMsg{margin-top:15px;color:#ef4444;font-weight:600;}
     @media(max-width:900px){.mypage-wrapper{grid-template-columns:1fr;}}
   </style>
 </head>
 <body>
-  <nav class="navbar">
-    <div class="container">
-      <div class="navbar-inner">
-        <div class="brand"><span>FesLite</span></div>
-        <div class="nav-actions">
-          <a href="index.html" class="btn btn-secondary">홈으로</a>
-          <a href="login.html" class="btn btn-accent">로그아웃</a>
-        </div>
-      </div>
-    </div>
-  </nav>
+
+  <div th:replace="~{common/header :: header}"></div>
+
+  <form style="display:none;" th:if="${_csrf}" th:action="@{/noop}">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+  </form>
 
   <main class="mypage-wrapper">
     <aside class="sidebar">
-       <h2><a href="mypage.html" style="text-decoration:none; color:inherit;">마이페이지</a></h2>
+       <h2><a th:href="@{/member/mypage}" style="text-decoration:none; color:inherit;">마이페이지</a></h2>
       <nav class="menu">
-        <a href="mypage-edit.html">회원정보 수정<span>›</span></a>
-        <a href="mypage-bookmark.html">내가 찜한 페이지<span>›</span></a>
-        <a href="mypage-review.html">나의 리뷰<span>›</span></a>
-        <a href="mypage-inquiry.html">1:1 문의<span>›</span></a>
-        <a href="mypage-delete.html" style="color:#ef4444;">회원탈퇴<span>›</span></a>
-      </nav>
+        <a th:href="@{/member/info}">회원정보 수정<span>›</span></a>
+        <a th:href="@{/member/bookmark}">내가 찜한 페이지<span>›</span></a>
+        <a th:href="@{/member/review}">나의 리뷰<span>›</span></a>
+        <a th:href="@{/member/inquiry}">1:1 문의<span>›</span></a>
+        <a th:href="@{/member/delete}" class="active" style="color:#ef4444;">회원탈퇴<span>›</span></a>
+          </nav>
     </aside>
 
     <section class="main">
       <h3>회원탈퇴</h3>
       <p>정말로 탈퇴하시겠습니까?<br>모든 회원 정보와 활동 내역이 삭제됩니다.</p>
-      <button id="deleteBtn">회원탈퇴</button>
-      <p id="deleteMsg" style="margin-top:15px;color:#6b21a8;font-weight:600;"></p>
+      <div class="delete-form-container">
+          <p style="font-size:0.9em; margin-bottom: 10px; color:#ef4444;">본인 확인을 위해 아이디와 비밀번호를 입력해주세요.</p>
+          <form id="deleteMemberForm">
+              
+              <label for="member_id">아이디</label>
+              <input id="member_id" type="text" required placeholder="회원 아이디 입력" />
+
+              <label for="current_pass">비밀번호</label>
+              <input id="current_pass" type="password" required placeholder="현재 비밀번호 입력" />
+              
+              <button id="deleteBtn" type="submit">회원탈퇴 진행</button>
+              
+              <p id="deleteMsg" style="margin-top:15px;color:#ef4444;font-weight:600;"></p>
+          </form>
+      </div>
     </section>
   </main>
 
   <footer class="footer"><div class="container">© 2025 FesLite — 모두의 축제를 연결합니다 🎡</div></footer>
 
-  <script>
-    document.addEventListener('DOMContentLoaded',()=>{
-      const links=document.querySelectorAll('.menu a');
-      const currentPath=window.location.pathname.split("/").pop();
-      links.forEach(link=>{
-        const href=link.getAttribute('href');
-        if(currentPath===href){link.classList.add('active');}
-      });
-    });
 
-    document.getElementById('deleteBtn').addEventListener('click',()=>{
-      if(confirm("정말로 탈퇴하시겠습니까?")){
-        document.getElementById('deleteMsg').innerText="회원탈퇴가 완료되었습니다. 이용해주셔서 감사합니다.";
-      }
-    });
-  </script>
 </body>
 </html>

@@ -38,7 +38,7 @@
           <div class="profile-left">
             <img th:src="@{/images/user_icon.png}" alt="프로필 이미지">
             <div class="profile-info">
-              <h3><span th:text="${userInfo.member_email}"></span>님</h3>
+              <h3><span th:text="${userInfo.member_nickname}"></span>님</h3>
               <p th:text="${userInfo.member_email}"></p> 
               <div class="extra-info">  
               <!-- 🚨 가입일 필드 (member_regdate)를 완전히 제거하여 템플릿 파싱 오류를 방지합니다. -->

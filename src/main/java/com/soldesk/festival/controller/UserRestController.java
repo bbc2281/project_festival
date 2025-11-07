@@ -248,7 +248,29 @@ public class UserRestController {
 		}
 
 	}
+    
+	@PostMapping("/withdraw")
+	public ResponseEntity<UserResponse> deleteUser(@AuthenticationPrincipal SecurityAllUsersDTO userdetails, @Valid @RequestBody LoginDTO deleteUser){
+      
+		if(userdetails == null) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(UserResponse.error("인증되지 않은 사용자 입니다"));
+		}
+		
+		try {
+			memberService.deleteMember(deleteUser);
+			UserResponse response = UserResponse.successMessage("회원탈퇴가 승인되었습니다");
+			return ResponseEntity.status(HttpStatus.OK).body(response);
+			
+		} catch (UserException e) {
+			UserResponse response = UserResponse.error(e.getMessage());
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+		}catch(Exception e) {
+			UserResponse response = UserResponse.error("회원탈퇴 승인과정에서 오류가 발생하였습니다");
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+		}
 
+
+	}
 
 
 	

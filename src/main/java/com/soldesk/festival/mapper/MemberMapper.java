@@ -88,7 +88,7 @@ public interface MemberMapper {
 	void updateMember(MemberUpdateDTO updateMember); //아이디 제외
 	
 	//@Update("update ")
-	@Delete("delete from member where member_id=#{member_id}")
+	@Delete("delete from member where member_id=#{member_id} and member_pass=#{member_pass}")
 	MemberDTO deleteMember(MemberDTO deleteMember);
 	
 	
