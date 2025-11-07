@@ -2,6 +2,7 @@ package com.soldesk.festival.controller;
 
 import java.util.List;
 
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,7 +11,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.soldesk.festival.dto.BoardDTO;
 import com.soldesk.festival.dto.FestivalDTO;
+import com.soldesk.festival.dto.MemberDetailDTO;
 import com.soldesk.festival.dto.PageDTO;
+import com.soldesk.festival.dto.SecurityAllUsersDTO;
 import com.soldesk.festival.mapper.MemberMapper;
 import com.soldesk.festival.service.BoardService;
 import com.soldesk.festival.service.FestivalService;
@@ -76,10 +79,14 @@ public class AdminController {
         return "/admin/inquiry";
     }
     @GetMapping("/member")
-    public String member(Model model){
+    public String member(@AuthenticationPrincipal SecurityAllUsersDTO userdetails, Model model){
+        
+        if(userdetails == null){
+            return "redirect:/auth/loginPage";
+        }
 
-        //List<MemberDetailDTO> members = memberService.getMemberListforAdmin(); -> I'll do this after take a sleep.(?)
-        //model.addAttribute("members", members);
+        List<MemberDetailDTO> members = memberService.getMemberListforAdmin(userdetails.getUsername());
+        model.addAttribute("members", members);
 
         return "/admin/member";
     }

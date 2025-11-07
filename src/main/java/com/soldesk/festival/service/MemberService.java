@@ -137,8 +137,21 @@ public class MemberService {
 		}
         return Optional.empty();
 	}
-
+    
 	
+	public boolean checkpassword(String userId, String rawpass){
+
+		Optional<MemberDTO> opMember = findUserbyId(userId);
+
+		if(opMember.isEmpty()){
+			return false;
+		}
+
+		MemberDTO member = opMember.get();
+		String password = member.getMember_pass();
+
+		return authUtil.checkPassword(rawpass, password);
+	}
     
 
 	

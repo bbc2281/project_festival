@@ -25,6 +25,7 @@ import com.soldesk.festival.dto.CompanyJoinDTO;
 import com.soldesk.festival.dto.LoginDTO;
 import com.soldesk.festival.dto.MemberJoinDTO;
 import com.soldesk.festival.dto.MemberUpdateDTO;
+import com.soldesk.festival.dto.PasswordVerifyDTO;
 import com.soldesk.festival.dto.SecurityAllUsersDTO;
 import com.soldesk.festival.dto.UserResponse;
 import com.soldesk.festival.exception.UserException;
@@ -204,12 +205,45 @@ public class UserRestController {
 
 			UserResponse response = UserResponse.successMessage("회원정보 수정 성공");
 			return ResponseEntity.ok(response);
+			
 		} catch (UserException e) {
 			UserResponse response = UserResponse.error(e.getMessage());
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
 		}catch(Exception e){
 			e.printStackTrace();
 			UserResponse response = UserResponse.error("회원정보 수정중 오류가 발생하였습니다");
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+		}
+
+	}
+    
+    @PostMapping("/verifypass")
+    public ResponseEntity<UserResponse> verifypass(@AuthenticationPrincipal SecurityAllUsersDTO userdetails, @Valid @RequestBody PasswordVerifyDTO passcheck){
+
+
+		String userId = userdetails.getUsername();
+		String rawpass = passcheck.getCurrent_pass();
+		boolean isMatch = memberService.checkpassword(userId, rawpass);
+
+		try {
+			if(isMatch){
+				
+				UserResponse response = UserResponse.successMessage("비밀번호 확인이 되었습니다");
+				return ResponseEntity.ok(response);
+
+			}else {
+
+				String err = "비밀번호가 일치하지 않습니다";
+				UserResponse response = UserResponse.error(err);
+				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+			}
+			
+		} catch (UserException e) {
+			UserResponse response = UserResponse.error(e.getMessage());
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+			
+		}catch (Exception e) {
+			UserResponse response = UserResponse.error("비밀번호 확인 중 오류가 발생하였습니다");
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
 		}
 

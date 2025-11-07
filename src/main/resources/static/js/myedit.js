@@ -121,7 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 // REST API 엔드포인트: PUT /api/v1/auth/modifymember
                 const res = await fetch('/api/v1/auth/modifymember', { 
-                    method: 'PUT',
+                    method: 'POST',
                     headers: headers,
                     body: JSON.stringify(updateData)
                 });
