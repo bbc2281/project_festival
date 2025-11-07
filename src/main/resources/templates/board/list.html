@@ -133,7 +133,7 @@
               th:onclick="|location.href='@{/board/info(board_idx=${board.board_idx})}'|">
             <td th:text="${board.board_idx}"></td>
             <td class="text-start" th:text="${board.board_title}"></td>
-            <td th:text="${board.member_idx}"></td>
+            <td th:text="관리자"></td>
             <td th:text="${#dates.format(board.board_regDate, 'yyyy-MM-dd')}"></td>
             <td th:text="${board.board_views}"></td>
             <td th:text="${board.board_category}"></td>

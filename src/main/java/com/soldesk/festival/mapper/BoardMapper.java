@@ -18,6 +18,11 @@ public interface BoardMapper {
             "limit #{start}, #{limit}")
             //맴버 테이블 연동 후 레프트 조인 풀기
     List<BoardDTO> selectAllBoard(@Param("start") int start ,@Param("limit") int limit);
+
+    @Select("select b.board_idx, m.member_idx, b.board_title, b.board_regDate, b.board_views, b.board_category, b.board_content, m.member_nickname " + 
+            "from board b LEFT join member m on b.member_idx = m.member_idx " +  
+            "order by board_idx desc ")
+    List<BoardDTO> selectAllBoardNoLimits();
     
     @Select("select b.board_idx, m.member_idx, b.board_title, b.board_regDate, b.board_views, b.board_category, b.board_content, m.member_nickname " + 
             "from board b LEFT join member m on b.member_idx = m.member_idx " +
@@ -52,7 +57,8 @@ public interface BoardMapper {
     @Delete("delete from board where board_idx=#{board_idx}")
     void deleteProecess(int board_idx);
 
-
+    @Select("select count(*) from board where board_regDate = #{date}")
+    int countBoardNow(@Param("date") String date);
     
     
 } 

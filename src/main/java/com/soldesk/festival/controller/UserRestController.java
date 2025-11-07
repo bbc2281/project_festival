@@ -2,6 +2,7 @@ package com.soldesk.festival.controller;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.soldesk.festival.dto.CompanyJoinDTO;
 import com.soldesk.festival.dto.LoginDTO;
+import com.soldesk.festival.dto.MemberDTO;
 import com.soldesk.festival.dto.MemberJoinDTO;
 import com.soldesk.festival.dto.SecurityAllUsersDTO;
 import com.soldesk.festival.dto.UserResponse;
@@ -74,8 +76,10 @@ public class UserRestController {
 
 			 HttpSession session = request.getSession(true);
 			 session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, securityContext);
-   
-
+			 
+			 memberService.findUserbyId(userLogin.getMember_id())
+    			.ifPresent(member -> session.setAttribute("loginMember", member));
+				session.setMaxInactiveInterval(30*60);
 
 			 SecurityAllUsersDTO user = (SecurityAllUsersDTO)authentication.getPrincipal();
 

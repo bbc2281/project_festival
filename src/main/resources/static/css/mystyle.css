@@ -1,5 +1,6 @@
- body {
+body {
       background: linear-gradient(135deg, #ffdee9 0%, #b5fffc 100%);
+      min-height: 100vh;
       font-family: 'Pretendard', sans-serif;
     }
 
@@ -10,6 +11,8 @@
       max-width: 1100px;
       margin: 40px auto;
       padding: 0 16px;
+      flex: 1;
+      min-height: calc(100vh - 80px);
     }
 
     /* 좌측 사이드 메뉴 */
@@ -120,6 +123,16 @@
     .dash-green{ background:#dcfce7; color:#065f46; }
     .dash-violet{ background:#f3e8ff; color:#6b21a8; }
     .dash-yellow{ background:#fef9c3; color:#854d0e; }
+
+    .footer {
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(4px);
+      text-align: center;
+      padding: 18px 0;
+      font-size: 14px;
+      color: #333;
+      box-shadow: 0 -2px 8px rgba(0,0,0,0.05);
+    }
 
     @media (max-width:900px){
       .mypage-wrapper{ grid-template-columns:1fr; }

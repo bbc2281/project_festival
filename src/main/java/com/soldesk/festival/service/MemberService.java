@@ -132,7 +132,16 @@ public class MemberService {
 		}
 		
 		public List<MemberDTO> getMemberList(){
+			
 			return memberMapper.getMemberList();
 		}
 
+
+	public int countMember(){
+		return memberMapper.countMember();
+	}
+
+	public void adminDeleteMember(int member_idx){
+		memberMapper.adminDeleteMember(member_idx);
+	}
 }

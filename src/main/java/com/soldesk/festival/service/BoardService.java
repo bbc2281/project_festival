@@ -66,4 +66,8 @@ public class BoardService {
     public int countBoard(){
         return boardDAO.countBoard();
     }
+
+    public int countBoardNow(String date){
+        return boardDAO.countBoardNow(date);
+    }
 }
