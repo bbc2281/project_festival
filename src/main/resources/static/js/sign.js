@@ -87,6 +87,25 @@ async function handleSignupSubmit(e) {
         return;
     }
 
+    // 🌟🌟🌟 [여기부터 주소 통합 로직 시작] 🌟🌟🌟
+    // HTML에서 세부 주소 필드의 name을 모두 제거했기 때문에, 
+    // data 객체에 member_address 필드가 포함되어 있지 않습니다.
+    
+    const postcode = document.getElementById('postcode').value;
+    const baseAddress = document.getElementById('address').value;
+    const detailAddress = document.getElementById('detailAddress').value;
+    const extraAddress = document.getElementById('extraAddress').value; 
+    
+    // 주소를 하나의 문자열로 합치기
+    // 예: [01234] 서울시 강남구 역삼동 (상세: 5층)
+    const fullAddress = `[${postcode}] ${baseAddress} ${detailAddress} ${extraAddress}`;
+    
+    // 최종 DTO 필드인 member_address에 통합된 값을 할당
+    // (이것이 hidden input name="member_address"의 값으로 최종 전송됩니다)
+    data.member_address = fullAddress.trim(); 
+    
+    // 🌟🌟🌟 [주소 통합 로직 끝] 🌟🌟🌟
+
     // 3. 백엔드로 보내지 않을 필드 제거
     // 🚨 필드명 변환이 필요 없으므로, 필요 없는 필드만 제거하고 data를 그대로 전송
     delete data.member_pass2;
