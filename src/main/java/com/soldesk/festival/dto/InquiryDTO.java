@@ -12,6 +12,7 @@ public class InquiryDTO {
     private String inquiry_title;
     private String inquiry_content;
     private String inquiry_regDate;
+    private String inquiry_answer;
 
     private String member_name;
     private String member_email;

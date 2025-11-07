@@ -7,6 +7,7 @@
   <base href="/">
   <link th:href="@{/css/adminStyle.css}" rel="stylesheet">
   <script defer th:src="@{/js/adminApp.js}"></script>
+  <script defer th:src="@{/js/adminInquiry.js}"></script>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <style>
@@ -32,7 +33,6 @@
   <div class="main">
     <header>
       <h4>1:1 문의 관리</h4>
-      <button class="btn btn-outline-danger btn-sm">로그아웃</button>
     </header>
 
     <div class="content">
@@ -47,24 +47,29 @@
             <th>관리</th>
           </tr>
         </thead>
+        
         <tbody>
           <tr th:each="inquiry : ${list}">
             <td th:text="${inquiry.member_name}"></td>
             <td th:text="${inquiry.member_email}"></td>
 
-            <!-- ✅ 제목 클릭 시 모달 띄우기 -->
             <td>
               <a class="inquiry-link"
-                 th:data-title="${inquiry.inquiry_title}"
-                 th:data-content="${inquiry.inquiry_content}"
-                 onclick="openInquiryModal(this)">
+                th:data-id="${inquiry.inquiry_idx}"
+                th:data-title="${inquiry.inquiry_title}"
+                th:data-content="${inquiry.inquiry_content}"
+                th:data-answer="${inquiry.inquiry_answer}"
+                onclick="openInquiryModal(this)">
                 <span th:text="${inquiry.inquiry_title}"></span>
               </a>
             </td>
 
             <td th:text="${inquiry.inquiry_regDate}"></td>
-            <td><span class="badge bg-warning text-dark">대기</span></td>
-            <td><button class="btn btn-success btn-sm">답변하기</button></td>
+            <td>
+              <span th:if="${inquiry.inquiry_answer == null}" class="badge bg-warning text-dark">대기</span>
+              <span th:if="${inquiry.inquiry_answer != null}" class="badge bg-success">완료</span>
+            </td>
+            <td><button class="btn btn-success btn-sm" th:if="${inquiry.inquiry_answer == null}">답변하기</button></td>
           </tr>
         </tbody>
       </table>
@@ -79,33 +84,32 @@
           <h5 class="modal-title" id="inquiryModalLabel">문의 상세내용</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="닫기"></button>
         </div>
+
         <div class="modal-body">
+          <!-- 제목 & 문의 내용 -->
           <h6 id="modalTitle" class="fw-semibold mb-3"></h6>
-          <div id="modalContent" class="border rounded bg-light p-3" style="min-height:120px;"></div>
+          <div id="modalContent" class="border rounded bg-light p-3 mb-4" style="min-height:120px;"></div>
+
+          <!-- ✅ 답변 표시 영역 -->
+          <div id="answerSection" class="d-none">
+            <h6 class="fw-semibold text-success">관리자 답변</h6>
+            <div id="answerContent" class="border rounded bg-white p-3 mb-3"></div>
+          </div>
+
+          <!-- ✅ 답변 작성 영역 -->
+          <form id="answerForm" class="d-none">
+            <label for="answerText" class="fw-semibold mb-2">답변 작성</label>
+            <textarea id="answerText" class="form-control" rows="4" placeholder="문의에 대한 답변을 입력하세요." required></textarea>
+          </form>
         </div>
+
         <div class="modal-footer">
           <button class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-          <button class="btn btn-success">답변하기</button>
+          <button id="submitAnswerBtn" class="btn btn-success d-none" type="button">답변 등록</button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ✅ JS -->
-  <script>
-    function openInquiryModal(el) {
-      // 데이터 속성에서 값 읽기
-      const title = el.getAttribute("data-title");
-      const content = el.getAttribute("data-content");
-
-      // 모달에 값 넣기
-      document.getElementById("modalTitle").innerText = title;
-      document.getElementById("modalContent").innerText = content;
-
-      // 모달 표시
-      const modal = new bootstrap.Modal(document.getElementById("inquiryDetailModal"));
-      modal.show();
-    }
-  </script>
 </body>
 </html>

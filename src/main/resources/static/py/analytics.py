@@ -41,6 +41,11 @@ for row in response.rows:
         record[met.name] = met_value.value
     data.append(record)
 
-# JSON 저장
-with open('src/main/resources/static/js/analytics.json', 'w', encoding='utf-8') as f:
+# JSON 저장 (BASE_DIR 기준)
+output_path = os.path.join(BASE_DIR, '..', 'js', 'analytics.json')
+output_path = os.path.abspath(output_path)
+
+os.makedirs(os.path.dirname(output_path), exist_ok=True)
+
+with open(output_path, 'w', encoding='utf-8') as f:
     json.dump(data, f, ensure_ascii=False, indent=2)

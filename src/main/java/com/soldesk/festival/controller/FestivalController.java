@@ -21,9 +21,11 @@ import com.soldesk.festival.dto.FestivalCategoryDTO;
 import com.soldesk.festival.dto.MemberDTO;
 import com.soldesk.festival.dto.RegionDTO;
 import com.soldesk.festival.service.ChatService;
+import com.soldesk.festival.service.FavoriteService;
 import com.soldesk.festival.service.FileUploadService;
 import com.soldesk.festival.service.SegFestivalService;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -35,10 +37,12 @@ public class FestivalController {
     private final ReviewService reviewService;
     private final ChatService chatService;
     private final FileUploadService fileUploadService;
-    
+    private final FavoriteService favoriteService; 
+
     @GetMapping("/festivalInfo")
-    public String info(@RequestParam("id") int id, Model model, @SessionAttribute(name = "loginMember", required = false) MemberDTO loginMember){
-        
+    public String info(@RequestParam("id") int id, Model model, HttpSession session){
+        MemberDTO loginMember = (MemberDTO) session.getAttribute("loginMember");
+
         FestivalDTO festival = festivalService.getFestival(id);
         model.addAttribute("festival", festival);
 
@@ -47,19 +51,20 @@ public class FestivalController {
         List<ReviewDTO> reviewList = reviewService.selectAllReviews(festivalIdx);
         model.addAttribute("reviews", reviewList);
 
-
-        
         ChatRoomDTO chatRoom = chatService.getChatRoomById(id);
         model.addAttribute("chatRoom", chatRoom);
 
-        if(loginMember != null){
+        boolean exist = false;
+        if (loginMember != null) {
+            exist = favoriteService.existsFavorite(loginMember.getMember_idx(), festivalIdx);
             model.addAttribute("loginMember", loginMember);
             model.addAttribute("loggedIn", true);
-        }else{
+        } else {
             loginMember = new MemberDTO();
             model.addAttribute("loginMember", loginMember);
             model.addAttribute("loggedIn", false);
         }
+        model.addAttribute("isFavorite", exist);
 
         return "festival/info";
     }
@@ -118,6 +123,6 @@ public class FestivalController {
         
         festivalService.deleteFestival(festival_idx);
 
-        return "redirect:/";
+        return "redirect:/admin/festival";
     }
 }

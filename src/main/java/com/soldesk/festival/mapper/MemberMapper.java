@@ -43,6 +43,7 @@ public interface MemberMapper {
 	
 	@Select("select * from member where member_id=#{member_id}")
 	@Results({
+		@Result(property="member_idx", column="member_idx"),
 		@Result(property="member_id", column="member_id"),
 		@Result(property="member_name", column="member_name"),
 		@Result(property="role", column="role", typeHandler=MemberRoleTypeHandler.class)
@@ -73,7 +74,7 @@ public interface MemberMapper {
 	Optional<MemberDTO> selectUserByEmail(@Param("member_email")String userEmail);
 	
     
-	@Select("select * from member order by member_idx desc")
+	@Select("select * from member where role = 'USER' order by member_idx desc")
 	List<MemberDTO> getMemberList();
 
 	@Options(useGeneratedKeys=true, keyProperty="member_idx")
@@ -89,6 +90,8 @@ public interface MemberMapper {
 	@Delete("delete from member where member_id=#{member_id}")
 	MemberDTO deleteMember(MemberDTO deleteMember);
 	
+	@Delete("delete from member where member_idx = #{member_idx}")
+	void adminDeleteMember(@Param("member_idx") int member_idx);
 	
 	@Select("select count(member_idx) from member")
 	int countMember();

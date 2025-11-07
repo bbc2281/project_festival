@@ -79,6 +79,7 @@ public class UserRestController {
 			 
 			 memberService.findUserbyId(userLogin.getMember_id())
     			.ifPresent(member -> session.setAttribute("loginMember", member));
+				session.setMaxInactiveInterval(30*60);
 
 			 SecurityAllUsersDTO user = (SecurityAllUsersDTO)authentication.getPrincipal();
 

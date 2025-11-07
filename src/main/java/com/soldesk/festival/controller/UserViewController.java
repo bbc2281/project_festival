@@ -1,5 +1,7 @@
 package com.soldesk.festival.controller;
 
+import java.util.List;
+
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -77,7 +79,12 @@ public class UserViewController {
 
     //일반회원 1:1문의
     @GetMapping("/mypage/inquiry")
-    public String mypageInquiry(@ModelAttribute("inquiry") InquiryDTO inquiry){
+    public String mypageInquiry(@ModelAttribute("inquiry") InquiryDTO inquiry, Model model,@SessionAttribute("loginMember") MemberDTO loginMember){
+
+        List<InquiryDTO> inquiryList = inquiryService.selectAllInquiry();
+        System.out.println(inquiryList);
+        model.addAttribute("inquiryList", inquiryList);
+
         return "member/inquiry";
     }
 

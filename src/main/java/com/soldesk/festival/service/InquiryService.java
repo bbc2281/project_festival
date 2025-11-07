@@ -27,4 +27,10 @@ public class InquiryService {
 
         inquiryDAO.insertInquiry(inquiry);
     }
+
+    public void updateInquiry(InquiryDTO inquiry){
+        if(inquiry != null){
+            inquiryDAO.updateInquiry(inquiry);
+        }
+    }
 }

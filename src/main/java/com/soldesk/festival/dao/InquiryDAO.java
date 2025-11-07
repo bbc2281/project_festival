@@ -22,4 +22,8 @@ public class InquiryDAO {
     public void insertInquiry(InquiryDTO inquiry){
         inquiryMapper.insertInquiry(inquiry);
     }
+
+    public void updateInquiry(InquiryDTO inquiry){
+        inquiryMapper.updateInquiry(inquiry);
+    }
 }

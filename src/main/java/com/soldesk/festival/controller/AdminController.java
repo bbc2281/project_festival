@@ -6,6 +6,8 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -87,6 +89,14 @@ public class AdminController {
 
         return "/admin/inquiry";
     }
+    @PostMapping("/answerInquiry")
+    public String answerInquiry(@RequestBody InquiryDTO inquiry){
+        
+        inquiryService.updateInquiry(inquiry);
+
+        return "redirect:/admin/inquiry";
+    }
+
     @GetMapping("/member")
     public String member(Model model){
 
@@ -118,5 +128,13 @@ public class AdminController {
         countDTO.setReviewCount(reviewCount);
         
         return countDTO;
+    }
+
+    @GetMapping("/delete")
+    public String deleteMember(@RequestParam("member_idx") int member_idx){
+
+        memberService.adminDeleteMember(member_idx);
+
+        return "redirect:/admin/member";
     }
 }

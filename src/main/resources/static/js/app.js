@@ -58,8 +58,9 @@ document.addEventListener("DOMContentLoaded", function(){
         address: festival.festival_address || '',
         lat: parseFloat(festival.LAT) || 0,
         lng: parseFloat(festival.LOT) || 0,
-        like: 0,
+        like: festival.festival_like || 0,
       };
+      
       FESTIVALS.push(formattedFestival);
       
     })

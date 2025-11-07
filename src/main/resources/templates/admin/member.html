@@ -32,15 +32,15 @@
   <div th:replace="~{common/adminAside :: aside}"></div>
 
   <div class="main">
-    <header><h4>회원정보 관리</h4><button class="btn btn-outline-danger btn-sm">로그아웃</button></header>
+    <header><h4>회원정보 관리</h4></header>
 
     <div class="p-4">
       <table class="table table-hover align-middle text-center">
         <thead class="table-light">
-          <tr><th>회원아이디</th><th>이름</th><th>이메일</th><th>생년월일</th><th>등급</th></tr>
+          <tr><th>회원아이디</th><th>이름</th><th>이메일</th><th>생년월일</th><th>등급</th><th></th></tr>
         </thead>
         <tbody>
-          <tr th:each="member : ${members}"><td th:text="${member.member_id}"></td><td th:text="${member.member_name}"></td><td th:text="${member.member_email}"></td><td th:text="${member.member_birth}"></td><td th:text="${member.role}"></td></tr>
+          <tr th:each="member : ${members}"><td th:text="${member.member_id}"></td><td th:text="${member.member_name}"></td><td th:text="${member.member_email}"></td><td th:text="${member.member_birth}"></td><td th:text="${member.role}"></td><td><a th:href="@{/admin/delete(member_idx=${member.member_idx})}" class="btn btn-success btn-sm">삭제</a></td></tr>
         </tbody>
       </table>
     </div>

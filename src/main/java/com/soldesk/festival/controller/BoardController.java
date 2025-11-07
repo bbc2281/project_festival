@@ -69,8 +69,8 @@ public class BoardController {
     }
 
     @PostMapping("/write")
-    public String writeSubmit(@ModelAttribute("writeBoard")BoardDTO boardDTO , @SessionAttribute("loginMember")MemberDTO memberDTO ){
-        boardDTO.setMember_idx(memberDTO.getMember_idx());
+    public String writeSubmit(@ModelAttribute("writeBoard")BoardDTO boardDTO){
+        boardDTO.setMember_idx(7);
         Document doc = Jsoup.parse(boardDTO.getBoard_content());
         Element img = doc.selectFirst("img[src^=data:]");
             if(img != null){

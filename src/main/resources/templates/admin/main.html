@@ -246,7 +246,6 @@
   <div class="main">
     <header class="admin-header">
       <h1>FesLite 관리자 대시보드</h1>
-      <button class="btn btn-outline-danger btn-sm">로그아웃</button>
     </header>
 
     <!-- 통계 카드 -->
@@ -305,33 +304,6 @@
 
     <footer>© 2025 FesLite Admin Dashboard</footer>
   </div>
-
-  <script>
-    const ctx = document.getElementById('visitorChart');
-    new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels: ['10-24', '10-25', '10-26', '10-27', '10-28'],
-        datasets: [{
-          label: '방문자 수',
-          data: [12, 20, 9, 15, 7],
-          borderColor: '#ff89b5',
-          backgroundColor: 'rgba(255,137,181,0.3)',
-          fill: true,
-          tension: 0.3,
-          pointRadius: 5
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: { legend: { display: false } },
-        scales: {
-          x: { grid: { display: false } },
-          y: { ticks: { stepSize: 5 } }
-        }
-      }
-    });
-  </script>
 
 </body>
 </html>
