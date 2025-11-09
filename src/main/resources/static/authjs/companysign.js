@@ -7,7 +7,7 @@ const csrfHeader = 'X-CSRF-TOKEN';
 // 🚨🚨 중복확인 상태를 관리하는 객체 (핵심) 🚨🚨
 const checkStatus = {
     'member_id': false,
-    'company_reg_nums': false,
+    'company_reg_num': false,
 };
 
 
@@ -35,7 +35,15 @@ async function verifyBusinessNumber() {
         // 백엔드 RestController (CompanyRestController.java) 호출
         const url = `/api/v1/company/verifybusiness?b_no=${encodeURIComponent(businessNumber)}&p_nm=${encodeURIComponent(representativeName)}`;
 
-        const response = await fetch(url, { method: 'POST' }); // RestController가 POST를 사용하도록 설계했으므로 POST 사용
+        const response = await fetch(url, { 
+                          method: 'POST',
+                          headers: {
+                // Content-Type은 GET 파라미터로 데이터를 보내므로 필수는 아니지만, 명시하는 것이 좋습니다.
+                'Content-Type': 'application/json', 
+                // 🚨🚨 403 에러 해결을 위한 CSRF 토큰 추가 (필수)
+                [csrfHeader]: csrfToken, 
+            }
+         }); // RestController가 POST를 사용하도록 설계했으므로 POST 사용
 
         const result = await response.json();
 

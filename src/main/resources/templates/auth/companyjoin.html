@@ -10,6 +10,7 @@
   <base href="/">
   <link rel="stylesheet" th:href="@{/css/loginStyle.css}" />
   <script defer th:src="@{/authjs/companysign.js}"></script> 
+      <script th:src="@{/authjs/myaddress.js}"></script>
 </head>
 <body>
   <div th:replace="~{common/loginHeader :: loginHeader}"></div>
@@ -26,10 +27,6 @@
             <div>
               <label for="company_name">회사명</label>
               <input id="company_name" name="company_name" class="input" placeholder="FesLite Corp." required />
-            </div>
-            <div>
-              <label for="company_owner">대표자명</label>
-              <input id="company_owner" name="company_owner" class="input" placeholder="홍길동" required />
             </div>
           </div>
 
@@ -56,6 +53,10 @@
           </div>
 
           <div class="form-row">
+             <div>
+              <label for="company_owner">대표자명</label>
+              <input id="company_owner" name="company_owner" class="input" placeholder="홍길동" required />
+            </div>
             <div>
               <label for="company_reg_num">사업자등록번호</label>
               <div style="display:flex; gap:8px; align-items:center;">
@@ -117,6 +118,5 @@
   <div th:replace="~{common/LoginFooter :: LoginFooter}"></div>
   
   <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-  <script defer th:src="@{/authjs/myAddress.js}"></script>
 </body>
 </html>
