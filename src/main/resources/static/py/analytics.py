@@ -12,7 +12,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 key_file_location = os.path.join(BASE_DIR, '..', 'google', 'meta-method-473006-t6-8a42068b9616.json')
 key_file_location = os.path.abspath(key_file_location)
 
-# GA4 Property ID (형태: 123456789)
+# GA4 Property ID
 PROPERTY_ID = "511737711" 
 
 # ------------------ 클라이언트 생성 ------------------
@@ -40,6 +40,8 @@ for row in response.rows:
     for met, met_value in zip(response.metric_headers, row.metric_values):
         record[met.name] = met_value.value
     data.append(record)
+
+data.sort(key=lambda x: x['date'])
 
 # JSON 저장 (BASE_DIR 기준)
 output_path = os.path.join(BASE_DIR, '..', 'js', 'analytics.json')

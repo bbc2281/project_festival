@@ -26,4 +26,5 @@ public class FestivalDTO {
     private String region_name;
     private Integer seg_festival_idx;
     private int festival_like;
+    private int member_idx;
 }

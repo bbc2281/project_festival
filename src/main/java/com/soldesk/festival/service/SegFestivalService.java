@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.soldesk.festival.dao.SegFestivalDAO;
+import com.soldesk.festival.dto.CompanyDTO;
 import com.soldesk.festival.dto.FestivalDTO;
 
 import lombok.RequiredArgsConstructor;
@@ -15,7 +16,8 @@ public class SegFestivalService {
     
     private final SegFestivalDAO segFestivalDAO;
 
-    public void insertSegFestival(FestivalDTO festivalDTO){
+    public void insertSegFestival(FestivalDTO festivalDTO, CompanyDTO company){
+        festivalDTO.setFestival_host(company.getCompany_name());
         segFestivalDAO.insertSegFestival(festivalDTO);
     }
 
