@@ -35,12 +35,7 @@ public class BoardController {
 
     @GetMapping("/list")
     public String listForm(Model model, @RequestParam(name = "page" , defaultValue = "1") int page , 
-        @RequestParam(name = "board_category" ,defaultValue = "") String board_category , HttpSession session){
-        
-        //나중에 진짜 맴버 객체랑 연동 할 예정입니다.
-        MemberDTO memberDTO = new MemberDTO();
-        memberDTO.setMember_idx(1);
-        session.setAttribute("loginMember", memberDTO);
+        @RequestParam(name = "board_category" ,defaultValue = "") String board_category){
         
         List<String> category = createCategoryList();
         model.addAttribute("categories", category);
@@ -69,8 +64,8 @@ public class BoardController {
     }
 
     @PostMapping("/write")
-    public String writeSubmit(@ModelAttribute("writeBoard")BoardDTO boardDTO){
-        boardDTO.setMember_idx(7);
+    public String writeSubmit(@ModelAttribute("writeBoard")BoardDTO boardDTO , @SessionAttribute("loginMember")MemberDTO memberDTO ){
+        boardDTO.setMember_idx(memberDTO.getMember_idx());
         Document doc = Jsoup.parse(boardDTO.getBoard_content());
         Element img = doc.selectFirst("img[src^=data:]");
             if(img != null){

@@ -15,7 +15,7 @@ import com.soldesk.festival.dto.RegionDTO;
 @Mapper
 public interface FestivalMapper {
     
-    @Select("select * from festival f join festival_category c on f.festival_category_idx = c.festival_category_idx join region r on r.region_idx  = f.region_idx left join (select festival_idx , count(favorite_idx) as festival_like from favorite fa group by festival_idx) fa on f.festival_idx = fa.festival_idx")
+    @Select("select * from festival f join festival_category c on f.festival_category_idx = c.festival_category_idx join region r on r.region_idx  = f.region_idx left join (select festival_idx , count(favorite_idx) as festival_like from favorite fa group by festival_idx) fa on f.festival_idx = fa.festival_idx order by (festival_end_date >= current_date) desc, festival_end_date asc")
     List<FestivalDTO> selectAllFestival();
 
     @Select("select * from festival where festival_idx = #{festival_idx}")

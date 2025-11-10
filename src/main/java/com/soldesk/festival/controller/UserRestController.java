@@ -1,26 +1,39 @@
 package com.soldesk.festival.controller;
 
+import java.io.PrintWriter;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.soldesk.festival.dto.CompanyJoinDTO;
 import com.soldesk.festival.dto.LoginDTO;
 import com.soldesk.festival.dto.MemberDTO;
@@ -191,5 +204,114 @@ public class UserRestController {
 		}
 	}
 
-	
+	@GetMapping("/login/naver")
+	public ResponseEntity<UserResponse> naverCallback(
+            @RequestParam String code,
+            @RequestParam String state,
+            HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        // 1) 인증 코드로 액세스 토큰 요청
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("grant_type", "authorization_code");
+        params.add("client_id", "6ODyCh148nT7pPRiBkqK");
+        params.add("client_secret", "_iRJIB6qT1");
+        params.add("code", code);
+        params.add("state", state);
+        params.add("redirect_uri", "http://localhost:8080/oauth2/authorization/naver/callback");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+        HttpEntity<MultiValueMap<String, String>> tokenRequest = new HttpEntity<>(params, headers);
+
+        ResponseEntity<String> tokenResponse = restTemplate.postForEntity(
+                "https://nid.naver.com/oauth2.0/token", tokenRequest, String.class);
+
+        if (!tokenResponse.getStatusCode().is2xxSuccessful()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(UserResponse.error("네이버 인증 토큰 발급 실패"));
+        }
+
+        // 2) access_token 파싱
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode tokenJson = mapper.readTree(tokenResponse.getBody());
+        String accessToken = tokenJson.get("access_token").asText();
+
+        // 3) access_token으로 사용자 프로필 조회
+        HttpHeaders profileHeaders = new HttpHeaders();
+        profileHeaders.setBearerAuth(accessToken);
+        HttpEntity<Void> profileRequest = new HttpEntity<>(profileHeaders);
+
+        ResponseEntity<String> profileResponse = restTemplate.exchange(
+                "https://openapi.naver.com/v1/nid/me",
+                HttpMethod.GET,
+                profileRequest,
+                String.class);
+
+        if (!profileResponse.getStatusCode().is2xxSuccessful()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(UserResponse.error("네이버 사용자 정보 조회 실패"));
+        }
+
+        // 4) 프로필 정보 파싱
+        JsonNode profileJson = mapper.readTree(profileResponse.getBody()).get("response");
+        String naverId = profileJson.get("id").asText();
+        String email = profileJson.has("email") ? profileJson.get("email").asText() : "";
+        String nickname = profileJson.has("nickname") ? profileJson.get("nickname").asText() : "";
+        String name = profileJson.has("name") ? profileJson.get("name").asText() : "";
+        String gender = profileJson.has("gender") ? profileJson.get("gender").asText() : "";
+        String mobile = profileJson.has("mobile") ? profileJson.get("mobile").asText() : "";
+        String birthday = profileJson.has("birthday") ? profileJson.get("birthday").asText() : "";
+        String birthyear = profileJson.has("birthyear") ? profileJson.get("birthyear").asText() : "";
+		String birth = birthyear + "-" + birthday;
+
+        // 5) 회원 조회 및 가입 처리
+        Optional<MemberDTO> optionalMember = memberService.findUserbyId(naverId);
+        MemberDTO member;
+        if (optionalMember.isEmpty()) {
+            MemberJoinDTO joinDTO = new MemberJoinDTO();
+            joinDTO.setMember_id(naverId);
+            joinDTO.setMember_email(email);
+            joinDTO.setMember_nickname(nickname);
+			joinDTO.setMember_name(name);
+			joinDTO.setMember_gender(gender);
+			joinDTO.setMember_phone(mobile);
+			joinDTO.setMember_birth(birth);
+			joinDTO.setMember_pass("SOCIAL_LOGIN");
+			joinDTO.setMember_address("");
+
+            memberService.join(joinDTO);
+			optionalMember = memberService.findUserbyId(naverId);
+			member = optionalMember.get();
+        } else {
+            member = optionalMember.get();
+        }
+
+        // 6) Spring Security Authentication 생성 및 등록
+        List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_USER"));
+
+		SecurityContext context = SecurityContextHolder.createEmptyContext();
+		UsernamePasswordAuthenticationToken authentication =
+			new UsernamePasswordAuthenticationToken(member.getMember_id(), "SOCIAL_LOGIN", authorities);
+
+		context.setAuthentication(authentication);
+		SecurityContextHolder.setContext(context);
+
+        // 세션 저장
+        HttpSession session = request.getSession(true);
+        session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, context);
+		session.setAttribute("loginMember", member);
+        session.setMaxInactiveInterval(30 * 60);
+
+         // 팝업창 닫고 부모창 이동 처리: 서버에서 JS 직접 내려준다
+		response.setContentType("text/html; charset=UTF-8");
+		PrintWriter out = response.getWriter();
+		out.println("<script>");
+		out.println("if(window.opener){window.opener.location.href='/';window.close();}else{window.location.href='/';}");
+		out.println("</script>");
+		out.close();
+		return null;
+	}
 }  
