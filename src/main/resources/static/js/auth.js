@@ -40,9 +40,10 @@ document.addEventListener('DOMContentLoaded', () => {
             // 로그인 REST API 호출
             const res = await fetch('/api/v1/auth/login', {
                 
-                 method: 'POST',
-                  headers: headers,
-                  body: JSON.stringify({ member_id, member_pass })
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify({ member_id, member_pass }),
+                credentials: "include"
             });
             console.log('서버 응답 상태 코드:', res.status);
             // 🚨 응답을 JSON으로 파싱. JSON이 아니면 자동으로 catch 블록으로 이동.

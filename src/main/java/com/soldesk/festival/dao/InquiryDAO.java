@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 
 import com.soldesk.festival.dto.InquiryDTO;
 import com.soldesk.festival.mapper.InquiryMapper;
-
 import lombok.RequiredArgsConstructor;
 
 @Repository
@@ -25,5 +24,9 @@ public class InquiryDAO {
 
     public void updateInquiry(InquiryDTO inquiry){
         inquiryMapper.updateInquiry(inquiry);
+    }
+
+    public int countInquiryByNUll(){
+        return inquiryMapper.countInquiryByNUll();
     }
 }
