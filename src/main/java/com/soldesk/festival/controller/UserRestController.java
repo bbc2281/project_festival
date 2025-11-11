@@ -91,8 +91,23 @@ public class UserRestController {
 			 session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, securityContext);
 			 
 			 memberService.findUserbyId(userLogin.getMember_id())
-    			.ifPresent(member -> session.setAttribute("loginMember", member));
-				session.setMaxInactiveInterval(30*60);
+    		 .ifPresentOrElse(
+        		member -> {
+            		session.setAttribute("loginMember", member);
+            		System.out.println("loginMember 세션 저장: " + member);
+        		},
+        			() -> System.out.println("loginMember 없음")
+    		);
+		
+			companyService.findCompanyUserById(userLogin.getMember_id())
+				.ifPresentOrElse(
+        			company -> {
+            			session.setAttribute("companyMember", company);
+            			System.out.println("companyMember 세션 저장: " + company);
+        			},
+        				() -> System.out.println("companyMember 없음")
+    		);
+			session.setMaxInactiveInterval(30*60);
 
 			 SecurityAllUsersDTO user = (SecurityAllUsersDTO)authentication.getPrincipal();
 
@@ -113,12 +128,13 @@ public class UserRestController {
 	}
 
     @PostMapping("/logout")
-	public ResponseEntity<UserResponse> logout(HttpServletRequest request, HttpServletResponse res){
+	public ResponseEntity<UserResponse> logout(HttpServletRequest request, HttpServletResponse res, HttpSession session){
 		 
 		SecurityContextLogoutHandler logoutHandler = new SecurityContextLogoutHandler();
 		 logoutHandler.logout(request, res, SecurityContextHolder.getContext().getAuthentication());
 		 UserResponse response = UserResponse.successMessage("로그아웃 성공");
 
+		 
 		 return ResponseEntity.ok(response);
 
 	}

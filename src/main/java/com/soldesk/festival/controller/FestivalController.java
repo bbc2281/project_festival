@@ -16,6 +16,7 @@ import com.soldesk.festival.dto.ReviewDTO;
 import com.soldesk.festival.service.FestivalService;
 import com.soldesk.festival.service.ReviewService;
 import com.soldesk.festival.dto.ChatRoomDTO;
+import com.soldesk.festival.dto.CompanyDTO;
 import com.soldesk.festival.dto.FestivalCategoryDTO;
 import com.soldesk.festival.dto.MemberDTO;
 import com.soldesk.festival.dto.RegionDTO;
@@ -41,6 +42,7 @@ public class FestivalController {
     @GetMapping("/festivalInfo")
     public String info(@RequestParam("id") int id, Model model, HttpSession session){
         MemberDTO loginMember = (MemberDTO) session.getAttribute("loginMember");
+        CompanyDTO companyMember = (CompanyDTO) session.getAttribute("companyMember");
 
         FestivalDTO festival = festivalService.getFestival(id);
         model.addAttribute("festival", festival);
@@ -55,14 +57,21 @@ public class FestivalController {
 
         boolean exist = false;
         if (loginMember != null) {
-            exist = favoriteService.existsFavorite(loginMember.getMember_idx(), festivalIdx);
+            exist = favoriteService.existsFavoriteByMember(loginMember.getMember_idx(), festivalIdx);
+            
             model.addAttribute("loginMember", loginMember);
             model.addAttribute("loggedIn", true);
+        }else if (companyMember != null) {
+            exist = favoriteService.existsFavoriteByCompany(festivalIdx, companyMember.getCompany_idx());
+            loginMember = new MemberDTO();
+            model.addAttribute("loginMember", loginMember);
+            model.addAttribute("loggedIn", false);
         } else {
             loginMember = new MemberDTO();
             model.addAttribute("loginMember", loginMember);
             model.addAttribute("loggedIn", false);
         }
+        System.out.println(exist);
         model.addAttribute("isFavorite", exist);
 
         return "festival/info";
@@ -87,7 +96,7 @@ public class FestivalController {
 
     @GetMapping("/festival/permit")
     public String permit(@RequestParam("festival_idx") int festival_idx){
-
+        
         FestivalDTO festival = segFestivalService.selectFestival(festival_idx);
         festivalService.insertFestival(festival);
 
@@ -97,7 +106,7 @@ public class FestivalController {
 
 
     @PostMapping("/festival/regSubData")
-    public String regFestival(@ModelAttribute("festival") FestivalDTO festivalDTO, @RequestParam("upload_file") MultipartFile file){
+    public String regFestival(@ModelAttribute("festival") FestivalDTO festivalDTO, @RequestParam("upload_file") MultipartFile file, @SessionAttribute("companyMember") CompanyDTO companyMember){
         
         if(!file.isEmpty()){
             String imageUrl;
@@ -112,7 +121,8 @@ public class FestivalController {
             }
         }
 
-        segFestivalService.insertSegFestival(festivalDTO);
+        
+        segFestivalService.insertSegFestival(festivalDTO, companyMember);
         return "redirect:/";
     }
 

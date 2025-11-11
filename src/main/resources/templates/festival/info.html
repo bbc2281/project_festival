@@ -47,7 +47,9 @@
                     class="btn btn-sm border-0 bg-transparent" 
                     id="btnFavorite"
                     th:data-festival-idx="${festival.festival_idx}"
-                    th:data-member-id="${session.loginMember != null ? session.loginMember.member_idx : 0}">
+                    th:data-member-id="${session.loginMember != null ? session.loginMember.member_idx : 0}"
+                    th:data-company-id="${session.companyMember != null ? session.companyMember.company_idx : 0}"
+                    >
                   <i class="bi" 
                     th:classappend="${isFavorite} ? 'bi-heart-fill text-danger fs-4' : 'bi-heart fs-4'"></i>
                 </button>

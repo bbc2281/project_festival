@@ -24,15 +24,27 @@ public class FavoriteController {
     public Map<String, Object> favorite(@RequestBody FavoriteDTO dto){
         Map<String, Object> result = new HashMap<>();
 
-        boolean exists = favoriteService.existsFavorite(dto.getMember_idx(), dto.getFestival_idx());
-        if (exists) {
-            favoriteService.deleteFavorite(dto);
-            result.put("status", "removed");
-        } else {
-            favoriteService.insertFavorite(dto);
-            result.put("status", "added");
+        if (dto.getMember_idx() != 0) {
+            boolean exists = favoriteService.existsFavoriteByMember(dto.getMember_idx(), dto.getFestival_idx());
+            if (exists) {
+                favoriteService.deleteFavoriteByMember(dto);
+                result.put("status", "removed");
+            } else {
+                favoriteService.insertFavoriteByMember(dto);
+                result.put("status", "added");
+            }
+        } else if (dto.getCompany_idx() != 0) {
+            boolean exists = favoriteService.existsFavoriteByCompany(dto.getFestival_idx(), dto.getCompany_idx());
+            if (exists) {
+                favoriteService.deleteFavoriteByCompany(dto);
+                result.put("status", "removed");
+            } else {
+                favoriteService.insertFavoriteByCompany(dto);
+                result.put("status", "added");
+            }
         }
-    return result;
+
+        return result;
     }
 
 }

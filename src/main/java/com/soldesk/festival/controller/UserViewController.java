@@ -10,14 +10,18 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
+import com.soldesk.festival.dto.CompanyDTO;
+import com.soldesk.festival.dto.FestivalDTO;
 import com.soldesk.festival.dto.InquiryDTO;
 import com.soldesk.festival.dto.MemberDTO;
 import com.soldesk.festival.dto.MemberDetailDTO;
 import com.soldesk.festival.dto.SecurityAllUsersDTO;
 import com.soldesk.festival.service.CompanyService;
+import com.soldesk.festival.service.FavoriteService;
 import com.soldesk.festival.service.InquiryService;
 import com.soldesk.festival.service.MemberService;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 
@@ -28,6 +32,7 @@ public class UserViewController {
     private final MemberService memberService;
     private final CompanyService companyService;
     private final InquiryService inquiryService;
+    private final FavoriteService favoriteService;
     
     //로그인품
     @GetMapping("/auth/loginPage")
@@ -80,7 +85,14 @@ public class UserViewController {
     
     //일반회원 찜한페이지
     @GetMapping("/mypage/bookmark")
-    public String mypageBookmark(){
+    public String mypageBookmark(Model model, HttpSession session){
+
+        MemberDTO loginMember = (MemberDTO) session.getAttribute("loginMember");
+
+        List<FestivalDTO> festivalList = favoriteService.selectAllFavoriteByUser(loginMember);
+
+        model.addAttribute("festivalList", festivalList);
+
         return "member/bookmark";
     }
 
@@ -110,12 +122,14 @@ public class UserViewController {
     }
 
     //일반회원탈퇴페이지
-    @GetMapping("/member/delete")
+    @GetMapping("/mypage/delete")
     public String accountWithdrawal(){
         return "member/delete";
     }
 
+
     // -------기업회원------------
+
 
     //기업회원 가입
     @GetMapping("/auth/companyjoin")
@@ -136,7 +150,13 @@ public class UserViewController {
     }
     //기업회원 찜하기
     @GetMapping("/company/favorite")
-    public String mypageFavoriteForCompany(){
+    public String mypageFavoriteForCompany(Model model, HttpSession session){
+
+        CompanyDTO company = (CompanyDTO) session.getAttribute("companyMember");
+        
+        List<FestivalDTO> festivalList = favoriteService.selectAllFavoriteByCompany(company);
+
+        model.addAttribute("festivalList", festivalList);
         return "company/favorite";
     }
     //기업회원 등록축제정보

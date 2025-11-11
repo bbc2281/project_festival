@@ -20,4 +20,7 @@ public interface InquiryMapper {
 
     @Update("update inquiry set inquiry_answer = #{inquiry_answer} where inquiry_idx = #{inquiry_idx}")
     void updateInquiry(InquiryDTO inquiry);
+
+    @Select("select count(*) from inquiry where inquiry_answer is null")
+    int countInquiryByNUll();
 }

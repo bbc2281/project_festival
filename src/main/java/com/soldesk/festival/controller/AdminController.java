@@ -21,6 +21,7 @@ import com.soldesk.festival.dto.FestivalDTO;
 import com.soldesk.festival.dto.InquiryDTO;
 import com.soldesk.festival.dto.MemberDTO;
 import com.soldesk.festival.service.BoardService;
+import com.soldesk.festival.service.FavoriteService;
 import com.soldesk.festival.service.FestivalService;
 import com.soldesk.festival.service.InquiryService;
 import com.soldesk.festival.service.MemberService;
@@ -59,6 +60,8 @@ public class AdminController {
         model.addAttribute("memberList", memberList.stream().limit(5).toList());
         model.addAttribute("countMember", countMember);
 
+        int countInquiry = inquiryService.countInquiryByNUll();
+        model.addAttribute("countInquiry", countInquiry);
         return "/admin/main";
     }
     @GetMapping("/event")

@@ -33,4 +33,8 @@ public class InquiryService {
             inquiryDAO.updateInquiry(inquiry);
         }
     }
+
+    public int countInquiryByNUll(){
+        return inquiryDAO.countInquiryByNUll();
+    }
 }
