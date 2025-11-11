@@ -1,5 +1,6 @@
 package com.soldesk.festival.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -60,5 +61,13 @@ public class CompanyService {
 				.orElseThrow(()-> new UserException("아이디나 비밀번호가 일치하지 않습니다"));
 		
 		
+	}
+
+	public List<CompanyDTO> getAllCompanys(){
+		return companyMapper.getAllCompanys();
+	}
+
+	public void deleteCompanyByAdmin(int id){
+		companyMapper.deleteCompanyByAdmin(id);
 	}
 }

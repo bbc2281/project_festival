@@ -183,18 +183,22 @@
       <label>요금</label>
       <div class="price-box">
         <div class="price-option">
-          <input type="radio" name="festival_fee" th:field="*{festival_fee}" value="무료" id="price_free" checked>
+          <input type="radio" name="festival_fee_radio" value="무료" id="price_free" checked>
           <label for="price_free">무료</label>
         </div>
         <div class="price-option">
-          <input type="radio" name="festival_fee" value="유료" id="price_paid">
+          <input type="radio" name="festival_fee_radio" value="유료" id="price_paid">
           <label for="price_paid">유료</label>
         </div>
       </div>
-      <!-- 요금 상세정보 박스(유료 선택시) -->
+
+      <!-- 유료 상세 -->
       <div id="price_detail_box" style="display:none;">
-        <input type="text" name="festival_fee_detail" th:field="*{festival_fee}" placeholder="요금 상세내용 입력 (예: 성인 5,000원, 청소년 3,000원)" />
+        <input type="text" id="fee_detail" placeholder="요금 상세내용 입력 (예: 성인 5,000원, 청소년 3,000원)" />
       </div>
+
+      <!-- 서버로 전달될 최종 요금 -->
+      <input type="hidden" name="festival_fee" id="festival_fee_hidden" th:field="*{festival_fee}" />
 
       <label>홈페이지</label>
       <input type="text" name="festival_link" th:field="*{festival_link}" placeholder="홈페이지 주소 입력" />
@@ -215,8 +219,42 @@
   <div th:replace="~{common/footer :: footer}"></div>
 
   <script>
-    // 주소 → 좌표 변환 후 제출
+    // 요금 토글: Thymeleaf가 id를 바꿔도 name/value 기준으로 안전하게 동작
+    document.addEventListener('DOMContentLoaded', () => {
+    const radios = document.querySelectorAll('input[name="festival_fee_radio"]');
+    const detailBox = document.getElementById('price_detail_box');
+
+    // 유료 선택 시 상세 입력창 표시
+    function toggleFeeDetailBox() {
+      const selected = document.querySelector('input[name="festival_fee_radio"]:checked').value;
+      detailBox.style.display = selected === '유료' ? 'block' : 'none';
+    }
+    radios.forEach(r => r.addEventListener('change', toggleFeeDetailBox));
+    toggleFeeDetailBox();
+
+    // 등록 버튼 클릭
+    document.getElementById('changeLoca').addEventListener('click', convertAddressAndSubmit);
+  });
+
+  // ✅ 요금 조합 함수
+  function updateFestivalFee() {
+    const selectedFee = document.querySelector('input[name="festival_fee_radio"]:checked').value;
+    const feeDetail = document.getElementById('fee_detail').value.trim();
+    const hiddenFee = document.getElementById('festival_fee_hidden');
+
+    if (selectedFee === '유료' && feeDetail) {
+      hiddenFee.value = `유료 (${feeDetail})`;
+    } else if (selectedFee === '유료' && !feeDetail) {
+      hiddenFee.value = '유료';
+    } else {
+      hiddenFee.value = '무료';
+    }
+  }
+
+  // 주소 → 좌표 변환 후 제출
     document.getElementById('changeLoca').addEventListener('click', () => {
+      updateFestivalFee();
+
       const addressInput = document.getElementById('sample6_address');
       if (!addressInput || !addressInput.value.trim()) {
         alert('주소를 입력하거나 주소 찾기를 먼저 진행해주세요.');
@@ -234,21 +272,6 @@
         document.getElementById('festival_lat').value = items[0].y;
         document.getElementById('dbReg').click();
       });
-    });
-
-    // 요금 토글: Thymeleaf가 id를 바꿔도 name/value 기준으로 안전하게 동작
-    document.addEventListener('DOMContentLoaded', function() {
-      const radios = document.querySelectorAll('input[type="radio"][name="festival_fee"]');
-      const detailBox = document.getElementById('price_detail_box');
-
-      function syncPriceBox() {
-        const paidChecked = Array.from(radios).some(r => r.checked && r.value === '유료');
-        detailBox.style.display = paidChecked ? 'block' : 'none';
-      }
-
-      radios.forEach(r => r.addEventListener('change', syncPriceBox));
-      // 초기 상태 동기화
-      syncPriceBox();
     });
   </script>
 </body>

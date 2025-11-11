@@ -20,11 +20,14 @@ import lombok.RequiredArgsConstructor;
 @Controller
 public class UserViewController {
 
+    private final SegFestivalService segFestivalService;
+
     private final ReviewService reviewService;
     private final MemberService memberService;
     private final CompanyService companyService;
     private final InquiryService inquiryService;
     private final FavoriteService favoriteService;
+
 
     
     //로그인품
@@ -161,7 +164,14 @@ public class UserViewController {
     }
     //기업회원 등록축제정보
     @GetMapping("/company/festival")
-    public String mypageFestivalForCompany(){
+    public String mypageFestivalForCompany(Model model, HttpSession session){
+
+        CompanyDTO company = (CompanyDTO) session.getAttribute("companyMember");
+        int id = company.getCompany_idx();
+        List<FestivalDTO> festivalList = segFestivalService.selectFestivalByCompany(id);
+
+        model.addAttribute("festivalList", festivalList);
+
         return "company/festival";
     }
     //기업회원 후원정보

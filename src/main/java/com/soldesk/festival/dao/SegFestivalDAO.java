@@ -23,6 +23,10 @@ public class SegFestivalDAO {
         return segFestivalMapper.selectFestival(idx);
     }//제안축제중 특정축제 선택
 
+    public List<FestivalDTO> selectFestivalByCompany(int idx){
+        return segFestivalMapper.selectFestivalByCompany(idx);
+    }//제안축제중 특정축제 선택
+
     public List<FestivalDTO> selectAllFestivals(){
         return segFestivalMapper.selectAllFestivals();
     }//제안축제 모든정보 선택
@@ -30,4 +34,12 @@ public class SegFestivalDAO {
     public void deleteFestival(int idx){
         segFestivalMapper.deleteFestival(idx);
     }//제안축제 삭제
+
+    public void updateSetLog(int idx){
+        segFestivalMapper.updateSetLog(idx);
+    }
+
+    public void updateDelLog(int idx){
+        segFestivalMapper.updateDelLog(idx);
+    }
 }

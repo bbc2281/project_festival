@@ -16,6 +16,7 @@ import com.soldesk.festival.dto.FestivalDTO;
 import com.soldesk.festival.dto.ReviewDTO;
 import com.soldesk.festival.service.FestivalService;
 import com.soldesk.festival.service.ReviewService;
+import com.fasterxml.jackson.annotation.JsonCreator.Mode;
 import com.soldesk.festival.dto.ChatRoomDTO;
 import com.soldesk.festival.dto.CompanyDTO;
 import com.soldesk.festival.dto.FestivalCategoryDTO;
@@ -96,15 +97,22 @@ public class FestivalController {
     }
 
     @GetMapping("/festival/permit")
-    public String permit(@RequestParam("festival_idx") int festival_idx){
+    public String permit(@RequestParam("festival_idx") int idx, Model model){
+        segFestivalService.updateSetLog(idx);
+        FestivalDTO festival = segFestivalService.selectFestival(idx);
         
-        FestivalDTO festival = segFestivalService.selectFestival(festival_idx);
         festivalService.insertFestival(festival);
 
-        segFestivalService.deleteFestival(festival_idx);
         return "redirect:/admin/proposal";
     }
 
+    @GetMapping("/festival/refuse")
+    public String refuse(@RequestParam("festival_idx") int idx, Model model){
+        segFestivalService.updateDelLog(idx);
+
+        //segFestivalService.deleteFestival(idx);
+        return "redirect:/admin/proposal";
+    }
 
     @PostMapping("/festival/regSubData")
     public String regFestival(@ModelAttribute("festival") FestivalDTO festivalDTO, @RequestParam("upload_file") MultipartFile file, @SessionAttribute("companyMember") CompanyDTO companyMember){

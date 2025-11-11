@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.soldesk.festival.dto.BoardDTO;
+import com.soldesk.festival.dto.CompanyDTO;
 import com.soldesk.festival.dto.CountDTO;
 import com.soldesk.festival.mapper.BoardMapper;
 import com.soldesk.festival.mapper.ReviewMapper;
@@ -21,6 +22,7 @@ import com.soldesk.festival.dto.FestivalDTO;
 import com.soldesk.festival.dto.InquiryDTO;
 import com.soldesk.festival.dto.MemberDTO;
 import com.soldesk.festival.service.BoardService;
+import com.soldesk.festival.service.CompanyService;
 import com.soldesk.festival.service.FavoriteService;
 import com.soldesk.festival.service.FestivalService;
 import com.soldesk.festival.service.InquiryService;
@@ -28,6 +30,7 @@ import com.soldesk.festival.service.MemberService;
 import com.soldesk.festival.service.ReviewService;
 import com.soldesk.festival.service.SegFestivalService;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -42,6 +45,7 @@ public class AdminController {
     private final SegFestivalService segFestivalService;
     private final ReviewService reviewService;
     private final InquiryService inquiryService;
+    private final CompanyService companyService;
 
     @GetMapping("/main")
     public String main(Model model){
@@ -104,16 +108,27 @@ public class AdminController {
     public String member(Model model){
 
         List<MemberDTO> members = memberService.getMemberList();
-
+        
         model.addAttribute("members", members);
+        
 
         return "/admin/member";
     }
+
+    @GetMapping("/company")
+    public String company(Model model){
+
+        List<CompanyDTO> companyMember = companyService.getAllCompanys();
+        
+        model.addAttribute("companyMember", companyMember);
+
+        return "/admin/company";
+    }
     @GetMapping("/proposal")
-    public String proposal(Model model){
+    public String proposal(Model model, HttpSession session){
 
         List<FestivalDTO> proposals = segFestivalService.selectAllFestivals();
-
+        
         model.addAttribute("proposals", proposals);
 
         return "/admin/proposal";
@@ -134,10 +149,21 @@ public class AdminController {
     }
 
     @GetMapping("/delete")
-    public String deleteMember(@RequestParam("member_idx") int member_idx){
-
-        memberService.adminDeleteMember(member_idx);
-
+    public String deleteMember(@RequestParam("member_idx") Integer member_idx){
+        
+        if(member_idx != null){
+            memberService.adminDeleteMember(member_idx);
+        }
         return "redirect:/admin/member";
     }
+
+    @GetMapping("/company/delete")
+    public String deleteCompany(@RequestParam("company_idx") Integer company_idx){
+        
+        if(company_idx != null){
+            companyService.deleteCompanyByAdmin(company_idx);
+        }
+        return "redirect:/admin/member";
+    }
+
 }

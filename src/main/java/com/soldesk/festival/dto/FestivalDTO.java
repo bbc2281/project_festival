@@ -27,4 +27,7 @@ public class FestivalDTO {
     private Integer seg_festival_idx;
     private int festival_like;
     private int member_idx;
+
+    private int company_idx;
+    private int festival_reg_log;
 }

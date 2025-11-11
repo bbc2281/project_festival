@@ -1,7 +1,9 @@
 package com.soldesk.festival.mapper;
 
+import java.util.List;
 import java.util.Optional;
 
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
@@ -56,4 +58,11 @@ public interface CompanyMapper {
 	@Insert("insert into company(company_name, member_id, member_pass, member_email, company_phone, company_reg_num, company_owner, company_open_date, role, company_address, company_account) "
 	+"values(#{company_name}, #{member_id}, #{member_pass}, #{member_email}, #{company_phone}, #{company_reg_num}, #{company_owner}, #{company_open_date}, #{role}, #{company_address}, #{company_account})")
 	void insertCompany(CompanyJoinDTO joinCompany);
+
+	@Select("select * from company")
+	List<CompanyDTO> getAllCompanys();
+
+	@Delete("delete from company where company_idx = #{company_idx}")
+	void deleteCompanyByAdmin(@Param("company_idx") int id);
+
 }
