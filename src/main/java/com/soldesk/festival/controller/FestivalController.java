@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.soldesk.festival.dto.FestivalDTO;
@@ -38,7 +37,7 @@ public class FestivalController {
     private final ReviewService reviewService;
     private final ChatService chatService;
     private final FileUploadService fileUploadService;
-    private final FavoriteService favoriteService; 
+    private final FavoriteService favoriteService;
 
     @GetMapping("/festivalInfo")
     public String info(@RequestParam("id") int id, Model model, HttpSession session){
@@ -52,7 +51,7 @@ public class FestivalController {
         int festivalIdx = festival.getFestival_idx();
         List<ReviewDTO> reviewList = reviewService.selectAllReviews(festivalIdx);
         model.addAttribute("reviews", reviewList);
-
+        
         ChatRoomDTO chatRoom = chatService.getChatRoomById(id);
         model.addAttribute("chatRoom", chatRoom);
 

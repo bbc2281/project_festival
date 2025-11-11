@@ -53,7 +53,7 @@ public interface MemberMapper {
     @Select("select count(*) from member where member_id=#{member_id}")
     int checkIdExist(@Param("member_id")String member_id);
 
-	@Select("select member_id, member_name, member_pass, role from member where member_id=#{member_id}")
+	@Select("select member_idx, member_id, member_name, member_pass, member_nickname, member_email, role from member where member_id=#{member_id}")
 	@Results({
 		@Result(property="member_idx", column="member_idx"),
 		@Result(property="member_id", column="member_id"),
@@ -95,7 +95,7 @@ public interface MemberMapper {
 	
 	@Select("select count(member_idx) from member")
 	int countMember();
-	
+
 	
 
 

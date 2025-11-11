@@ -104,22 +104,26 @@
   <script src="https://uicdn.toast.com/editor/latest/i18n/ko-kr.js"></script>
 
 
-  <!-- <script>
+  <script>
     document.getElementById('submit-btn').addEventListener('click', async (e) => {
       e.preventDefault();
         let board_title = document.getElementById(`board_title`);
-        let content = document.getElementsByTagName(`textarea`)[0];
         let title_msg = board_title.value.trim();
-        let content_msg = content.value.trim();
+        let content_html = document.querySelector('.ProseMirror.toastui-editor-contents').innerHTML.trim();
+        let tempDiv = document.createElement('div');
+        tempDiv.innerHTML = content_html;
+        let content_msg = tempDiv.textContent.trim();
 
         let msg = title_msg + `\n` + content_msg;
         
         let msg_ok = await testMsg(msg);
         if(!msg_ok) return;
 
+        document.getElementById('board_content_hidden').value = content_html;
+
         e.target.closest('form').submit();
     });
-  </script> -->
+  </script>
 
   <!-- Footer -->
   <div th:replace="~{common/footer :: footer}"></div>

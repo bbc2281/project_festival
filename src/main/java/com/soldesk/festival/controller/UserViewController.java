@@ -24,6 +24,7 @@ import com.soldesk.festival.service.MemberService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
+
 @RequiredArgsConstructor
 @Controller
 public class UserViewController {
@@ -43,6 +44,12 @@ public class UserViewController {
     @GetMapping("/auth/join")
     public String joinSelect(){
         return "auth/join";
+    }
+
+    //네이버로그인테스트
+    @GetMapping("/oauth2/authorization/naver")
+    public String naverLogin() {
+        return "auth/naverTest";
     }
 
     // -----일반회원--------------

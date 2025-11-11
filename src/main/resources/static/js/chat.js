@@ -20,6 +20,10 @@ chatInput.addEventListener("keydown", async (e) => {
         
 //메시지 전송(발신)
 function sendMessage(){
+    if (!isChatAllowed()) {
+        alert("채팅은 축제 시작 1달 전부터 종료 1달 후까지만 가능합니다.");
+        return;
+    }
     let message = chatInput.value;
     
     let chatMessage = {
