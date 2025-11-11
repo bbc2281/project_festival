@@ -174,11 +174,5 @@ public class UserViewController {
     public String mypageDeleteForCompany(){
         return "company/delete";
     }
-    
-    
-
-
-       
-    
 
 }
