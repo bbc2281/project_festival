@@ -36,4 +36,7 @@ public interface ReviewMapper {
 
         @Select("select count(*) from review where review_reg_date = #{date}")
         int countReviewNow(@Param("date") String date);
+
+        @Select("select * from review where member_idx = #{member_idx}")
+        List<ReviewDTO> infoReviewByMember(@Param("member_idx") int idx);
     }
