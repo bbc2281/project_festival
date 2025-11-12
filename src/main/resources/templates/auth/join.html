@@ -1,14 +1,19 @@
 <!DOCTYPE html>
 <html lang="ko" th:xmlns="www.thymeleaf.org">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>회원가입 유형 선택 — FesLite</title>
   <base href="/">
   <link rel="stylesheet" th:href="@{/css/loginStyle.css}" />
+  <script type="text/javascript" src="https://static.nid.naver.com/js/naverLogin_implicit-1.0.3.js" charset="utf-8"></script>
+  <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
   <script defer th:src="@{/js/joinpage.js}"></script>
   <script defer th:src="@{/js/app.js}"></script>
+  <script defer th:src="@{/js/naver.js}"></script>
 </head>
+
 <body>
   <div th:replace="~{common/loginHeader :: loginHeader}"></div>
 
@@ -24,8 +29,8 @@
             <img th:src="@{/images/member.png}" alt="일반회원 아이콘" class="member-icon">
             <div class="card-title mt-3">일반회원 가입</div>
             <div class="small">즐겨찾기, 리뷰, 티켓 구매 등을 위한 기본 계정</div>
-              <li>축제 뉴스 조회</li>
-              <li>공지 및 이벤트 참여</li>
+            <li>축제 뉴스 조회</li>
+            <li>공지 및 이벤트 참여</li>
             </ul>
           </div>
 
@@ -40,10 +45,19 @@
               <li>축제 뉴스 조회</li>
               <li>공지 및 이벤트 참여</li>
               <li>축제 제안</li>
-              <li>후원 기능</li> 
+              <li>후원 기능</li>
             </ul>
           </div>
         </div>
+        <div id="opt-social" class="option-card" style="margin-top: 10px; padding: 10px; height: fit-content;">
+            <p class="card-title mt-3">또는 SNS 계정으로 가입</p>
+            <div class="social-buttons">
+              <a th:href="@{/oauth2/authorization/kakao}" class="social-btn kakao">카카오 로그인</a>
+              <a th:href="@{/oauth2/authorization/google}" class="social-btn google">Google 로그인</a>
+              <a href="#" id="my-naver-btn" class="social-btn naver">네이버 로그인</a>
+              <div id="naver_id_login" style="display: none;"></div>
+            </div>
+          </div>
 
         <div class="mt-5">
           <a th:href="@{/}" class="btn btn-secondary">메인으로</a>
@@ -54,4 +68,5 @@
 
   <div th:replace="~{common/LoginFooter :: LoginFooter}"></div>
 </body>
+
 </html>

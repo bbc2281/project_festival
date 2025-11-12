@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -16,7 +17,7 @@
   <div th:replace="~{common/header :: header}"></div>
 
   <main class="mypage-wrapper">
-  <div th:replace="~{common/memberAside :: aside}"></div>
+    <div th:replace="~{common/memberAside :: aside}"></div>
 
     <section class="main">
       <section class="profile-card">s
@@ -27,17 +28,17 @@
               <h3>[[${displayName}]] 님</h3>
               <p th:text="${userInfo.member_email}"></p>
               <div class="extra-info">
-              <!-- 가입일: <span th:text="${userInfo.member_regdate}"></span><br>  -->
-              회원 유형: <span th:text="${userInfo.role}"></span><br> 
-              닉네임: <span th:text="${userInfo.member_nickname}"></span>
-             </div>
+                <!-- 가입일: <span th:text="${userInfo.member_regdate}"></span><br>  -->
+                회원 유형: <span th:text="${userInfo.role}"></span><br>
+                닉네임: <span th:text="${userInfo.member_nickname}"></span>
               </div>
             </div>
           </div>
-          <div class="profile-actions">
-            <button class="btn btn-primary" id="edit" role="button">회원정보 수정</button>
-            <button class="btn btn-accent" id="myreview" role="button">내 리뷰 보기</button>
-          </div>
+        </div>
+        <div class="profile-actions">
+          <button class="btn btn-primary" id="edit" role="button">회원정보 수정</button>
+          <button class="btn btn-accent" id="myreview" role="button">내 리뷰 보기</button>
+        </div>
         </div>
       </section>
 
@@ -76,6 +77,23 @@
     <div class="container">© 2025 FesLite — 모두의 축제를 연결합니다 🎡</div>
   </footer>
 
-  
+  <script>
+    // 메뉴 강조 (JS 유지)
+    document.addEventListener('DOMContentLoaded', () => {
+      const links = document.querySelectorAll('.menu a');
+      const currentPath = window.location.pathname.split("/").pop();
+      links.forEach(link => {
+        const href = link.getAttribute('href').split("/").pop();
+        if (currentPath === 'info' && href === 'info') {
+          link.classList.add('active');
+        } else if (currentPath === href) {
+          link.classList.add('active');
+        } else {
+          link.classList.remove('active');
+        }
+      });
+    });
+  </script>
 </body>
+
 </html>
