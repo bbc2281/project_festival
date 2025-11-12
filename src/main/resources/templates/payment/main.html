@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://js.tosspayments.com/v1/payment-widget"></script>
+    <title>Document</title>
+</head>
+<body>
+    <div id="payment-method"></div> <!--해당 div태그에 결제 위젯이 만들어집니다.-->
+    <div id="agreement"></div> <!--해당 div태그에 결제 서비스 이용약관이 만들어집니다.-->
+    결제하기 로직 구현 <br>
+    <button id="paymentButton">결제하기</button> <br>
+    <span id="festival_name" th:text="${festivalDTO.festival_name}"></span>
+    
+    
+
+    <script src="/js/payment.js"></script>
+</body>
+</html>

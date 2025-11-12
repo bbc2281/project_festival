@@ -12,4 +12,5 @@ public class CommentDTO {
     private int review_idx;
     private String comment_content;
     private String comment_regDate;
+    private String member_nickname;
 }

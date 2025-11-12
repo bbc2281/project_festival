@@ -6,115 +6,180 @@
   <title>FesLite — 게시판</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <style>
-    html, body {
-      height: 100%;
-    }
-
+    html, body { height: 100%; }
     body {
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-    }
-
-    /* main이 페이지 내용 영역 */
-    main {
-      flex: 1;
-    }
-
-
-    body {
-      background: linear-gradient(135deg, rgb(255, 222, 233), rgb(222, 248, 255));
+      display: flex; flex-direction: column; min-height: 100vh;
+      background: linear-gradient(135deg, #ffdee9 0%, #b5fffc 100%);
       background-attachment: fixed;
-      background-repeat: no-repeat;
-      background-size: cover;
-      color: #222;
       font-family: "Inter", "Noto Sans KR", sans-serif;
+      color: #222;
     }
+    main { flex: 1; }
 
+    /* 카드 */
     .gradient-card {
       border: 2px solid transparent;
       border-image: linear-gradient(90deg, #7c3aed, #22d3ee) 1;
-      border-radius: 16px;
-      background: #fff;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      border-radius: 18px;
+      background: #fffdfd;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+      transition: all 0.3s ease;
     }
-    .gradient-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-    }
+    .gradient-card:hover { transform: translateY(-4px); box-shadow: 0 10px 24px rgba(0,0,0,0.12); }
 
-    .board-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-    }
+    /* 헤더 */
+    .board-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .board-header h3 { font-weight: 700; color: #4f46e5; }
 
-    .board-header h3 {
-      font-weight: 700;
-    }
-
-    .board-search {
-      display: flex;
-      gap: 8px;
-    }
-
+    /* 버튼 */
     .btn-gradient {
       background: linear-gradient(90deg, #7c3aed, #22d3ee);
       color: #fff;
       border: none;
-      border-radius: 10px;
-      padding: 8px 16px;
+      border-radius: 12px;
+      padding: 10px 18px;
+      font-weight: 600;
+      transition: all 0.3s ease;
     }
-
     .btn-gradient:hover {
-      opacity: 0.9;
+      opacity: 0.92;
+      box-shadow: 0 0 10px rgba(124,58,237,0.4);
     }
 
+    /* 테이블 */
     .table th {
-      background-color: rgba(124, 58, 237, 0.1);
-      color: #333;
+      background-color: rgba(124,58,237,0.08);
       font-weight: 600;
     }
-
     .table td, .table th {
       vertical-align: middle;
+      border-color: rgba(0,0,0,0.08);
+    }
+    .table-hover tbody tr:hover {
+      background-color: rgba(34,211,238,0.06);
+      cursor: pointer;
+      transition: background 0.2s ease;
     }
 
-    .table-hover tbody tr:hover {
-      background-color: rgba(34, 211, 238, 0.08);
-      cursor: pointer;
+    /* 카테고리 + 검색창 */
+    .category-tabs {
+      margin-bottom: 22px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .category-left { display: flex; gap: 10px; flex-wrap: wrap; }
+
+    .category-link {
+      display: inline-block;
+      padding: 8px 18px;
+      border-radius: 20px;
+      text-decoration: none;
+      color: #fff;
+      font-weight: 600;
+      transition: all 0.25s ease;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.12);
+    }
+    .category-link.all { background-color: #6b7280; }
+    .category-link:nth-child(2) { background-color: #7c3aed; }
+    .category-link:nth-child(3) { background-color: #7c3aed; }
+    .category-link:nth-child(4) { background-color: #7c3aed; }
+
+    .category-link:hover { transform: translateY(-2px); filter: brightness(1.1); }
+    .category-link.active {
+      box-shadow: 0 0 15px rgba(124,58,237,0.4);
+      transform: scale(1.05);
+    }
+
+    .board-search {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.8);
+      padding: 8px 12px;
+      border-radius: 10px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+    }
+    .board-search select, .board-search input {
+      border-radius: 10px;
+      border: 1px solid #ccc;
+    }
+    .board-search input:focus, .board-search select:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(124,58,237,0.25);
+    }
+
+    /* 페이지네이션 */
+    ul.pagination-list {
+      list-style: none;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      padding: 0;
+      margin-top: 30px;
+    }
+    ul.pagination-list li a {
+      display: block;
+      padding: 8px 14px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 600;
+      color: #555;
+      border: 1px solid #ddd;
+      transition: all 0.25s ease;
+    }
+    ul.pagination-list li a:hover {
+      background: linear-gradient(90deg, #7c3aed, #22d3ee);
+      color: #fff;
+      box-shadow: 0 0 8px rgba(124,58,237,0.3);
+    }
+    .active-page {
+      background: linear-gradient(90deg, #7c3aed, #22d3ee);
+      color: #fff !important;
+      border: none !important;
+      box-shadow: 0 0 10px rgba(124,58,237,0.4);
+    }
+
+    /* 반응형 */
+    @media (max-width: 768px) {
+      .board-search { flex-direction: column; align-items: stretch; }
+      .board-search input, .board-search select, .board-search button { width: 100%; }
     }
   </style>
 </head>
-
 <body>
-  <!-- header -->
   <div th:replace="~{common/header :: header}"></div>
 
   <main class="container py-5">
     <div class="gradient-card p-4 mb-4">
       <div class="board-header">
-        <h3>📢 공지&이벤트</h3>
-        <div class="board-search">
-    <select class="form-select" style="width: 150px;" name="board_category">
-        <option value="">전체</option>
-        <option th:each="category : ${categories}"
-            th:value="${category}"
-             th:text="${category}"></option>
-    </select>
+        <h3>📢 공지 & 이벤트</h3>
+      </div>
+
+      <!-- 카테고리 + 검색 -->
+      <div class="category-tabs">
+        <div class="category-left">
+          <a th:href="@{/board/list}" class="category-link all"
+             th:classappend="${param.board_category == null || param.board_category == ''} ? ' active' : ''">전체</a>
+          <a th:each="category : ${categories}"
+             th:href="@{/board/list(board_category=${category})}"
+             th:text="${category}"
+             class="category-link"
+             th:classappend="${param.board_category == category} ? ' active' : ''"></a>
+        </div>
+
+        <div class="board-search mt-2 mt-md-0">
+          <select class="form-select" style="width: 150px;" name="board_category">
+            <option value="">전체</option>
+            <option th:each="category : ${categories}" th:value="${category}" th:text="${category}"></option>
+          </select>
           <input type="text" class="form-control" placeholder="제목 검색..." style="width: 200px;">
           <button class="btn-gradient">검색</button>
         </div>
       </div>
-
-      <div>
-         <div th:each="category : ${categories}">
-          <a th:href="@{/board/list(board_category=${category})}">[[${category}]]</a> <br>
-        </div>
-      </div>
-
 
       <table class="table table-hover text-center align-middle">
         <thead>
@@ -128,8 +193,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr th:each="board : ${boards}"
-              th:onclick="|location.href='@{/board/info(board_idx=${board.board_idx})}'|">
+          <tr th:each="board : ${boards}" th:onclick="|location.href='@{/board/info(board_idx=${board.board_idx})}'|">
             <td th:text="${board.board_idx}"></td>
             <td class="text-start" th:text="${board.board_title}"></td>
             <td th:text="${board.member_idx}"></td>
@@ -138,7 +202,7 @@
             <td th:text="${board.board_category}"></td>
           </tr>
           <tr th:if="${#lists.isEmpty(boards)}">
-            <td colspan="6" class="text-muted">등록된 게시글이 없습니다.</td>
+            <td colspan="6" class="text-muted py-4">등록된 게시글이 없습니다.</td>
           </tr>
         </tbody>
       </table>
@@ -148,27 +212,24 @@
       </div>
     </div>
 
-    <!-- 페이징 영역 --> 
-    <div th:if="${pageDTO.pageCnt > 1}"> 
-      <div> 
-          <ul style="list-style: none; display: flex; gap: 8px; padding: 0;"> 
-                  <!-- 이전 페이지 버튼 --> 
-                  <li th:if="${pageDTO.prevPage >= 1}"> 
-                  <a th:href="@{/board/list(page=${pageDTO.prevPage}, board_category=${param.board_category})}">이전</a> </li>
-                  <!-- 페이지 번호 버튼 --> 
-                  <li th:each="i : ${#numbers.sequence(pageDTO.min, pageDTO.max)}"> 
-                  <a th:href="@{/board/list(page=${i}, board_category=${param.board_category})}" th:text="${i}" th:classappend="${i == pageDTO.currentPage} ? 'active-page' : ''"></a> </li> 
-                  <!-- 다음 페이지 버튼 --> 
-                  <li th:if="${pageDTO.nextPage > pageDTO.currentPage}"> <a th:href="@{/board/list(page=${pageDTO.nextPage}, board_category=${param.board_category})}">다음</a> 
-              </li> 
-          </ul> 
-      </div> 
+    <!-- 페이징 -->
+    <div th:if="${pageDTO.pageCnt > 1}">
+      <ul class="pagination-list">
+        <li th:if="${pageDTO.prevPage >= 1}">
+          <a th:href="@{/board/list(page=${pageDTO.prevPage}, board_category=${param.board_category})}">이전</a>
+        </li>
+        <li th:each="i : ${#numbers.sequence(pageDTO.min, pageDTO.max)}">
+          <a th:href="@{/board/list(page=${i}, board_category=${param.board_category})}"
+             th:text="${i}"
+             th:classappend="${i == pageDTO.currentPage} ? 'active-page' : ''"></a>
+        </li>
+        <li th:if="${pageDTO.nextPage > pageDTO.currentPage}">
+          <a th:href="@{/board/list(page=${pageDTO.nextPage}, board_category=${param.board_category})}">다음</a>
+        </li>
+      </ul>
     </div>
-
-
   </main>
 
-  <!-- footer -->
   <div th:replace="~{common/footer :: footer}"></div>
 </body>
 </html>
