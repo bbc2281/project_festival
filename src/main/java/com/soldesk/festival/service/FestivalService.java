@@ -5,7 +5,9 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.soldesk.festival.dao.FestivalDAO;
+import com.soldesk.festival.dto.FestivalCategoryDTO;
 import com.soldesk.festival.dto.FestivalDTO;
+import com.soldesk.festival.dto.RegionDTO;
 
 import lombok.RequiredArgsConstructor;
 
@@ -24,12 +26,25 @@ public class FestivalService {
         return festivalDAO.getFestival(id);
     } //getFestival
 
-    public List<String> getCategory(){
+    public List<FestivalCategoryDTO> getCategory(){
         return festivalDAO.getCategory();
     } //getCategory
 
-    public List<String> getRegion(){
+    public List<RegionDTO> getRegion(){
         return festivalDAO.getRegion();
     }
 
+    public void insertFestival(FestivalDTO festival){
+        festival.setSeg_festival_idx((Integer) null);
+        
+        festivalDAO.insertFestival(festival);
+    }
+
+    public void deleteFestival(int festival_idx){
+        festivalDAO.deleteFestival(festival_idx);
+    }
+    
+    public int countFestival(){
+        return festivalDAO.countFestival();
+    }
 }

@@ -45,4 +45,7 @@ public class ReviewService {
         reviewDAO.deleteReview(review_idx);
     }
     
+    public int countReviewNow(String date){
+        return reviewDAO.countReviewNow(date);
+    }
 }

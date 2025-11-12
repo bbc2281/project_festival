@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>기업 제안서 승인 관리 | FesLite</title>
+  <base href="/">
+  <link th:href="@{/css/adminStyle.css}" rel="stylesheet">
+  <script defer th:src="@{/js/adminApp.js}"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <style>
+    body{margin:0;font-family:'Pretendard',sans-serif;background:#f5f6fa;display:flex;height:100vh;}
+    .sidebar{width:240px;background:#1f1f2e;color:#fff;padding:20px 0;display:flex;flex-direction:column;}
+    .sidebar a{display:block;padding:12px 20px;color:#ccc;text-decoration:none;}
+    .sidebar a:hover,.active{background:linear-gradient(135deg,#b5fffc 0%,#ffdee9 100%);color:#000;font-weight:600;}
+    .main{flex:1;overflow-y:auto;}
+    header{background:#fff;box-shadow:0 1px 6px rgba(0,0,0,0.1);padding:15px 30px;display:flex;justify-content:space-between;}
+    table{background:#fff;margin:20px;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,0.08);}
+    .badge-pending{background:#ffe082;color:#5d4037;}
+    .badge-approved{background:#81c784;color:#fff;}
+    .badge-rejected{background:#ef9a9a;color:#fff;}
+    .sidebar h2{text-align:center;font-size:20px;font-weight:700;margin-bottom:30px;line-height:1.2;white-space:nowrap;}
+    a.festival-link { color: #007bff; text-decoration: none; font-weight: 500; cursor:pointer; }
+    a.festival-link:hover { text-decoration: underline; }
+  </style>
+</head>
+
+<body>
+  <!-- 좌측 사이드바 -->
+  <div th:replace="~{common/adminAside :: aside}"></div>
+
+  <!-- 메인 영역 -->
+  <div class="main">
+    <header>
+      <h4>축제 등록 관리</h4>
+    </header>
+
+    <div class="p-4">
+      <table class="table table-hover align-middle text-center">
+        <thead class="table-light">
+          <tr>
+            <th>기업명</th>
+            <th>축제명</th>
+            <th>예상 시작일</th>
+            <th>예상 종료일</th>
+            <th>축제 예정장소</th>
+            <th>상태</th>
+            <th>승인/반려</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="proposal : ${proposals}">
+            <td th:text="${proposal.festival_host}"></td>
+            <!-- ✅ 클릭하면 모달 띄우기 -->
+            <td>
+              <a class="festival-link"
+                 th:data-idx="${proposal.seg_festival_idx}"
+                 th:data-name="${proposal.festival_name}"
+                 th:data-host="${proposal.festival_host}"
+                 th:data-begin="${proposal.festival_begin_date}"
+                 th:data-end="${proposal.festival_end_date}"
+                 th:data-address="${proposal.festival_address}"
+                 th:data-content="${proposal.festival_info}"
+                 th:data-img="@{${proposal.festival_img_path}}"
+                 onclick="openDetailModal(this)">
+                <span th:text="${proposal.festival_name}"></span>
+              </a>
+            </td>
+            <td th:text="${proposal.festival_begin_date}"></td>
+            <td th:text="${proposal.festival_end_date}"></td>
+            <td th:text="${proposal.festival_address}"></td>
+            <td><span class="badge badge-pending">승인대기</span></td>
+            <td>
+              <a th:href="@{/festival/permit(festival_idx=${proposal.seg_festival_idx})}" class="btn btn-success btn-sm">승인</a>
+              <a class="btn btn-secondary btn-sm">반려</a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ✅ 상세보기 모달 -->
+  <div class="modal fade" id="festivalDetailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="detailModalLabel">축제 상세정보</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="닫기"></button>
+        </div>
+        <div class="modal-body">
+          <table class="table table-bordered">
+            <tr><th>기업명</th><td id="detailHost"></td></tr>
+            <tr><th>축제명</th><td id="detailName"></td></tr>
+            <tr><th>시작일</th><td id="detailBegin"></td></tr>
+            <tr><th>종료일</th><td id="detailEnd"></td></tr>
+            <tr><th>장소</th><td id="detailAddress"></td></tr>
+            <tr><th>내용</th><td id="detailContent"></td></tr>
+          </table>
+        </div>
+        <div class="col-md-6 text-center">
+              <!-- ✅ 축제 이미지 -->
+              <img id="detailImage" src="" alt="축제 이미지" class="img-fluid">
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ✅ JS -->
+  <script>
+    function openDetailModal(el) {
+      // 클릭한 행의 데이터 속성 불러오기
+      const idx = el.getAttribute("data-idx");
+      const img = el.getAttribute("data-img");
+
+      document.getElementById("detailName").innerText = el.getAttribute("data-name");
+      document.getElementById("detailHost").innerText = el.getAttribute("data-host");
+      document.getElementById("detailBegin").innerText = el.getAttribute("data-begin");
+      document.getElementById("detailEnd").innerText = el.getAttribute("data-end");
+      document.getElementById("detailAddress").innerText = el.getAttribute("data-address");
+      document.getElementById("detailContent").innerText = el.getAttribute("data-content");
+
+      const imgEl = document.getElementById("detailImage");
+      if (img && img.trim() !== "") {
+        imgEl.src = img;
+        imgEl.style.display = "block";
+      } else {
+        imgEl.style.display = "none";
+      }
+
+      // 모달 띄우기
+      const modal = new bootstrap.Modal(document.getElementById("festivalDetailModal"));
+      modal.show();
+    }
+  </script>
+</body>
+</html>

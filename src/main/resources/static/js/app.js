@@ -1,6 +1,41 @@
+ window.logout = async function() {
+        try {
+            const csrfInput = document.querySelector('input[name="_csrf"]');
+            const csrfToken = csrfInput ? csrfInput.value : null;
+            const csrfHeader = 'X-CSRF-TOKEN'; 
+            
+            // API 호출을 위한 헤더 설정 (로그인 로직과 동일)
+            const headers = { 'Content-Type': 'application/json' };
+            if (csrfToken) headers[csrfHeader] = csrfToken;
+
+            // 로그아웃 REST API 호출
+            const res = await fetch('/api/v1/auth/logout', {
+                method: 'POST',
+                headers: headers,
+                // 로그아웃은 body가 필요하지 않습니다.
+            });
+
+            console.log('로그아웃 서버 응답 상태 코드:', res.status);
+            const data = await res.json();
+
+            if (data.success) {
+                alert(data.message || '로그아웃 성공!');
+                window.location.href = '/';
+            } else {
+                alert('로그아웃 실패: ' + (data.message || '서버 오류'));
+            }
+
+        } catch (error) {
+            console.error('로그아웃 중 오류 발생:', error);
+            alert('네트워크 오류로 로그아웃에 실패했습니다.');
+        }
+    }
+
+
 
 // Dataset (mock)
 const FESTIVALS = [ ];
+const NOTICES = [ ];
 
 document.addEventListener("DOMContentLoaded", function(){
   fetch("/api/festivals")
@@ -23,8 +58,9 @@ document.addEventListener("DOMContentLoaded", function(){
         address: festival.festival_address || '',
         lat: parseFloat(festival.LAT) || 0,
         lng: parseFloat(festival.LOT) || 0,
-        like: 0,
+        like: festival.festival_like || 0,
       };
+      
       FESTIVALS.push(formattedFestival);
       
     })
@@ -32,36 +68,35 @@ document.addEventListener("DOMContentLoaded", function(){
     if (qs('#resultGrid')) initSearchPage();
     if (qs('#festivalDetail')) renderFestivalDetail();
     if (qs('#postList')) renderBoard();
-    bindAuthForms();
+    // bindAuthForms();
   })
   .catch(err =>{
     console.log("축제정보 호출 오류",err);
-  })
+  });
 
+  // 홈화면 공지사항 호출
+  fetch("/index/board")
+  .then(response => response.json())
+  .then(BoardList =>{
+    BoardList.forEach(board => {
+      const board_date = new Date(board.board_regDate)
+      formattedDate = board_date.toISOString().split('T')[0]
+      const formattedBoard = {
+        title : board.board_title,
+        date :  formattedDate
+      };
+      // 공지사항 추가
+      NOTICES.push(formattedBoard);
+    })
+  })
+  .catch(err =>{
+    console.log("공지사항 호출 오류",err);
+  });
 });
 
-const NOTICES = [
-  {title:"서버 점검 안내", date:"2025-10-05"},
-  {title:"가을 축제 이벤트 당첨자 발표", date:"2025-10-01"},
-  {title:"사이트 정식 오픈 공지", date:"2025-09-20"}
-];
 
-// 홈화면 공지사항 호출
-fetch("/index/board")
-.then(res => response.json())
-.then(BoardList =>{
-  BoardList.forEach(board => {
-    const formattedBoard = {
-      title : board.board_title,
-      date : board.board_regDate
-    };
-    // 공지사항 추가
-    NOTICES.push(formattedBoard);
-  })
-})
-.catch(err =>{
-  console.log("공지사항 호출 오류",err);
-});
+
+
 
 // Utility
 const qs = (s,doc=document)=>doc.querySelector(s);
@@ -91,7 +126,7 @@ function renderHome(){
 
   // Notices
   const ul = qs('#noticeList');
-  NOTICES.forEach(n=>{
+  NOTICES.slice(0,6).forEach(n=>{
     const li = document.createElement('li');
     li.className='list-group-item d-flex justify-content-between align-items-center';
     li.innerHTML = `<span>${n.title}</span><span class="text-secondary small">${n.date}</span>`;
@@ -153,6 +188,7 @@ function initSearchPage(){
     if (b === "기타") return -1;   
     return a.localeCompare(b, 'ko-KR'); 
   });
+  
   fillOptions(qs('#cat'), ['전체', ...cats]);
   fillOptions(qs('#region'), ['전체', ...regions]);
 
@@ -255,58 +291,4 @@ function renderPager(total, size, page) {
   }
 }
 
-// Festival detail page
-
-// function renderFestivalDetail(){
-//   const url = new URL(location.href);
-//   const id = url.searchParams.get('id');
-//   const f = FESTIVALS.find(x=>x.id===id) || FESTIVALS[0];
-//   const root = qs('#festivalDetail');
-//   root.innerHTML = `
-//   <div class="row g-4">
-//     <div class="col-lg-7">
-//       <img class="rounded-4 shadow w-100 object-fit-cover" src="${f.img}" style="height:380px">
-//     </div>
-//     <div class="col-lg-5">
-//       <h3 class="fw-bold">${f.name}</h3>
-//       <div class="text-secondary mb-2">${f.region} · ${f.city}</div>
-//       <div class="mb-1">기간: ${f.begin} ~ ${f.end}</div>
-//       <div class="mb-1">요금: ${f.fee===0?'무료':'₩'+f.fee.toLocaleString()}</div>
-//       <div class="mb-1">주최: ${f.host}</div>
-//       <div class="mb-2">주소: ${f.address}</div>
-//       <div class="mb-3">${festivalBadge(f)}</div>
-//       <div class="d-flex gap-2">
-//         <a class="btn btn-primary" href="https://map.naver.com/p/search/${encodeURIComponent(f.address)}" target="_blank">네이버 길찾기</a>
-//         <a class="btn btn-outline-secondary" href="search.html">목록으로</a>
-//       </div>
-//       <div class="alert alert-light border mt-3">💬 이 축제의 전용 채팅방은 1개로 고정됩니다. (모의)</div>
-//     </div>
-//   </div>
-//   <div class="mt-4">
-//     <h5 class="mb-3">상세 소개</h5>
-//     <p>${f.info}</p>
-//   </div>
-//   <div class="mt-4">
-//     <h5 class="mb-3">리뷰</h5>
-//     <div class="vstack gap-2" id="reviews">
-//       <div class="border rounded p-3"><b>익명</b> · 즐거웠어요! 야간 조명이 특히 예뻤어요.</div>
-//     </div>
-//   </div>`;
-// }
-
-// Board page content
-function renderBoard(){
-  const list = qs('#postList');
-  const posts = [
-    {title:'서버 점검 안내', author:'관리자', date:'2025-10-05'},
-    {title:'가을 축제 이벤트 당첨자 발표', author:'운영팀', date:'2025-10-01'},
-    {title:'사이트 정식 오픈 공지', author:'관리자', date:'2025-09-20'},
-  ];
-  posts.forEach(p=>{
-    const li = document.createElement('li');
-    li.className = 'list-group-item d-flex justify-content-between align-items-center';
-    li.innerHTML = `<div><a href="#" class="text-decoration-none">${p.title}</a><div class="small text-secondary">by ${p.author}</div></div><div class="small text-secondary">${p.date}</div>`;
-    list.appendChild(li);
-  });
-}
 

@@ -22,7 +22,7 @@ public class BoardService {
         int start = (page - 1) *10;
 		int limit = 10 ; 
         return boardDAO.selectAllBoard(start,limit);
-    }
+    } 
 
     public List<BoardDTO> selectAllBoardByCategory(int page, String board_category){
         int start = (page - 1) * 10 ;
@@ -63,4 +63,11 @@ public class BoardService {
         boardDAO.deleteProecess(board_idx);
     }
 
+    public int countBoard(){
+        return boardDAO.countBoard();
+    }
+
+    public int countBoardNow(String date){
+        return boardDAO.countBoardNow(date);
+    }
 }

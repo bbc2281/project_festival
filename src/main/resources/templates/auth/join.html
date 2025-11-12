@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ko" th:xmlns="www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>회원가입 유형 선택 — FesLite</title>
+  <base href="/">
+  <link rel="stylesheet" th:href="@{/css/loginStyle.css}" />
+  <script defer th:src="@{/js/joinpage.js}"></script>
+</head>
+<body>
+  <div th:replace="~{common/loginHeader :: loginHeader}"></div>
+
+  <main class="center-screen">
+    <section class="card signup-select-card">
+      <div class="card-body text-center">
+        <h2 style="margin:0 0 12px;font-size:28px;">회원 유형 선택</h2>
+        <p class="card-sub">가입하실 계정 유형을 선택해주세요.</p>
+
+        <div class="grid grid-2 mt-4">
+          <!-- 일반회원 -->
+          <div id="opt-user" class="option-card">
+            <img th:src="@{/images/member.png}" alt="일반회원 아이콘" class="member-icon">
+            <div class="card-title mt-3">일반회원 가입</div>
+            <div class="small">즐겨찾기, 리뷰, 티켓 구매 등을 위한 기본 계정</div>
+              <li>축제 뉴스 조회</li>
+              <li>공지 및 이벤트 참여</li>
+            </ul>
+          </div>
+
+          <!-- 기업회원 -->
+          <div id="opt-company" class="option-card">
+            <img th:src="@{/images/company.png}" alt="기업회원 아이콘" class="member-icon">
+            <div class="card-title mt-3">기업회원 가입</div>
+            <div class="small">축제 등록, 공지 발행, 리포트 기능 제공</div>
+            <ul class="service-list">
+              <li>축제 조회 및 추천</li>
+              <li>채팅 / 리뷰</li>
+              <li>축제 뉴스 조회</li>
+              <li>공지 및 이벤트 참여</li>
+              <li>축제 제안</li>
+              <li>후원 기능</li> 
+            </ul>
+          </div>
+        </div>
+
+        <div class="mt-5">
+          <a th:href="@{/}" class="btn btn-secondary">메인으로</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div th:replace="~{common/LoginFooter :: LoginFooter}"></div>
+</body>
+</html>
