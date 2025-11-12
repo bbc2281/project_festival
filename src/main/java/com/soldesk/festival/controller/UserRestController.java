@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -224,6 +225,34 @@ public class UserRestController {
 		}
 	}
 
+    @PostMapping("/modify")
+    public ResponseEntity<UserResponse> modifyProcess(@RequestBody MemberDTO userInfo, HttpSession session) {
+        try {
+            memberService.modifyMember(userInfo);
+            MemberDTO modifiedMember = memberService.findUserbyIdx(userInfo.getMember_idx());
+            session.setAttribute("loginMember", modifiedMember);
+            return ResponseEntity.ok(UserResponse.successMessage("회원정보 수정 성공"));
+        } catch(Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(UserResponse.error("회원정보 수정 중 오류가 발생했습니다."));
+        }
+    }
+
+	@PostMapping("/delete")
+	public void deleteProcess(@SessionAttribute("loginMember") MemberDTO loginMember, HttpSession session,
+			HttpServletResponse response) throws Exception {
+		memberService.deleteMember(loginMember.getMember_idx());
+		session.invalidate();
+		response.setContentType("text/html;charset=UTF-8");
+		PrintWriter out = response.getWriter();
+		out.println("<script>");
+		out.println("alert('회원탈퇴 성공');");
+		out.println("window.location.href='/';");
+		out.println("</script>");
+		out.close();
+	}
+
 	@GetMapping("/login/naver")
 	public ResponseEntity<UserResponse> naverCallback(
 			@RequestParam String code,
@@ -300,8 +329,9 @@ public class UserRestController {
 			joinDTO.setMember_phone(mobile);
 			joinDTO.setMember_birth(birth);
 			joinDTO.setMember_pass("SOCIAL_LOGIN");
-			joinDTO.setMember_address("네이버회원 주소");
-			joinDTO.setMember_job("네이버회원 직업");
+			joinDTO.setMember_address("기타");
+			joinDTO.setMember_job("기타");
+			joinDTO.setIs_social(1);//소셜회원 = 1 일반회원 = 0
 
 			memberService.join(joinDTO);
 			optionalMember = memberService.findUserbyId(naverId);
