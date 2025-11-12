@@ -6,9 +6,10 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 
 import com.soldesk.festival.dao.paymentDAO;
+import com.soldesk.festival.dto.CompanyDTO;
 import com.soldesk.festival.dto.PaymentDTO;
 import com.soldesk.festival.dto.PaymentRequestDTO;
-import com.soldesk.festival.dto.companyDTO;
+
 import com.soldesk.festival.dto.fundingFestivalDTO;
 
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,7 @@ public class paymentService {
     private final paymentDAO paymentDAO;
     private final FundingService fundingService;
 
-    public String saveOrderAndReturnOrderId(PaymentRequestDTO requestDTO , companyDTO companyDTO){
+    public String saveOrderAndReturnOrderId(PaymentRequestDTO requestDTO , CompanyDTO companyDTO){
         PaymentDTO paymentDTO = new PaymentDTO();
         String orderId = UUID.randomUUID().toString().replace("-", "").substring(0, 20);
         paymentDTO.setOrder_id(orderId);

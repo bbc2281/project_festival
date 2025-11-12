@@ -20,7 +20,7 @@ import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.soldesk.festival.config.TossConfig;
 import com.soldesk.festival.dto.PaymentRequestDTO;
-import com.soldesk.festival.dto.companyDTO;
+import com.soldesk.festival.dto.CompanyDTO;
 import com.soldesk.festival.dto.PaymentDTO;
 import com.soldesk.festival.service.paymentService;
 
@@ -38,9 +38,8 @@ public class PaymentRestController {
     
     @PostMapping("/order")
     //주문 요청 만들기 
-    public ResponseEntity<Map<String,Object>> createOrder(@RequestBody PaymentRequestDTO requestDTO , @SessionAttribute("companyMember")companyDTO companyDTO){
-        companyDTO.setCompany_idx(1); // 로그인 기능이 연동이 되어 있지 않아 설정한 임시 idx입니다 로그인 기능 연동 후 삭제 해야합니다.
-
+    public ResponseEntity<Map<String,Object>> createOrder(@RequestBody PaymentRequestDTO requestDTO , @SessionAttribute("companyMember")CompanyDTO companyDTO){
+       
         Map<String,Object> response = new HashMap<String,Object>();
         try {   
             logger.info(" 주문 생성 요청 들어옴: {}", requestDTO); 
@@ -132,7 +131,7 @@ public class PaymentRestController {
     }
 
     @PostMapping("/info") //주문 정보를 가져오는 메서드입니다 
-    public ResponseEntity<Map<String,Object>> infoPayment(@RequestBody Map<String,Object> request, @SessionAttribute("companyMember")companyDTO companyDTO){
+    public ResponseEntity<Map<String,Object>> infoPayment(@RequestBody Map<String,Object> request, @SessionAttribute("companyMember")CompanyDTO companyDTO){
         Map<String,Object> response = new HashMap<String,Object>();
         String orderId = request.get("orderId").toString();
         try {

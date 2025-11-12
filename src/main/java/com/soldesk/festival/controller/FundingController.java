@@ -5,7 +5,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.soldesk.festival.dto.companyDTO;
+import com.soldesk.festival.dto.CompanyDTO;
 import com.soldesk.festival.dto.fundingFestivalDTO;
 import com.soldesk.festival.service.FundingService;
 
@@ -33,7 +33,7 @@ public class FundingController {
         model.addAttribute("fundingFestival", fundingFestivalDTO);
 
         //임시용 으로 세션에 객체를 넣었습니다.
-        companyDTO companyDTO = new companyDTO();
+        CompanyDTO companyDTO = new CompanyDTO();
         session.setAttribute("companyMember", companyDTO);
 
         return "/funding/info";
