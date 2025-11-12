@@ -113,7 +113,14 @@
 
     <section class="main">
       <h3>나의 리뷰</h3>
-      <div id="reviewList" class="review-grid"></div>
+      <div class="review-grid">
+        <div class="review-card" th:each="review : ${reviewList}">
+          <p th:text="${review.review_content}"></p>
+          <div class="review-meta">
+            작성일: <span th:text="${#dates.format(review.review_reg_date, 'yyyy-MM-dd')}"></span>
+          </div>
+        </div>
+      </div>
     </section>
   </main>
 
@@ -121,29 +128,7 @@
     <div class="container">© 2025 FesLite — 모두의 축제를 연결합니다 🎡</div>
   </footer>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const links = document.querySelectorAll('.menu a');
-      const currentPath = window.location.pathname.split("/").pop();
-      links.forEach(link => {
-        const href = link.getAttribute('href');
-        if (currentPath === href) { link.classList.add('active'); }
-        else { link.classList.remove('active'); }
-      });
-    });
-
-    const reviews = [
-      { title: "서울 불빛정원 너무 예뻤어요!", content: "야경이 진짜 아름다웠고 분위기가 최고였어요!", date: "2025-10-20" },
-      { title: "부산 불꽃축제 후기", content: "불꽃이 엄청 웅장하고 사진도 잘 나왔어요!", date: "2025-09-18" },
-      { title: "전주 한옥마을 축제", content: "먹거리도 많고 전통 공연이 인상적이었어요!", date: "2025-08-02" }
-    ];
-    const reviewList = document.getElementById('reviewList');
-    reviews.forEach(r => {
-      const card = document.createElement('div');
-      card.className = 'review-card';
-      card.innerHTML = `<h4>${r.title}</h4><p>${r.content}</p><div class="review-meta">작성일: ${r.date}</div>`;
-      reviewList.appendChild(card);
-    });
+  <script>   
     // 메뉴 강조 (JS 유지)
     document.addEventListener('DOMContentLoaded', () => {
       const links = document.querySelectorAll('.menu a');

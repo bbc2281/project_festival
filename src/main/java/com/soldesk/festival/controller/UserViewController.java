@@ -10,17 +10,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
-import com.soldesk.festival.dto.CompanyDTO;
-import com.soldesk.festival.dto.FestivalDTO;
-import com.soldesk.festival.dto.InquiryDTO;
-import com.soldesk.festival.dto.MemberDTO;
-import com.soldesk.festival.dto.MemberDetailDTO;
-import com.soldesk.festival.dto.SecurityAllUsersDTO;
-import com.soldesk.festival.service.CompanyService;
-import com.soldesk.festival.service.FavoriteService;
-import com.soldesk.festival.service.InquiryService;
-import com.soldesk.festival.service.MemberService;
-
+import com.soldesk.festival.dto.*;
+import com.soldesk.festival.service.*;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
@@ -28,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 @Controller
 public class UserViewController {
 
+    private final ReviewService reviewService;
     private final MemberService memberService;
     private final CompanyService companyService;
     private final InquiryService inquiryService;
@@ -117,7 +109,14 @@ public class UserViewController {
 
     // 일반회원 리뷰작성정보
     @GetMapping("/mypage/review")
-    public String mypageReview() {
+    public String mypageReview(Model model, HttpSession session){
+
+        MemberDTO loginMember = (MemberDTO) session.getAttribute("loginMember");
+
+        List<ReviewDTO> reviewList = reviewService.infoReviewByMember(loginMember);
+
+        model.addAttribute("reviewList", reviewList);
+
         return "member/review";
     }
 
