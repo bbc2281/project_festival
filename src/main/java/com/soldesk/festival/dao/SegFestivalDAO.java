@@ -42,4 +42,12 @@ public class SegFestivalDAO {
     public void updateDelLog(int idx){
         segFestivalMapper.updateDelLog(idx);
     }
+
+    public int countFestivalByCompany(int idx){
+        return segFestivalMapper.countFestivalByCompany(idx);
+    }
+
+    public List<FestivalDTO> selectCommitFestival(int idx){
+        return segFestivalMapper.selectCommitFestival(idx);
+    }
 }

@@ -34,4 +34,10 @@ public interface SegFestivalMapper {
 
     @Update("update seg_festival set festival_reg_log = 0 where seg_festival_idx = #{seg_festival_idx}")
     void updateDelLog(@Param("seg_festival_idx") int seg_festival_id);
+
+    @Select("select count(*) from seg_festival where company_idx= #{company_idx}")
+    int countFestivalByCompany(@Param("company_idx") int idx);
+
+    @Select("select * from seg_festival where company_idx = #{company_idx} and festival_reg_log = 1")
+    List<FestivalDTO> selectCommitFestival(@Param("company_idx") int idx);
 }

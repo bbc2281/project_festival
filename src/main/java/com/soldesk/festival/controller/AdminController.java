@@ -166,4 +166,12 @@ public class AdminController {
         return "redirect:/admin/member";
     }
 
+    @GetMapping("/board/delete")
+    public String deleteBoard(@RequestParam("id") int board_idx){
+
+        boardService.deleteProecess(board_idx);
+
+        return "redirect:/admin/event";
+    }
+
 }

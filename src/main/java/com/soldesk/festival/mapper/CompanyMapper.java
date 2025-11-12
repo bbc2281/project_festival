@@ -25,7 +25,6 @@ public interface CompanyMapper {
 		@Result(property="company_name", column="company_name"),
 		@Result(property="role", column= "role", typeHandler=MemberRoleTypeHandler.class)
 	})
-	
 	@Select("select * from company where member_id=#{member_id}")
 	Optional<CompanyDTO> findCompanyUserById(@Param("member_id")String member_id); //시스템 내부에서 조회용
     
@@ -53,6 +52,8 @@ public interface CompanyMapper {
 	@Select("select * from company where company_reg_num=#{company_reg_num}")
 	CompanyDTO findCompanyUserByregNum(@Param("company_reg_num")Integer regNum); //사용자용
     
+	@Select("select * from company where company_idx = #{company_idx}")
+	CompanyDTO selectCompanyByIdx(@Param("company_idx") int id);
 
 	@Options(useGeneratedKeys=true, keyProperty="company_idx")
 	@Insert("insert into company(company_name, member_id, member_pass, member_email, company_phone, company_reg_num, company_owner, company_open_date, role, company_address, company_account) "

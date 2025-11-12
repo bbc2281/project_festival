@@ -27,6 +27,8 @@ public class UserViewController {
     private final CompanyService companyService;
     private final InquiryService inquiryService;
     private final FavoriteService favoriteService;
+    private final CommentService commentService;
+    private final FundingFestivalService fundingFestivalService;
 
 
     
@@ -65,9 +67,19 @@ public class UserViewController {
         }
 
        MemberDetailDTO userInfo = memberService.getMemberDetails(userdetails.getUsername());
-
+       int idx = userInfo.getMember_idx();
        model.addAttribute("userInfo", userInfo);
        model.addAttribute("displayName", userdetails.getUserDisplayName());
+
+       int favorite = favoriteService.countFavoriteByMember(idx);
+       int inquiry = inquiryService.countInquiryByMember(idx);
+       int review = reviewService.countReviewByMember(idx);
+       int comment = commentService.countCommentByMember(idx);
+
+       model.addAttribute("favorite", favorite);
+       model.addAttribute("inquiry", inquiry);
+       model.addAttribute("review", review);
+       model.addAttribute("comment", comment);
 
        return "member/mypage";
     }
@@ -142,7 +154,30 @@ public class UserViewController {
 
     //기업회원 마이페이지
     @GetMapping("/company/mypage")
-    public String companyPageForm(){
+    public String companyPageForm(@AuthenticationPrincipal SecurityAllUsersDTO userdetails, Model model){
+
+        if(userdetails == null){
+            return "redirect:/auth/loginPage";
+        }
+
+        int idx = (int) userdetails.getUserIdx();
+        CompanyDTO login = companyService.selectCompanyByIdx(idx);
+        model.addAttribute("login", login);
+
+        int segFestival = segFestivalService.countFestivalByCompany(idx);
+        int favorite = favoriteService.countFavoriteByCompany(idx);
+        int festival_funding = fundingFestivalService.countFundingByCompany(idx);
+        int payment = 0;
+
+        model.addAttribute("segFestival", segFestival);
+        model.addAttribute("favorite", favorite);
+        model.addAttribute("festival_funding", festival_funding);
+        model.addAttribute("payment", payment);
+
+        List<FestivalDTO> commitFestivalList = segFestivalService.selectCommitFestival(idx);
+
+        model.addAttribute("commitFestivalList", commitFestivalList);
+
         return "company/mypage";
     }
 

@@ -35,8 +35,6 @@ public class CompanyService {
 		return Optional.ofNullable(companyMapper.findCompanyUserByregNum(regNum));
 	}
 
-
-
     @Transactional(rollbackFor= com.soldesk.festival.exception.UserException.class)
 	public void join(CompanyJoinDTO joinCompany){
 
@@ -47,14 +45,8 @@ public class CompanyService {
 		joinCompany.setRole(joinCompany.getRole());
 		companyMapper.insertCompany(joinCompany);
 		
-      
-	       
-		
-
 	}
 
-
-	
 	public void deleteCompany(String companyId, String password) {
 		
 		CompanyDTO thisCompany = findCompanyUserById(companyId).filter(company -> authUtil.checkPassword(password, company.getMember_pass()))
@@ -69,5 +61,9 @@ public class CompanyService {
 
 	public void deleteCompanyByAdmin(int id){
 		companyMapper.deleteCompanyByAdmin(id);
+	}
+
+	public CompanyDTO selectCompanyByIdx(int idx){
+		return companyMapper.selectCompanyByIdx(idx);
 	}
 }

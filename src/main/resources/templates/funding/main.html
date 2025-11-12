@@ -20,8 +20,7 @@
         <input id="searchInput" type="search" class="form-control" placeholder="축제, 지역, 테마로 검색" />
       </div>
     </form>
-    <a class="btn btn-outline-dark d-none d-md-inline-flex" th:href="@{/funding/info}">펀딩 상세페이지(임시)</a>
-    <a class="btn btn-gradient" th:href="@{/funding/main}">펀딩 등록하기</a>
+    <a class="btn btn-gradient" th:href="@{/funding/register}">펀딩 등록하기</a>
   </div>
 </header>
 
@@ -80,12 +79,8 @@
   <div class="container py-2">
     <ul id="categoryTabs" class="nav nav-pills justify-content-center flex-wrap gap-2">
       <li class="nav-item"><button class="nav-link active" data-category="all">전체</button></li>
-      <li  class="nav-item"><button class="nav-link" data-category="문화/예술"></button></li>
-      <li class="nav-item"><button class="nav-link" data-category="문화/예술">문화/예술</button></li>
-      <li class="nav-item"><button class="nav-link" data-category="시민화합">시민화합</button></li>
-      <li class="nav-item"><button class="nav-link" data-category="자연/경관">자연/경관</button></li>
-      <li class="nav-item"><button class="nav-link" data-category="전통/역사">전통/역사</button></li>
-      <li class="nav-item"><button class="nav-link" data-category="기타">기타</button></li>
+      <!-- th:each 해야함 -->
+      <li th:each="cat : ${category}" class="nav-item"><button class="nav-link" th:data-category="${cat.festival_category_name}" th:text="${cat.festival_category_name}"></button></li>
     </ul>
   </div>
 </nav>
@@ -96,96 +91,49 @@
   <div class="container">
 <div id="fundingGrid" class="row g-3 g-md-4">
 
-<div class='col-6 col-md-4 col-lg-3 funding-card' data-category='축제' data-title='한강 불꽃축제' data-end='2025-12-31' data-raised='20000000' data-goal='40000000'>
-  <a class='card h-100 shadow-hover text-decoration-none' href='./funding-detail.html'>
-    <div class='ratio ratio-4x3'>
-      <img class='rounded-top object-fit-cover' src='https://images.unsplash.com/photo-1508264165352-258a6b1b149a?q=80&w=600&auto=format&fit=crop' alt='한강 불꽃축제' />
+<div th:each="funding : ${fundingList}" 
+     class="col-6 col-md-4 col-lg-3 funding-card" 
+     data-category="축제"
+     th:data-category="${funding.festival_category_name}"
+     th:data-title="${funding.festival_name}" 
+     th:data-end="${funding.funding_end_date}" 
+     th:data-raised="${funding.festival_amount}" 
+     th:data-goal="${funding.festival_total_amount}">
+  
+  <a class="card h-100 shadow-hover text-decoration-none" 
+     th:href="@{/funding/info(id=${funding.funding_festival_idx})}">
+    
+    <div class="ratio ratio-4x3">
+      <img class="rounded-top object-fit-cover" 
+           th:src="${funding.festival_img_path}" 
+           alt="축제 이미지" />
     </div>
-    <div class='card-body'>
-      <h6 class='card-title text-truncate'>한강 불꽃축제</h6>
-      <p class='card-text text-muted small mb-2'>도심 속 화려한 불꽃의 향연</p>
-      <div class='progress mb-1'><div class='progress-bar' role='progressbar'></div></div>
-      <div class='d-flex justify-content-between small'><span class='fw-semibold percent-txt'>0%</span><span class='text-muted'><span class='raised-txt'>0</span>/<span class='goal-txt'>0</span></span></div>
-      <div class='mt-1 small text-danger fw-semibold'>D-<span class='dday-txt'>0</span></div>
-    </div>
-  </a>
-</div>
-
-<div class='col-6 col-md-4 col-lg-3 funding-card' data-category='축제' data-title='서울 빛축제' data-end='2025-12-31' data-raised='20000000' data-goal='40000000'>
-  <a class='card h-100 shadow-hover text-decoration-none' href='./funding-detail.html'>
-    <div class='ratio ratio-4x3'>
-      <img class='rounded-top object-fit-cover' src='https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=600&auto=format&fit=crop' alt='서울 빛축제' />
-    </div>
-    <div class='card-body'>
-      <h6 class='card-title text-truncate'>서울 빛축제</h6>
-      <p class='card-text text-muted small mb-2'>도심을 밝히는 미디어아트 축제</p>
-      <div class='progress mb-1'><div class='progress-bar' role='progressbar'></div></div>
-      <div class='d-flex justify-content-between small'><span class='fw-semibold percent-txt'>0%</span><span class='text-muted'><span class='raised-txt'>0</span>/<span class='goal-txt'>0</span></span></div>
-      <div class='mt-1 small text-danger fw-semibold'>D-<span class='dday-txt'>0</span></div>
-    </div>
-  </a>
-</div>
-
-<div class='col-6 col-md-4 col-lg-3 funding-card' data-category='축제' data-title='벚꽃 로드 페스티벌' data-end='2025-12-31' data-raised='20000000' data-goal='40000000'>
-  <a class='card h-100 shadow-hover text-decoration-none' href='./funding-detail.html'>
-    <div class='ratio ratio-4x3'>
-      <img class='rounded-top object-fit-cover' src='https://images.unsplash.com/photo-1552873553-1b6a2f5a47e4?q=80&w=600&auto=format&fit=crop' alt='벚꽃 로드 페스티벌' />
-    </div>
-    <div class='card-body'>
-      <h6 class='card-title text-truncate'>벚꽃 로드 페스티벌</h6>
-      <p class='card-text text-muted small mb-2'>봄날 벚꽃과 버스킹의 향연</p>
-      <div class='progress mb-1'><div class='progress-bar' role='progressbar'></div></div>
-      <div class='d-flex justify-content-between small'><span class='fw-semibold percent-txt'>0%</span><span class='text-muted'><span class='raised-txt'>0</span>/<span class='goal-txt'>0</span></span></div>
-      <div class='mt-1 small text-danger fw-semibold'>D-<span class='dday-txt'>0</span></div>
-    </div>
-  </a>
-</div>
-
-<div class='col-6 col-md-4 col-lg-3 funding-card' data-category='축제' data-title='부산 바다음악회' data-end='2025-12-31' data-raised='20000000' data-goal='40000000'>
-  <a class='card h-100 shadow-hover text-decoration-none' href='./funding-detail.html'>
-    <div class='ratio ratio-4x3'>
-      <img class='rounded-top object-fit-cover' src='https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=600&auto=format&fit=crop' alt='부산 바다음악회' />
-    </div>
-    <div class='card-body'>
-      <h6 class='card-title text-truncate'>부산 바다음악회</h6>
-      <p class='card-text text-muted small mb-2'>바다와 음악이 어우러진 여름 축제</p>
-      <div class='progress mb-1'><div class='progress-bar' role='progressbar'></div></div>
-      <div class='d-flex justify-content-between small'><span class='fw-semibold percent-txt'>0%</span><span class='text-muted'><span class='raised-txt'>0</span>/<span class='goal-txt'>0</span></span></div>
-      <div class='mt-1 small text-danger fw-semibold'>D-<span class='dday-txt'>0</span></div>
+    
+    <div class="card-body">
+      <h6 class="card-title text-truncate" th:text="${funding.festival_name}"></h6>
+      <p class="card-text text-muted small mb-2" th:text="${funding.festival_short}"></p>
+      
+      <!-- 진행률 바 -->
+      <div class="progress mb-1">
+        <div class="progress-bar" role="progressbar"></div>
+      </div>
+      
+      <!-- % / 금액 -->
+      <div class="d-flex justify-content-between small">
+        <span class="fw-semibold percent-txt">0</span><span>%</span>
+        <span class="text-muted">
+          <span class="raised-txt" th:text="${funding.festival_amount}"></span> / 
+          <span class="goal-txt" th:text="${funding.festival_total_amount}"></span>
+        </span>
+      </div>
+      
+      <!-- D-day -->
+      <div class="mt-1 small text-danger fw-semibold">
+        D-<span class="dday-txt">0</span>
+      </div>
     </div>
   </a>
 </div>
-
-<div class='col-6 col-md-4 col-lg-3 funding-card' data-category='축제' data-title='전주 한옥문화축제' data-end='2025-12-31' data-raised='20000000' data-goal='40000000'>
-  <a class='card h-100 shadow-hover text-decoration-none' href='./funding-detail.html'>
-    <div class='ratio ratio-4x3'>
-      <img class='rounded-top object-fit-cover' src='https://images.unsplash.com/photo-1520975918793-9b8f39c93a13?q=80&w=600&auto=format&fit=crop' alt='전주 한옥문화축제' />
-    </div>
-    <div class='card-body'>
-      <h6 class='card-title text-truncate'>전주 한옥문화축제</h6>
-      <p class='card-text text-muted small mb-2'>한옥 거리의 전통 공연과 야시장</p>
-      <div class='progress mb-1'><div class='progress-bar' role='progressbar'></div></div>
-      <div class='d-flex justify-content-between small'><span class='fw-semibold percent-txt'>0%</span><span class='text-muted'><span class='raised-txt'>0</span>/<span class='goal-txt'>0</span></span></div>
-      <div class='mt-1 small text-danger fw-semibold'>D-<span class='dday-txt'>0</span></div>
-    </div>
-  </a>
-</div>
-
-<div class='col-6 col-md-4 col-lg-3 funding-card' data-category='축제' data-title='제주 해변 버스킹' data-end='2025-12-31' data-raised='20000000' data-goal='40000000'>
-  <a class='card h-100 shadow-hover text-decoration-none' href='./funding-detail.html'>
-    <div class='ratio ratio-4x3'>
-      <img class='rounded-top object-fit-cover' src='https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=600&auto=format&fit=crop' alt='제주 해변 버스킹' />
-    </div>
-    <div class='card-body'>
-      <h6 class='card-title text-truncate'>제주 해변 버스킹</h6>
-      <p class='card-text text-muted small mb-2'>파도소리와 함께하는 힐링 공연</p>
-      <div class='progress mb-1'><div class='progress-bar' role='progressbar'></div></div>
-      <div class='d-flex justify-content-between small'><span class='fw-semibold percent-txt'>0%</span><span class='text-muted'><span class='raised-txt'>0</span>/<span class='goal-txt'>0</span></span></div>
-      <div class='mt-1 small text-danger fw-semibold'>D-<span class='dday-txt'>0</span></div>
-    </div>
-  </a>
-</div>
-
     </div>
   </div>
 </main>

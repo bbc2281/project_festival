@@ -47,4 +47,12 @@ public class SegFestivalService {
     public void updateDelLog(int idx){
         segFestivalDAO.updateDelLog(idx);
     }
+
+    public int countFestivalByCompany(int idx){
+        return segFestivalDAO.countFestivalByCompany(idx);
+    }
+
+    public List<FestivalDTO> selectCommitFestival(int idx){
+        return segFestivalDAO.selectCommitFestival(idx);
+    }
 }
