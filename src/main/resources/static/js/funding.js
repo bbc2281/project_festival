@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const end = new Date(card.dataset.end);
 
     // 진행률
-    const percent = Math.min(100, Math.floor((raised / goal) * 100));
+    const percent = Math.min(Math.floor((raised / goal) * 100));
     const progressBar = card.querySelector(".progress-bar");
     const percentTxt = card.querySelector(".percent-txt");
     const raisedTxt = card.querySelector(".raised-txt");
@@ -141,7 +141,7 @@ function _initFundingDetail(detail) {
   }
 
   function _updateUI(animated) {
-    const percent = Math.min(100, Math.floor((raised / goal) * 100));
+    const percent = Math.min(Math.floor((raised / goal) * 100));
     percentEl.textContent = String(percent);
     raisedEl.textContent = raised.toLocaleString();
 
@@ -164,6 +164,24 @@ function _initFundingDetail(detail) {
     });
   }
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  const searchInput = document.getElementById("searchInput");
+  const cards = document.querySelectorAll(".funding-card");
+
+  if (!searchInput || !cards.length) return;
+
+  searchInput.addEventListener("input", () => {
+    const keyword = searchInput.value.trim().toLowerCase();
+
+    cards.forEach(card => {
+      const title = (card.dataset.title || "").toLowerCase();
+      const category = (card.dataset.category || "").toLowerCase();
+      const match = title.includes(keyword) || category.includes(keyword);
+      card.style.display = match ? "" : "none";
+    });
+  });
+});
 
 /* 전역 등록: 상세 초기화가 확실히 호출되도록 보장  */
 window.initFundingDetail = _initFundingDetail;

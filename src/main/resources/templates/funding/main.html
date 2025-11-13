@@ -13,14 +13,18 @@
 <header class="border-bottom bg-white bg-opacity-75 backdrop-blur sticky-top">
   <div class="container d-flex align-items-center gap-3 py-2">
     <a class="navbar-brand fw-bold" th:href="@{/funding/main}">FesLite Funding</a>
-    <a class="small text-muted d-none d-md-block" th:href="@{/}">축제 페이지</a>
+    <a class="text-muted d-none d-md-block" th:href="@{/}">축제 페이지</a>
     <form class="d-none d-md-flex ms-auto w-50" role="search" onsubmit="return false;">
       <div class="input-group">
         <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
         <input id="searchInput" type="search" class="form-control" placeholder="축제, 지역, 테마로 검색" />
       </div>
     </form>
-    <a class="btn btn-gradient" th:href="@{/funding/register}">펀딩 등록하기</a>
+    <div sec:authorize="isAnonymous()">
+        <a th:href="@{/auth/loginPage}" class="btn btn-gradient" >로그인</a>
+        <a th:href="@{/auth/join}" class="btn btn-gradient" >회원가입</a>
+        </div>
+    <a sec:authorize="hasAuthority('ROLE_COMPANY')" class="btn btn-gradient" th:href="@{/funding/register}">펀딩 등록하기</a>
   </div>
 </header>
 
@@ -105,7 +109,7 @@
     
     <div class="ratio ratio-4x3">
       <img class="rounded-top object-fit-cover" 
-           th:src="${funding.festival_img_path}" 
+           th:src="${funding.festival_img_path != null ? funding.festival_img_path : '/images/default.png'}" 
            alt="축제 이미지" />
     </div>
     

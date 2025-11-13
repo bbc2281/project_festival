@@ -42,4 +42,7 @@ public interface ReviewMapper {
 
         @Select("select * from review where member_idx = #{member_idx}")
         List<ReviewDTO> infoReviewByMember(@Param("member_idx") int idx);
-    }
+
+        @Select("select * from review where festival_idx = #{festival_idx} limit #{start}, #{limit}")
+        List<ReviewDTO> selectReviewPage(@Param("start") int start, @Param("limit") int limit, @Param("festival_idx") int idx);
+}

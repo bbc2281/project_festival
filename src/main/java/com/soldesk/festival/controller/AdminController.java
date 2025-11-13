@@ -149,7 +149,7 @@ public class AdminController {
     public String deleteMember(@RequestParam("member_idx") Integer member_idx){
         
         if(member_idx != null){
-            memberService.adminDeleteMember(member_idx);
+            memberService.deleteMemberByAdmin(member_idx);
         }
         return "redirect:/admin/member";
     }

@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import json
+import re
 
 query = '서울 축제'
 url = f'https://search.naver.com/search.naver?ssc=tab.news.all&where=news&sm=tab_jum&query={query}'
@@ -13,9 +14,12 @@ response = requests.get(url, headers=headers)
 
 soup = BeautifulSoup(response.content, 'html.parser')
 # 발표당일 클래스명 확인(확인위치 최하단 a링크)
-elements = soup.select('.r5Erm7sXBDLtcwB4qpy7')
+ele = soup.select('.OMzvsrwCLRe2oeDclV97')
+#print(ele)
 
-print(elements)
+elements = soup.select('.nwfSPmNIlDyRhvW6TUmz')
+
+# print(elements)
 
 news_titles = []
 news_links = []

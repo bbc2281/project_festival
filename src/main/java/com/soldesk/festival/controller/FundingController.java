@@ -1,6 +1,9 @@
 package com.soldesk.festival.controller;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
@@ -63,9 +66,22 @@ public class FundingController {
     }
 
     @PostMapping("/register")
-    public String regFunding(@ModelAttribute("funding") FundingFestivalDTO fundingDTO, @RequestParam("img_path") MultipartFile imgFile, HttpSession session){
-
+    public String regFunding(@ModelAttribute("funding") FundingFestivalDTO fundingDTO, @RequestParam("img_path") MultipartFile imgFile, @RequestParam("file") MultipartFile file, HttpSession session){
+        String uploadDir = "C:\\soldesk\\project_festival\\festival\\festival\\project_festival\\src\\main\\resources\\static\\uploads";
         CompanyDTO login = (CompanyDTO) session.getAttribute("companyMember");
+        
+        try {
+            if (!file.isEmpty()) {
+                String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+                Path savePath = Paths.get(uploadDir, fileName);
+                Files.createDirectories(savePath.getParent());
+                file.transferTo(savePath.toFile());
+
+                fundingDTO.setFestival_file("/uploads/" + fileName);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         if(!imgFile.isEmpty()){
             String imageUrl;

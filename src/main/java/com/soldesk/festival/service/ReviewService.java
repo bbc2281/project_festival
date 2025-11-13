@@ -27,6 +27,12 @@ public class ReviewService {
         return reviewDAO.selectAllReviews(festival_idx);
     }
 
+    public List<ReviewDTO> selectReviewPage(int page, int idx){
+        int start = (page - 1) *10;
+		int limit = 10 ; 
+        return reviewDAO.selectReviewPage(start, limit, idx);
+    }
+
     public PageDTO getPageDTO(int festival_idx,int currentPage){
         int reviewCount = reviewDAO.countReview(festival_idx);
         PageDTO pageDTO = new PageDTO(reviewCount, currentPage);
@@ -61,4 +67,5 @@ public class ReviewService {
 
         return null;
     }
+
 }

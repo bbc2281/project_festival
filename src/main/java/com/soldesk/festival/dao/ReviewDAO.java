@@ -50,4 +50,8 @@ public class ReviewDAO {
     public List<ReviewDTO> infoReviewByMember(int idx){
         return reviewMapper.infoReviewByMember(idx);
     }
+
+    public List<ReviewDTO> selectReviewPage(int start, int limit, int idx){
+        return reviewMapper.selectReviewPage(start, limit, idx);
+    }
 }

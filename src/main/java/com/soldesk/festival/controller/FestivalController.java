@@ -21,6 +21,7 @@ import com.soldesk.festival.dto.ChatRoomDTO;
 import com.soldesk.festival.dto.CompanyDTO;
 import com.soldesk.festival.dto.FestivalCategoryDTO;
 import com.soldesk.festival.dto.MemberDTO;
+import com.soldesk.festival.dto.PageDTO;
 import com.soldesk.festival.dto.RegionDTO;
 import com.soldesk.festival.service.ChatService;
 import com.soldesk.festival.service.FavoriteService;
@@ -42,7 +43,7 @@ public class FestivalController {
     private final FavoriteService favoriteService;
 
     @GetMapping("/festivalInfo")
-    public String info(@RequestParam("id") int id, Model model, HttpSession session){
+    public String info(@RequestParam("id") int id, Model model, HttpSession session, @RequestParam(name = "page" , defaultValue = "1") int page){
         MemberDTO loginMember = (MemberDTO) session.getAttribute("loginMember");
         CompanyDTO companyMember = (CompanyDTO) session.getAttribute("companyMember");
 
@@ -51,8 +52,11 @@ public class FestivalController {
 
         //리뷰 추가 
         int festivalIdx = festival.getFestival_idx();
-        List<ReviewDTO> reviewList = reviewService.selectAllReviews(festivalIdx);
+        // List<ReviewDTO> reviewList = reviewService.selectAllReviews(festivalIdx);
+        List<ReviewDTO> reviewList = reviewService.selectReviewPage(page, festivalIdx);
+        PageDTO pageDTO = reviewService.getPageDTO(festivalIdx, page);
         model.addAttribute("reviews", reviewList);
+        model.addAttribute("pageDTO", pageDTO);
         
         ChatRoomDTO chatRoom = chatService.getChatRoomById(id);
         model.addAttribute("chatRoom", chatRoom);

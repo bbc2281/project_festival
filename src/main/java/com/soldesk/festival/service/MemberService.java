@@ -144,4 +144,8 @@ public class MemberService {
 	public MemberDTO findUserbyIdx(int member_idx) {
 		return memberMapper.findUserbyIdx(member_idx);
 	}
+
+	public void deleteMemberByAdmin(int member_idx){
+		memberMapper.deleteMemberByAdmin(member_idx);
+	}
 }

@@ -1,28 +1,47 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FesLite — 축제 상세</title>
+  <base href="/">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link th:href="@{/css/style.css}" rel="stylesheet">
+  <script th:inline="javascript">
+    const festival_idx = [[${ festival.festival_idx }]];
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+  <script defer th:src="@{/js/app.js}"></script>
+  <script defer th:src="@{/js/map.js}"></script>
+  <script defer th:src="@{/js/weather.js}"></script>
+  <script defer th:src="@{/js/locationInfo.js}"></script>
+  <script defer th:src="@{/js/chat.js}"></script>
+  <script defer th:src="@{/js/favorite.js}"></script>
+  <script th:src="@{/js/filtering.js}"></script>
+  <script type="text/javascript" src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=u4pl1guhug"></script>
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>FesLite — 축제 상세</title>
-<base href="/">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-<link th:href="@{/css/style.css}" rel="stylesheet">
-<script th:inline="javascript">
-  const festival_idx = [[${festival.festival_idx}]];
-</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
-<script defer th:src="@{/js/app.js}"></script>
-<script defer th:src="@{/js/map.js}"></script>
-<script defer th:src="@{/js/weather.js}"></script>
-<script defer th:src="@{/js/locationInfo.js}"></script>
-<script defer th:src="@{/js/chat.js}"></script>
-<script defer th:src="@{/js/favorite.js}"></script>
-<script th:src="@{/js/filtering.js}"></script>
-<script type="text/javascript" src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=u4pl1guhug"></script>
+  <style>
+    /* 🖼️ 모달 스타일 */
+    .gallery-thumb {
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
 
+    .gallery-thumb:hover {
+      transform: scale(1.05);
+    }
+
+    .gallery-modal img {
+      width: 100%;
+      max-width: 800px;
+      height: auto;
+      object-fit: contain;
+      border-radius: 12px;
+    }
+  </style>
 </head>
 
 <body class="bg-gradient-festive">
@@ -35,7 +54,7 @@
       <div class="col-lg-8 d-flex">
         <div class="gradient-card w-100">
           <div class="body">
-            
+
             <div class="d-flex justify-content-between align-items-center mb-2">
               <div>
                 <h3 class="fw-bold mb-0" th:text="${festival.festival_name}"></h3>
@@ -43,26 +62,21 @@
                   <span th:text="${festival.festival_begin_date}"></span> ~
                   <span th:text="${festival.festival_end_date}"></span>
                   <span class="chip">요금: <span th:text="${festival.festival_fee}"></span></span>
-                  <button 
-                    class="btn btn-sm border-0 bg-transparent" 
-                    id="btnFavorite"
+                  <button class="btn btn-sm border-0 bg-transparent" id="btnFavorite"
                     th:data-festival-idx="${festival.festival_idx}"
-                    th:data-member-id="${session.loginMember != null ? session.loginMember.member_idx : 0}"
-                    th:data-company-id="${session.companyMember != null ? session.companyMember.company_idx : 0}"
-                    >
-                  <i class="bi" 
-                    th:classappend="${isFavorite} ? 'bi-heart-fill text-danger fs-4' : 'bi-heart fs-4'"></i>
-                </button>
+                    th:data-member-id="${session.loginMember != null ? session.loginMember.member_idx : 0}">
+                    <i class="bi"
+                      th:classappend="${isFavorite} ? 'bi-heart-fill text-danger fs-4' : 'bi-heart fs-4'"></i>
+                  </button>
                 </div>
               </div>
             </div>
 
             <div style="border-radius: 12px; overflow: hidden; margin-bottom: 20px;">
               <a th:href="${festival.festival_link}">
-              <img th:src="${festival.festival_img_path != null ? festival.festival_img_path : '/images/default.png'}" 
-                class="img-fluid rounded-4 shadow" 
-                style="max-height: 600px; width: 100%; object-fit: contain;" 
-                alt="축제 포스터">
+                <img th:src="${festival.festival_img_path != null ? festival.festival_img_path : '/images/default.png'}"
+                  class="img-fluid rounded-4 shadow" style="max-height: 600px; width: 100%; object-fit: contain;"
+                  alt="축제 포스터">
               </a>
             </div>
 
@@ -72,14 +86,15 @@
             <hr>
             <h5 class="fw-bold mb-2">상세 소개</h5>
             <p th:text="${festival.festival_info}" style="white-space:pre-line;"></p>
-            <span th:if="${festival.festival_info == '상세내용은 링크를 참조해 주세요'}"><a th:href="${festival.festival_link}" target="_blank"  style="text-decoration: none;"> - 상세정보(클릭)</a></span>
+            <span th:if="${festival.festival_info == '상세내용은 링크를 참조해 주세요'}"><a th:href="${festival.festival_link}"
+                target="_blank" style="text-decoration: none;"> - 상세정보(클릭)</a></span>
 
             <!-- 지도 / 길찾기 -->
             <div class="section">
               <h5 class="fw-bold mb-3">지도</h5>
               <div class="gradient-card">
                 <div class="body">
-                  <div id ="map" class="map"></div>
+                  <div id="map" class="map"></div>
                 </div>
               </div>
             </div>
@@ -126,7 +141,7 @@
                 </div>
               </div>
             </div>
-            
+
             <!-- 주변 즐길거리 -->
             <div class="section">
               <h5 class="fw-bold mb-3">주변 즐길거리</h5>
@@ -134,7 +149,6 @@
                 <div class="col-md-12">
                   <div class="gradient-card">
                     <div class="body text-center" id="locationInfo_list">
-
                     </div>
                   </div>
                 </div>
@@ -147,141 +161,269 @@
 
       <!-- 오른쪽 패널 -->
       <div class="col-lg-4 d-flex flex-column justify-content-start" style="gap: 0.25rem;">
-       
-
-        <!-- 채팅 -->
         <div class="sticky-wrapper">
-        <div class="gradient-card" style="max-height: 500px; height: 500px;">
-          <div class="body d-flex flex-column h-100">
-            <h5 class="fw-bold mb-3">채팅방</h5>
-            <div class="chat-box flex-grow-1 overflow-auto" id="chatBox">
-            </div>
-            <div class="input-group mt-2">
-              <input type="text" id="chatInput" class="form-control" placeholder="메시지 입력..." />
-              <button class="btn-gradient" id="btnSendChat">보내기</button>
+          <div class="gradient-card" style="max-height: 500px; height: 500px;">
+            <div class="body d-flex flex-column h-100">
+              <h5 class="fw-bold mb-3">채팅방</h5>
+              <div class="chat-box flex-grow-1 overflow-auto" id="chatBox"></div>
+              <div class="input-group mt-2">
+                <input type="text" id="chatInput" class="form-control" placeholder="메시지 입력..." />
+                <button class="btn-gradient" id="btnSendChat">보내기</button>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- 🟢 리뷰: 메인 맨 아래로 이동 -->
-    <div class="row mt-5">
-      <div class="col-12">
-        <div class="gradient-card" style="height: 650px;">
-          <div class="body d-flex flex-column h-100">
-                 <h5 class="fw-bold mb-3">리뷰</h5>
-                    <div th:each="review : ${reviews}" class="border rounded p-2 bg-light review-box">
-                       <b th:text="${review.member_nickname}"></b> — 
-                         <span class="review-content" th:text="${review.review_content}"></span><br>
-                           <img th:if="${review.review_img_path != null}" th:src="@{${review.review_img_path}}" class="img-fluid mt-2 review-image" style="max-height: 200px;">
-                          <button class="btnModifyReview"
-                              th:data-review-idx="${review.review_idx}"
-                              th:data-review-content="${review.review_content}">수정하기
-                          </button>
-                          <button class="btnDeleteReview" th:data-review-idx="${review.review_idx}">삭제하기</button>
-                          <button class="commentBtn" id="commentBtn" th:data-review-idx="${review.review_idx}">답글</button>
-                   </div>
-            <div class="mb-2">
-              <input type="file" id="reviewImage" class="form-control mb-2" accept="image/*">
-              <input type="text" class="form-control" id="reviewText" placeholder="한줄 리뷰 또는 댓글 입력" />
+      <!-- 🟢 리뷰 영역 -->
+      <div class="row mt-5">
+        <div class="col-12">
+          <div class="gradient-card">
+            <div class="body d-flex flex-column h-100">
+
+              <h5 class="fw-bold mb-3">
+                리뷰
+                <span id="reviewCount" class="text-muted ms-2" style="font-size: 0.9rem;">(0)</span>
+              </h5>
+
+              <!-- 🖼 한 줄 고정 리뷰 갤러리 -->
+              <div id="reviewGalleryFixed" class="mb-3 shadow-sm">
+
+                <!-- 왼쪽 이미지 영역 -->
+                <div class="left-strip">
+                  <div th:each="review : ${reviews}" th:if="${review.review_img_path != null}" class="thumb-box">
+                    <img class="gallery-thumb" th:src="@{${review.review_img_path}}"
+                      th:attr="data-src=@{${review.review_img_path}}">
+                  </div>
+                </div>
+
+                <!-- 오른쪽 “더보기” -->
+                <div class="more-box" id="openGalleryModal">
+                  <div class="count" th:text="${#lists.size(reviews.?[review_img_path != null])}"></div>
+                  <div class="more-text">더보기</div>
+                </div>
+
+              </div>
+
+
+
+              <hr class="my-3">
+
+              <!-- 리뷰 목록 -->
+              <div id="reviewList" class="flex-grow-1 overflow-auto">
+                <div th:each="review : ${reviews}" class="border rounded p-2 bg-light mb-2 review-box">
+                  <b th:text="${review.member_nickname}"></b> —
+                  <span class="review-content" th:text="${review.review_content}"></span><br>
+
+                  <img th:if="${review.review_img_path != null}" th:src="@{${review.review_img_path}}"
+                    class="img-fluid mt-2 review-image" style="max-height:200px;">
+
+                  <div class="mt-2 d-flex gap-2">
+                    <button class="review-btn modify btnModifyReview" th:data-review-idx="${review.review_idx}"
+                      th:data-review-content="${review.review_content}">
+                      ✏ 수정
+                    </button>
+
+                    <button class="review-btn delete btnDeleteReview" th:data-review-idx="${review.review_idx}">
+                      🗑 삭제
+                    </button>
+
+                    <button class="review-btn reply commentBtn" th:data-review-idx="${review.review_idx}">
+                      💬 답글
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 페이징 영역 --> 
+              <div th:if="${pageDTO.pageCnt > 1}"> 
+                <div> 
+                  <ul style="list-style: none; display: flex; gap: 8px; padding: 0;"> 
+                    <!-- 이전 페이지 버튼 --> 
+                    <li th:if="${pageDTO.prevPage >= 1}"> 
+                    <a th:href="@{/festivalInfo(page=${pageDTO.prevPage}, id=${festival.festival_idx})}">이전</a> </li>
+                    <!-- 페이지 번호 버튼 --> 
+                    <li th:each="i : ${#numbers.sequence(pageDTO.min, pageDTO.max)}"> 
+                    <a th:href="@{/festivalInfo(page=${i}, id=${festival.festival_idx})}" th:text="${i}" th:classappend="${i == pageDTO.currentPage} ? 'active-page' : ''"></a> </li> 
+                    <!-- 다음 페이지 버튼 --> 
+                    <li th:if="${pageDTO.nextPage > pageDTO.currentPage}"> <a th:href="@{/festivalInfo(page=${pageDTO.nextPage}, id=${festival.festival_idx})}">다음</a> 
+                    </li> 
+                  </ul> 
+                </div> 
+              </div>
+
+              <!-- 리뷰 작성 -->
+              <div class="mt-3">
+                <input type="file" id="reviewImage" class="form-control mb-2" accept="image/*">
+                <input type="text" class="form-control" id="reviewText" placeholder="한줄 리뷰 또는 댓글 입력">
+                <button class="btn-gradient mt-2 w-100" id="btnAddReview">등록</button>
+              </div>
             </div>
-            <button class="btn-gradient mt-auto" id="btnAddReview">등록</button>
           </div>
         </div>
       </div>
-    </div>
   </main>
 
-
+  <!-- 모달 추가 -->
+  <div class="modal fade" id="galleryModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content bg-dark text-center p-3 gallery-modal">
+        <button type="button" class="btn-close btn-close-white ms-auto me-2 mt-1" data-bs-dismiss="modal"></button>
+        <img id="galleryModalImg" src="" alt="리뷰 이미지">
+      </div>
+    </div>
+  </div>
 
   <!-- 하단 푸터 -->
   <div th:replace="~{common/footer :: footer}"></div>
 
-  <!-- 채팅 -->
+  <!-- 채팅 JS -->
   <script th:inline="javascript">
-        const festivalBeginDateStr = /*[[${festival.festival_begin_date}]]*/ '2025-11-01';
-        const festivalEndDateStr = /*[[${festival.festival_end_date}]]*/ '2025-11-30';
-        const roomId = `[[${chatRoom.chat_room_idx}]]`;
-        const isLogin = [[${loggedIn}]];
-        const socket = new SockJS("/ws");//웹소켓 연결 객체
-        let stompClient = Stomp.over(socket);//STOMP 프로토콜 이용
-        const chatBox = document.getElementById("chatBox");
-        const chatInput = document.getElementById("chatInput");
-        const btnSendChat = document.getElementById("btnSendChat");
-
-        function isValid(value) {
-          return value != null && value !== "" && value !== "null";
-        }
-
-        //닉네임 없으면 아이디, 아이디 없으면 이메일 출력
-        let loginMember;
-        let loginMemberIdx;
-        
-        if(isLogin){
-          loginMember =  (isValid(`[[${loginMember.member_nickname}]]`) 
-                                    ? `[[${loginMember.member_nickname}]]`
-                                    : isValid(`[[${loginMember.member_id}]]`)
-                                    ? `[[${loginMember.member_id}]]`
-                                    : `[[${loginMember.member_email}]]`);
-          loginMember = loginMember.replace(/^"(.*)"$/, '$1');
-          loginMemberIdx =`[[${loginMember.member_idx}]]`;//현재 접속한 회원의 기본키
-        }else{
-          loginMember = null;
-          loginMemberIdx = null;
-        }
-
-        //웹소켓 연결, 구독 설정(수신)
-        stompClient.connect({}, function(response){
-          if (!isChatAllowed()) {
-            chatInput.disabled = true;
-            btnSendChat.disabled = true;
-            chatBox.innerHTML = `<span class="bubble system">채팅은 축제 시작 1달 전부터 종료 1달 후까지만 가능합니다.</span>`;
-            chatInput.placeholder = ``;
-            return;
-          }
-          stompClient.subscribe(`/topic/chat/${roomId}`, function(message){
-              let chatMessage = JSON.parse(message.body);
-              //서버로부터 받은 메시지(JSON)를 자바스크립트 객체로 변환
-              showMessage(chatMessage);
-          });
-          
-          if(!isLogin){
-            chatInput.disabled = true;
-            btnSendChat.disabled = true;
-            chatInput.placeholder = "로그인 후 채팅이 가능합니다.";
-          }else{
-            let welcome = {
-            chat_type : "SYSTEM",
-            chat_room : parseInt(roomId),
-            chat_sender : parseInt(loginMemberIdx),
-            chat_message : `'${loginMember}'님이<br>입장하셨습니다`
-            };
-            stompClient.send(`/app/chat/${roomId}`, {}, JSON.stringify(welcome));
-          }
-        }, function(error){
-          console.log(`웹소켓 연결 실패`);  
-        });
-
-    function isChatAllowed() {
-    const today = new Date();
-    const festivalBegin = new Date(festivalBeginDateStr);
-    const festivalEnd = new Date(festivalEndDateStr);
-
-    // 한 달 전, 한 달 후 날짜 계산
-    const monthBeforeBegin = new Date(festivalBegin);
-    monthBeforeBegin.setMonth(monthBeforeBegin.getMonth() - 1);
-
-    const monthAfterEnd = new Date(festivalEnd);
-    monthAfterEnd.setMonth(monthAfterEnd.getMonth() + 1);
-
-    // 오늘 날짜가 (축제 시작 1달 전) ~ (축제 종료 1달 후) 범위 내인가?
-    return (today >= monthBeforeBegin) && (today <= monthAfterEnd);
-}
+    const roomId = `[[${chatRoom.chat_room_idx}]]`;
+    const isLogin = [[${ loggedIn }]];
+    function isValid(value) {
+      return value != null && value !== "" && value !== "null";
+    }
+    let loginMember;
+    let loginMemberIdx;
+    if (isLogin) {
+      loginMember = (isValid(`[[${loginMember.member_nickname}]]`)
+        ? `[[${loginMember.member_nickname}]]`
+        : isValid(`[[${loginMember.member_id}]]`)
+          ? `[[${loginMember.member_id}]]`
+          : `[[${loginMember.member_email}]]`);
+      loginMember = loginMember.replace(/^"(.*)"$/, '$1');
+      loginMemberIdx = `[[${loginMember.member_idx}]]`;
+    } else {
+      loginMember = null;
+      loginMemberIdx = null;
+    }
+    const socket = new SockJS("/ws");
+    let stompClient = Stomp.over(socket);
+    const chatBox = document.getElementById("chatBox");
+    const chatInput = document.getElementById("chatInput");
+    const btnSendChat = document.getElementById("btnSendChat");
+    stompClient.connect({}, function (response) {
+      stompClient.subscribe(`/topic/chat/${roomId}`, function (message) {
+        let chatMessage = JSON.parse(message.body);
+        showMessage(chatMessage);
+      });
+      if (!isLogin) {
+        chatInput.disabled = true;
+        btnSendChat.disabled = true;
+        chatInput.placeholder = "로그인 후 채팅이 가능합니다.";
+      } else {
+        let welcome = {
+          chat_type: "SYSTEM",
+          chat_room: parseInt(roomId),
+          chat_sender: parseInt(loginMemberIdx),
+          chat_message: `'${loginMember}'님이<br>입장하셨습니다`
+        };
+        stompClient.send(`/app/chat/${roomId}`, {}, JSON.stringify(welcome));
+      }
+    }, function (error) {
+      console.log(`웹소켓 연결 실패`);
+    });
   </script>
-  
+
   <script th:src="@{/js/review.js}"></script>
   <script th:src="@{/js/comment.js}"></script>
 
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- 모달 스크립트 -->
+
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const modal = new bootstrap.Modal(document.getElementById("galleryModal"));
+      const modalImg = document.getElementById("galleryModalImg");
+
+      const thumbs = Array.from(document.querySelectorAll(".gallery-thumb"));
+      let index = 0;
+
+      function show(indexNum) {
+        modalImg.src = thumbs[indexNum].getAttribute("data-src");
+        index = indexNum;
+        modal.show();
+      }
+
+      thumbs.forEach((img, i) => {
+        img.addEventListener("click", () => show(i));
+      });
+
+      
+      // ← → 키보드로 이전/다음 사진 넘기기
+      document.addEventListener("keydown", (e) => {
+        if (!document.getElementById("galleryModal").classList.contains("show")) return;
+        if (e.key === "ArrowRight") {
+          index = (index + 1) % thumbs.length;
+          show(index);
+        }
+        if (e.key === "ArrowLeft") {
+          index = (index - 1 + thumbs.length) % thumbs.length;
+          show(index);
+        }
+      });
+    });
+  </script>
+
+  <!-- 📌 전체 이미지 갤러리 모달 -->
+<div class="modal fade" id="galleryAllModal" tabindex="-1">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content p-3">
+      <button type="button" class="btn-close ms-auto mb-2" data-bs-dismiss="modal"></button>
+       <!-- 총 개수 표시 -->
+        <h5 id="galleryAllCount" class="fw-bold mb-3 text-center"></h5>
+      <div class="row g-3" id="galleryAllContainer"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  const allModal = new bootstrap.Modal(document.getElementById("galleryAllModal"));
+  const container = document.getElementById("galleryAllContainer");
+  const countBox = document.getElementById("galleryAllCount");
+
+  document.getElementById("openGalleryModal")?.addEventListener("click", (e) => {
+
+    e.stopPropagation(); // 단일모달 이벤트 막기
+
+    const allThumbs = Array.from(document.querySelectorAll(".gallery-thumb"));
+
+    // 🔥 총 이미지 개수 표시
+    countBox.textContent = `📷 전체 이미지 (총 ${allThumbs.length}개)`;
+
+    container.innerHTML = ""; // 기존 이미지 비우기
+
+    allThumbs.forEach(t => {
+      const col = document.createElement("div");
+      col.className = "col-4";
+
+      const img = document.createElement("img");
+      img.src = t.dataset.src;
+      img.style.cursor = "pointer";
+
+      // 전체 보기 상태에서도 개별 클릭 시 큰 모달 띄우기
+      img.addEventListener("click", () => {
+        document.getElementById("galleryModalImg").src = t.dataset.src;
+        const big = new bootstrap.Modal(document.getElementById("galleryModal"));
+        big.show();
+      });
+
+      col.appendChild(img);
+      container.appendChild(col);
+    });
+
+    allModal.show();
+  });
+});
+</script>
+
+
+
 </body>
+
 </html>
