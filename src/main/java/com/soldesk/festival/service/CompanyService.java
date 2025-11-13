@@ -1,5 +1,6 @@
 package com.soldesk.festival.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -34,8 +35,6 @@ public class CompanyService {
 		return Optional.ofNullable(companyMapper.findCompanyUserByregNum(regNum));
 	}
 
-
-
     @Transactional(rollbackFor= com.soldesk.festival.exception.UserException.class)
 	public void join(CompanyJoinDTO joinCompany){
 
@@ -46,19 +45,25 @@ public class CompanyService {
 		joinCompany.setRole(joinCompany.getRole());
 		companyMapper.insertCompany(joinCompany);
 		
-      
-	       
-		
-
 	}
 
-
-	
 	public void deleteCompany(String companyId, String password) {
 		
 		CompanyDTO thisCompany = findCompanyUserById(companyId).filter(company -> authUtil.checkPassword(password, company.getMember_pass()))
 				.orElseThrow(()-> new UserException("아이디나 비밀번호가 일치하지 않습니다"));
 		
 		
+	}
+
+	public List<CompanyDTO> getAllCompanys(){
+		return companyMapper.getAllCompanys();
+	}
+
+	public void deleteCompanyByAdmin(int id){
+		companyMapper.deleteCompanyByAdmin(id);
+	}
+
+	public CompanyDTO selectCompanyByIdx(int idx){
+		return companyMapper.selectCompanyByIdx(idx);
 	}
 }

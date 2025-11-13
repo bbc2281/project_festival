@@ -190,18 +190,17 @@
           <div class="profile-left">
             <img th:src="@{/images/company_icon.png}" alt="기업 로고">
             <div class="profile-info">
-              <h3>주식회사 식스센스</h3>
-              <p>contact@feslite.co.kr</p>
+              <h3 th:text="${login.company_name}"></h3>
+              <p th:text="${login.member_email}"></p>
               <div class="extra-info">
-                가입일: 2024-10-18<br>
-                대표자: 홍길동<br>
-                활동 지역: 서울특별시
+                대표자: <span th:text="${login.company_owner}"></span><br>
+                주소: <span th:text="${login.company_address}"></span>
               </div>
             </div>
           </div>
           <div class="profile-actions">
             <button class="btn btn-primary">기업정보 수정</button>
-            <button class="btn btn-accent">등록 축제 관리</button>
+            <button class="btn btn-accent" th:onclick="|location.href='@{/company/festival}'|">등록 축제 관리</button>
           </div>
         </div>
       </section>
@@ -211,37 +210,27 @@
       <section class="dashboard">
         <div class="dash-card dash-purple">
           <div class="dash-title">등록한 축제</div>
-          <div class="dash-value">5</div>
+          <div class="dash-value" th:text="${segFestival}"></div>
         </div>
         <div class="dash-card dash-orange">
-          <div class="dash-title">후원받은 금액</div>
-          <div class="dash-value">₩1,200,000</div>
+          <div class="dash-title">관심있는 축제</div>
+          <div class="dash-value" th:text="${favorite}"></div>
         </div>
         <div class="dash-card dash-blue">
-          <div class="dash-title">관심 받은 수</div>
-          <div class="dash-value">24</div>
+          <div class="dash-title">펀딩 게시글 수</div>
+          <div class="dash-value" th:text="${festival_funding}"></div>
         </div>
         <div class="dash-card dash-green">
-          <div class="dash-title">이벤트 주최 수</div>
-          <div class="dash-value">3</div>
-        </div>
-        <div class="dash-card dash-violet">
-          <div class="dash-title">네트워크 연결 기업</div>
-          <div class="dash-value">7</div>
-        </div>
-        <div class="dash-card dash-yellow">
-          <div class="dash-title">신규 제안서</div>
-          <div class="dash-value">2</div>
+          <div class="dash-title">후원 횟수(db연결 예정)</div>
+          <div class="dash-value" th:text="${payment}"></div>
         </div>
       </section>
 
       <!-- 활동 내역 -->
       <section class="activity-box">
-        <h4>최근 등록한 축제</h4>
+        <h4>최근 승인된 축제</h4>
         <ul>
-          <li><span>🎪 서울 불빛정원 페스티벌</span><span>승인 대기</span></li>
-          <li><span>🌸 봄꽃 페스티벌</span><span>진행중</span></li>
-          <li><span>🍁 가을빛 음악제</span><span>종료</span></li>
+          <li th:each="festival : ${commitFestivalList}"><span th:text="${festival.festival_name}"></span><span th:text="${festival.festival_info}"></span></li>
         </ul>
       </section>
 

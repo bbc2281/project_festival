@@ -83,7 +83,8 @@ document.addEventListener("DOMContentLoaded", function(){
       formattedDate = board_date.toISOString().split('T')[0]
       const formattedBoard = {
         title : board.board_title,
-        date :  formattedDate
+        date :  formattedDate,
+        cat : board.board_category
       };
       // 공지사항 추가
       NOTICES.push(formattedBoard);
@@ -102,14 +103,6 @@ document.addEventListener("DOMContentLoaded", function(){
 const qs = (s,doc=document)=>doc.querySelector(s);
 const qsa = (s,doc=document)=>Array.from(doc.querySelectorAll(s));
 
-// Render functions for each page
-// document.addEventListener('DOMContentLoaded', ()=>{
-//   if (qs('#heroInner')) renderHome();
-//   if (qs('#resultGrid')) initSearchPage();
-//   if (qs('#festivalDetail')) renderFestivalDetail();
-//   if (qs('#postList')) renderBoard();
-//   bindAuthForms();
-// });
 
 function renderHome(){
   // Hero slides
@@ -129,7 +122,7 @@ function renderHome(){
   NOTICES.slice(0,6).forEach(n=>{
     const li = document.createElement('li');
     li.className='list-group-item d-flex justify-content-between align-items-center';
-    li.innerHTML = `<span>${n.title}</span><span class="text-secondary small">${n.date}</span>`;
+    li.innerHTML = `<span>[${n.cat}]</span><span>${n.title}</span><span class="text-secondary small">${n.date}</span>`;
     ul.appendChild(li);
   });
 

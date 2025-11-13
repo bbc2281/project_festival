@@ -37,4 +37,8 @@ public class InquiryService {
     public int countInquiryByNUll(){
         return inquiryDAO.countInquiryByNUll();
     }
+
+    public int countInquiryByMember(int idx){
+        return inquiryDAO.countInquiryByMember(idx);
+    }
 }

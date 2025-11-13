@@ -49,6 +49,10 @@ public class ReviewService {
         return reviewDAO.countReviewNow(date);
     }
 
+    public int countReviewByMember(int idx){
+        return reviewDAO.countReviewByMember(idx);
+    }
+
     public List<ReviewDTO> infoReviewByMember(MemberDTO loginMember){
         if(loginMember != null){
             int idx = loginMember.getMember_idx();

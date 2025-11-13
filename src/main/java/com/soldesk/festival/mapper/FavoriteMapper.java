@@ -22,6 +22,7 @@ public interface FavoriteMapper {
 
     @Insert("insert into favorite (member_idx, festival_idx) values (#{member_idx}, #{festival_idx})")
     void insertFavoriteByMember(FavoriteDTO favorite);
+
     @Insert("insert into favorite (festival_idx, company_idx) values (#{festival_idx}, #{company_idx})")
     void insertFavoriteByCompany(FavoriteDTO favorite);
 
@@ -33,6 +34,12 @@ public interface FavoriteMapper {
 
     @Select("select count(favorite_idx) from favorite where festival_idx = #{festival_idx}")
     int countFavoriteByFestival(@Param("festival_idx") int festival_idx);
+
+    @Select("select count(favorite_idx) from favorite where member_idx = #{member_idx}")
+    int countFavoriteByMember(@Param("member_idx") int member_idx);
+
+    @Select("select count(favorite_idx) from favorite where company_idx = #{company_idx}")
+    int countFavoriteByCompany(@Param("company_idx") int company_idx);
 
     @Select("select * from festival f join favorite fa on f.festival_idx = fa.festival_idx where fa.member_idx = #{member_idx}")
     List<FestivalDTO> selectAllFavoriteByUser(@Param("member_idx") int member_idx);
