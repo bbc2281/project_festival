@@ -1,9 +1,7 @@
 package com.soldesk.festival.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,7 +15,6 @@ import com.soldesk.festival.dto.BoardDTO;
 import com.soldesk.festival.dto.CompanyDTO;
 import com.soldesk.festival.dto.CountDTO;
 import com.soldesk.festival.mapper.BoardMapper;
-import com.soldesk.festival.mapper.ReviewMapper;
 import com.soldesk.festival.dto.FestivalDTO;
 import com.soldesk.festival.dto.InquiryDTO;
 import com.soldesk.festival.dto.MemberDTO;

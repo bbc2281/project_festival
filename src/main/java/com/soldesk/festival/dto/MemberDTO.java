@@ -18,6 +18,8 @@ public class MemberDTO {
 	private String member_name;
 
 	private String member_pass;
+
+	private int is_social;
 	
 	//private String member_pass2;
 	

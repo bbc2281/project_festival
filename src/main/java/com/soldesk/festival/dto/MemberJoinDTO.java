@@ -54,6 +54,8 @@ public class MemberJoinDTO {
 	
 	private int member_point;
 	private MemberRole role;
+
+	private int is_social;
 	
 	//private boolean deleted;
 	//private LocalDateTime deletedAt;

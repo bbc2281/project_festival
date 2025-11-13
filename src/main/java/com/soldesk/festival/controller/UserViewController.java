@@ -15,7 +15,6 @@ import com.soldesk.festival.service.*;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
-
 @RequiredArgsConstructor
 @Controller
 public class UserViewController {
@@ -31,20 +30,19 @@ public class UserViewController {
     private final FundingFestivalService fundingFestivalService;
 
 
-    
-    //로그인품
+    // 로그인품
     @GetMapping("/auth/loginPage")
-    public String loginForm(){
+    public String loginForm() {
         return "auth/loginPage";
     }
 
-    //회원가입 유형 선택
+    // 회원가입 유형 선택
     @GetMapping("/auth/join")
-    public String joinSelect(){
+    public String joinSelect() {
         return "auth/join";
     }
 
-    //네이버로그인테스트
+    // 네이버로그인테스트
     @GetMapping("/oauth2/authorization/naver")
     public String naverLogin() {
         return "auth/naverTest";
@@ -52,17 +50,16 @@ public class UserViewController {
 
     // -----일반회원--------------
 
-    //회원가입:일반회원
+    // 회원가입:일반회원
     @GetMapping("/auth/memberjoin")
-    public String joinForm(){
-        return "auth/memberJoin";   
+    public String joinForm() {
+        return "auth/memberJoin";
     }
-    
-    //일반회원 마이페이지(일반)
-    @GetMapping("/member/mypage")
-    public String mypageForm(@AuthenticationPrincipal SecurityAllUsersDTO userdetails, Model model){
 
-        if(userdetails == null){
+    // 일반회원 마이페이지(일반)
+    @GetMapping("/member/mypage")
+    public String mypageForm(@AuthenticationPrincipal SecurityAllUsersDTO userdetails, Model model) {
+        if(userdetails == null) {
             return "redirect:/auth/loginPage";
         }
 
@@ -84,16 +81,19 @@ public class UserViewController {
        return "member/mypage";
     }
 
-    
-    //일반회원 정보수정
     @GetMapping("/mypage/edit")
-    public String mypageModifyForMember(){
+    public String myinfo(@AuthenticationPrincipal SecurityAllUsersDTO userdetails, Model model) {
+        if(userdetails == null) {
+            return "redirect:/auth/loginPage";
+        }
+        MemberDetailDTO userInfo = memberService.getMemberDetails(userdetails.getUsername());
+        model.addAttribute("userInfo", userInfo);
         return "member/edit";
     }
-    
-    //일반회원 찜한페이지
+
+    // 일반회원 찜한페이지
     @GetMapping("/mypage/bookmark")
-    public String mypageBookmark(Model model, HttpSession session){
+    public String mypageBookmark(Model model, HttpSession session) {
 
         MemberDTO loginMember = (MemberDTO) session.getAttribute("loginMember");
 
@@ -104,9 +104,10 @@ public class UserViewController {
         return "member/bookmark";
     }
 
-    //일반회원 1:1문의
+    // 일반회원 1:1문의
     @GetMapping("/mypage/inquiry")
-    public String mypageInquiry(@ModelAttribute("inquiry") InquiryDTO inquiry, Model model,@SessionAttribute("loginMember") MemberDTO loginMember){
+    public String mypageInquiry(@ModelAttribute("inquiry") InquiryDTO inquiry, Model model,
+            @SessionAttribute("loginMember") MemberDTO loginMember) {
 
         List<InquiryDTO> inquiryList = inquiryService.selectAllInquiry();
         System.out.println(inquiryList);
@@ -116,14 +117,15 @@ public class UserViewController {
     }
 
     @PostMapping("/mypage/regInquiry")
-    public String mypageInsertInquiry(@ModelAttribute("inquiry") InquiryDTO inquiry, @SessionAttribute("loginMember") MemberDTO loginMember){
-       
+    public String mypageInsertInquiry(@ModelAttribute("inquiry") InquiryDTO inquiry,
+            @SessionAttribute("loginMember") MemberDTO loginMember) {
+
         inquiryService.insertInquiry(inquiry, loginMember);
 
         return "redirect:/mypage/inquiry";
     }
 
-    //일반회원 리뷰작성정보
+    // 일반회원 리뷰작성정보
     @GetMapping("/mypage/review")
     public String mypageReview(Model model, HttpSession session){
 
@@ -136,23 +138,21 @@ public class UserViewController {
         return "member/review";
     }
 
-    //일반회원탈퇴페이지
+    // 일반회원탈퇴페이지
     @GetMapping("/mypage/delete")
-    public String accountWithdrawal(){
+    public String accountWithdrawal() {
         return "member/delete";
     }
 
-
     // -------기업회원------------
 
-
-    //기업회원 가입
+    // 기업회원 가입
     @GetMapping("/auth/companyjoin")
-    public String companyJoinForm(){
+    public String companyJoinForm() {
         return "auth/companyjoin";
     }
 
-    //기업회원 마이페이지
+    // 기업회원 마이페이지
     @GetMapping("/company/mypage")
     public String companyPageForm(@AuthenticationPrincipal SecurityAllUsersDTO userdetails, Model model){
 
@@ -181,23 +181,25 @@ public class UserViewController {
         return "company/mypage";
     }
 
-    //기업회원 정보수정
+    // 기업회원 정보수정
     @GetMapping("/company/edit")
-    public String mypageModifyForCompany(){
+    public String mypageModifyForCompany() {
         return "company/edit";
     }
-    //기업회원 찜하기
+
+    // 기업회원 찜하기
     @GetMapping("/company/favorite")
-    public String mypageFavoriteForCompany(Model model, HttpSession session){
+    public String mypageFavoriteForCompany(Model model, HttpSession session) {
 
         CompanyDTO company = (CompanyDTO) session.getAttribute("companyMember");
-        
+
         List<FestivalDTO> festivalList = favoriteService.selectAllFavoriteByCompany(company);
 
         model.addAttribute("festivalList", festivalList);
         return "company/favorite";
     }
-    //기업회원 등록축제정보
+
+    // 기업회원 등록축제정보
     @GetMapping("/company/festival")
     public String mypageFestivalForCompany(Model model, HttpSession session){
 
@@ -209,21 +211,18 @@ public class UserViewController {
 
         return "company/festival";
     }
-    //기업회원 후원정보
+
+    // 기업회원 후원정보
     @GetMapping("/company/sponsor")
-    public String mypageSponsorForCompany(){
+    public String mypageSponsorForCompany() {
         return "company/sponsor";
     }
-    //기업회원 회원탈퇴
+
+    // 기업회원 회원탈퇴
     @GetMapping("/company/delete")
-    public String mypageDeleteForCompany(){
+    public String mypageDeleteForCompany() {
         return "company/delete";
     }
-    
-    
-
-
-       
     
 
 }
