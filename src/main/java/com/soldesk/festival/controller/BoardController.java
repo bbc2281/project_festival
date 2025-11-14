@@ -22,7 +22,6 @@ import com.soldesk.festival.dto.MemberDTO;
 import com.soldesk.festival.service.BoardService;
 import com.soldesk.festival.service.FileUploadService;
 
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 @Controller

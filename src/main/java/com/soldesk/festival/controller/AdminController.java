@@ -131,7 +131,7 @@ public class AdminController {
 
     @GetMapping("/delete")
     public String deleteMember(@RequestParam("member_idx") int member_idx){
-
+        System.out.println(member_idx);
         memberService.deleteMember(member_idx);
 
         return "redirect:/admin/member";

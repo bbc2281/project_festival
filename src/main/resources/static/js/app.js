@@ -83,7 +83,8 @@ document.addEventListener("DOMContentLoaded", function(){
       formattedDate = board_date.toISOString().split('T')[0]
       const formattedBoard = {
         title : board.board_title,
-        date :  formattedDate
+        date :  formattedDate,
+        idx : board.board_idx
       };
       // 공지사항 추가
       NOTICES.push(formattedBoard);
@@ -129,7 +130,7 @@ function renderHome(){
   NOTICES.slice(0,6).forEach(n=>{
     const li = document.createElement('li');
     li.className='list-group-item d-flex justify-content-between align-items-center';
-    li.innerHTML = `<span>${n.title}</span><span class="text-secondary small">${n.date}</span>`;
+    li.innerHTML = `<a href="/board/info?board_idx=${n.idx}" style="text-decoration: none; color: inherit;">${n.title}</a><span class="text-secondary small">${n.date}</span>`;
     ul.appendChild(li);
   });
 

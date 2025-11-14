@@ -221,8 +221,6 @@
         if(isLogin){
           loginMember =  (isValid(`[[${loginMember.member_nickname}]]`) 
                                     ? `[[${loginMember.member_nickname}]]`
-                                    : isValid(`[[${loginMember.member_id}]]`)
-                                    ? `[[${loginMember.member_id}]]`
                                     : `[[${loginMember.member_email}]]`);
           loginMember = loginMember.replace(/^"(.*)"$/, '$1');
           loginMemberIdx =`[[${loginMember.member_idx}]]`;//현재 접속한 회원의 기본키
