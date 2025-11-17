@@ -24,9 +24,9 @@ public class CompanyDTO {
 
 	private Integer company_reg_num;
 	
-
 	private String company_owner;
 	
+	private String company_email;
 
 	private String company_open_date;
 

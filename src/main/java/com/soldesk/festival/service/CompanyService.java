@@ -10,6 +10,7 @@ import com.soldesk.festival.config.AuthUtil;
 import com.soldesk.festival.config.MemberRole;
 import com.soldesk.festival.dto.CompanyDTO;
 import com.soldesk.festival.dto.CompanyJoinDTO;
+import com.soldesk.festival.dto.MemberDTO;
 import com.soldesk.festival.exception.UserException;
 import com.soldesk.festival.mapper.CompanyMapper;
 
@@ -73,5 +74,11 @@ public class CompanyService {
 
 	public List<CompanyDTO> getCompanyListPaged(int offset, int limit){
 		return companyMapper.selectCompanyPaged(offset, limit);
+	}
+
+	@Transactional
+	public void modifyCompany(CompanyDTO updateUser) {
+			companyMapper.updateCompany(updateUser);
+		
 	}
 }

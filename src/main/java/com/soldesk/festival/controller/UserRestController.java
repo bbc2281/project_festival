@@ -17,6 +17,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -37,6 +38,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.soldesk.festival.dto.CompanyDTO;
 import com.soldesk.festival.dto.CompanyJoinDTO;
 import com.soldesk.festival.dto.LoginDTO;
 import com.soldesk.festival.dto.MemberDTO;
@@ -243,10 +245,38 @@ public class UserRestController {
 		}
 	}
 
+	@PostMapping("/modifyCompany")
+	public ResponseEntity<UserResponse> modifyCompany(@RequestBody CompanyDTO loginMember, HttpSession session) {
+		try {
+			companyService.modifyCompany(loginMember);
+			CompanyDTO modifiedCompany = companyService.selectCompanyByIdx(loginMember.getCompany_idx());
+			session.setAttribute("loginMember", modifiedCompany);
+			return ResponseEntity.ok(UserResponse.successMessage("회원정보가 수정되었습니다"));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body(UserResponse.error("회원정보 수정 중 오류가 발생했습니다."));
+		}
+	}
+
 	@PostMapping("/delete")
 	public void deleteProcess(@SessionAttribute("loginMember") MemberDTO loginMember, HttpSession session,
 			HttpServletResponse response) throws Exception {
 		memberService.deleteMember(loginMember.getMember_idx());
+		session.invalidate();
+		response.setContentType("text/html;charset=UTF-8");
+		PrintWriter out = response.getWriter();
+		out.println("<script>");
+		out.println("alert('회원탈퇴가 완료되었습니다');");
+		out.println("window.location.href='/';");
+		out.println("</script>");
+		out.close();
+	}
+
+	@PostMapping("/deleteCompany")
+	public void deleteCompany(@AuthenticationPrincipal SecurityAllUsersDTO userdetails, HttpSession session,
+			HttpServletResponse response) throws Exception {
+		companyService.deleteCompanyByAdmin((int)userdetails.getUserIdx());
 		session.invalidate();
 		response.setContentType("text/html;charset=UTF-8");
 		PrintWriter out = response.getWriter();
