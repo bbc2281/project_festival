@@ -1,186 +1,118 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="_csrf" th:content="${_csrf.token}" />
-  <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+  <meta name="_csrf" th:content="${_csrf.token}"/>
+  <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
   <title>회원정보 수정 — FesLite</title>
-  <link rel="stylesheet" th:href="@{/css/mystyle.css}" />
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-  <script defer th:src="@{/js/address.js}"></script>
-  <script defer th:src="@{/js/memberModify.js}"></script>
+  <link rel="stylesheet" />
   <script defer th:src="@{/js/app.js}"></script>
-  <script defer th:src="@{/js/aside.js}"></script>
+    <script defer th:src="@{/authjs/myedit.js}"></script>
   <style>
-    body {
-      background: linear-gradient(135deg, #ffdee9 0%, #b5fffc 100%);
-      font-family: 'Pretendard', sans-serif;
-    }
-
-    .mypage-wrapper {
-      display: grid;
-      grid-template-columns: 240px 1fr;
-      gap: 24px;
-      max-width: 1100px;
-      margin: 40px auto;
-      padding: 0 16px;
-    }
-
-    .sidebar {
-      background: #fff;
-      border-radius: 14px;
-      box-shadow: 0 4px 14px rgba(0, 0, 0, .1);
-      padding: 20px 16px;
-    }
-
-    .menu a {
-      display: flex;
-      justify-content: space-between;
-      padding: 10px 12px;
-      border-radius: 10px;
-      text-decoration: none;
-      color: #333;
-      font-weight: 600;
-      transition: 0.15s ease;
-    }
-
-    .menu a:hover {
-      background: #f0f2ff;
-      color: #6b21a8;
-    }
-
-    .menu a.active {
-      background: #6b21a8;
-      color: #fff;
-      font-weight: 700;
-    }
-
-    .main {
-      background: #fff;
-      border-radius: 20px;
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
-      padding: 30px;
-    }
-
-    label {
-      display: block;
-      margin-top: 12px;
-      font-weight: 600;
-    }
-
-    input.input,
-    select.input {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      margin-top: 4px;
-    }
-
-    .ppButton {
-      margin-top: 20px;
-      padding: 10px 16px;
-      border: none;
-      border-radius: 8px;
-      background: #6b21a8;
-      color: #fff;
-      font-weight: 700;
-    }
-
-    @media(max-width:900px) {
-      .mypage-wrapper {
-        grid-template-columns: 1fr;
-      }
-    }
+    body{background:linear-gradient(135deg,#ffdee9 0%,#b5fffc 100%);font-family:'Pretendard',sans-serif;}
+    .mypage-wrapper{display:grid;grid-template-columns:240px 1fr;gap:24px;max-width:1100px;margin:40px auto;padding:0 16px;}
+    .sidebar{background:#fff;border-radius:14px;box-shadow:0 4px 14px rgba(0,0,0,.1);padding:20px 16px;}
+    .menu a{display:flex;justify-content:space-between;padding:10px 12px;border-radius:10px;text-decoration:none;color:#333;font-weight:600;transition:0.15s ease;}
+    .menu a:hover{background:#f0f2ff;color:#6b21a8;}
+    .menu a.active{background:#6b21a8;color:#fff;font-weight:700;}
+    .main{background:#fff;border-radius:20px;box-shadow:0 4px 14px rgba(0,0,0,0.1);padding:30px;}
+    label{display:block;margin-top:12px;font-weight:600;}
+    input{width:100%;padding:10px;border:1px solid #ccc;border-radius:8px;margin-top:4px;}
+    button{margin-top:20px;padding:10px 16px;border:none;border-radius:8px;background:#6b21a8;color:#fff;font-weight:700;}
+    @media(max-width:900px){.mypage-wrapper{grid-template-columns:1fr;}}
   </style>
 </head>
-
 <body>
   <div th:replace="~{common/header :: header}"></div>
+
+<form style="display:none;" th:if="${_csrf}" th:action="@{/noop}">
+  <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+</form>
+
+
+
   <main class="mypage-wrapper">
-    <div class="sidebar" th:replace="~{common/memberAside :: aside}"></div>
+    <aside class="sidebar">
+    <h2><a th:href="@{/member/mypage}" style="text-decoration:none; color:inherit;">마이페이지</a></h2>
+      <nav class="menu">
+    <!-- 현재 페이지를 active로 설정 -->
+    <a th:href="@{/member/info}" class="active">회원정보 수정<span>›</span></a>
+    <a th:href="@{/member/bookmark}">내가 찜한 페이지<span>›</span></a>
+    <a th:href="@{/member/eview}">나의 리뷰<span>›</span></a>
+    <a th:href="@{/member/inquiry}">1:1 문의<span>›</span></a>
+    <a th:href="@{/member/delete}" style="color:#ef4444;">회원탈퇴<span>›</span></a>
+  </nav>
+    </aside>
+
     <section class="main">
       <h3>회원정보 수정</h3>
-      <form id="myedit-form" th:object="${userInfo}" onsubmit="return false;">
-        <input type="hidden" id="member_idx" th:field="*{member_idx}" />
+      <form th:action="@{/api/v1/auth/modifymember}" method="post" id="myedit-form" class="form">
+        
+        <!-- 이름 (기존 값 채우기) -->
         <label for="member_name">이름</label>
-        <input id="member_name" name="member_name" class="input" required th:value="${userInfo.member_name}"
-          readonly="true" />
+        <input id="member_name" name="member_name" class="input" placeholder="홍길동" required 
+               th:value="${userInfo.member_name}" />
 
+        <!-- 이메일 (기존 값 채우기) -->
         <label for="member_email">이메일</label>
-        <input th:if="${userInfo.is_social != 1}" id="member_email" name="member_email" type="email" class="input"
-          th:value="${userInfo.member_email}" required />
-        <input th:if="${userInfo.is_social == 1}" id="member_email" name="member_email" type="email" class="input"
-          th:value="${userInfo.member_email}" required readonly="true" />
+        <input id="member_email" name="member_email" type="email" class="input" th:value="${userInfo.member_email}" required/>
 
-        <label for="member_pass" th:if="${userInfo.is_social == 0}">비밀번호 변경</label>
-        <input id="member_pass" th:if="${userInfo.is_social == 0}" name="member_pass" type="password" class="input"
-          placeholder="변경하지 않으려면 비워두세요" />
-        <input id="member_pass" th:if="${userInfo.is_social != 0}" name="member_pass" type="hidden" class="input"
-          value="" />
+        <!-- 비밀번호 (보안상 빈 칸 유지) -->
+        <label for="member_pass">비밀번호 변경</label>
+        <input id="member_pass" name="member_pass" type="password" class="input" placeholder="변경하지 않으려면 비워두세요"  />
 
+         <!-- 비밀번호 확인 (빈 칸 유지) -->
+        <label for="member_pass2">비밀번호 변경확인</label>
+        <input id="member_pass2" name="member_pass2" type="password" class="input" placeholder="입력하나 비번 다시 입력" />
 
-        <label for="member_pass2" th:if="${userInfo.is_social == 0}">비밀번호 변경확인</label>
-        <input id="member_pass2" th:if="${userInfo.is_social == 0}" name="member_pass2" type="password" class="input"
-          placeholder="비밀번호를 다시 입력하세요" />
-        <input id="member_pass2" th:if="${userInfo.is_social != 0}" name="member_pass2" type="hidden" class="input"
-          value="" />
-        <p id="editErrorMessage" class="text-danger fw-bold mt-3"></p>
-
+        <!-- 닉네임 (기존 값 채우기) -->
         <label for="member_nickname">닉네임</label>
         <input id="member_nickname" name="member_nickname" class="input" th:value="${userInfo.member_nickname}" />
-
+      
+        <!-- 핸드폰 (기존 값 채우기) -->
         <label for="member_phone">핸드폰 번호</label>
         <input id="member_phone" name="member_phone" class="input" th:value="${userInfo.member_phone}" />
 
-        <div>
-          <label>주소</label>
-          <input type="hidden" id="sample6_postcode" placeholder="우편번호" />
-          <input type="hidden" id="sample6_detailAddress" placeholder="상세주소" />
-          <input type="hidden" id="sample6_extraAddress" placeholder="참고항목" />
-          <input class="ppButton" type="button" onclick="sample6_execDaumPostcode()" value="주소 찾기"
-            style="margin-top: 0; margin-bottom: 5px; width: 15%;" />
-          <input type="text" id="member_address" name="member_address" class="input" readonly="true" required
-            th:field="*{member_address}" />
-        </div>
+        <!-- 주소 (기존 값 채우기 - member_region 사용 가정) -->
+        <label for="member_address">주소</label>
+        <input id="member_address" name="member_address" class="input" th:value="${userInfo.member_address}" />
 
+          <!-- 성별 (기존 값 채우기 - member_region 사용 가정) -->
         <label for="member_gender">성별</label>
-        <select id="member_gender" name="member_gender" class="input" th:field="*{member_gender}">
-          <option value="">선택</option>
-          <option value="M">남성</option>
-          <option value="F">여성</option>
-          <option value="O">기타</option>
-        </select>
+        <input id="member_gender" name="member_gender" class="input" th:value="${userInfo.member_gender}" />
 
+        
+        <!-- 직업 (기존 값 채우기 - 필드명 미확인, 임시로 빈 값) -->
         <label for="member_job">직업</label>
-        <select id="member_job" name="member_job" class="input" th:field="*{member_job}">
-          <option value="">선택</option>
-          <option value="관리자">관리자</option>
-          <option value="전문가 및 관련 종사자">전문가 및 관련 종사자</option>
-          <option value="사무 종사자">사무 종사자</option>
-          <option value="서비스 종사자">서비스 종사자</option>
-          <option value="판매 종사자">판매 종사자</option>
-          <option value="농림·어업 숙련 종사자">농림·어업 숙련 종사자</option>
-          <option value="기능원 및 관련 기능 종사자">기능원 및 관련 기능 종사자</option>
-          <option value="장치·기계 조작 및 조립 종사자">장치·기계 조작 및 조립 종사자</option>
-          <option value="단순노무 종사자">단순노무 종사자</option>
-          <option value="군인">군인</option>
-          <option value="학생">학생</option>
-          <option value="기타">기타</option>
-        </select>
-        <input id="member_id" type="hidden" th:value="${userInfo.member_id}">
-        <div>
-          <button class="ppButton" id="btnSave" type="submit">저장하기</button>
-        </div>
+        <input id="member_job" name="member_job" class="input" placeholder="예: 학생, 개발자, 디자이너" 
+               th:value="${userInfo.member_job ?: ''}" />
+        
+        <button type="submit">저장하기</button>
       </form>
     </section>
   </main>
+
   <footer class="footer">
     <div class="container">© 2025 FesLite — 모두의 축제를 연결합니다 🎡</div>
   </footer>
-</body>
 
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const links=document.querySelectorAll('.menu a');
+      const currentPath=window.location.pathname.split("/").pop();
+      links.forEach(link=>{
+        const href=link.getAttribute('href').split("/").pop();
+        // 'info'와 'mypage'를 제외한 정확한 경로 일치 확인
+        if(currentPath==='info' && href==='info'){
+            link.classList.add('active');
+        } else if (currentPath === href){
+            link.classList.add('active');
+        } else {
+            link.classList.remove('active');
+        }
+      });
+    });
+  </script>
+</body>
 </html>

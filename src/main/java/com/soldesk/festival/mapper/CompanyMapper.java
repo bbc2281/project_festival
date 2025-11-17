@@ -1,9 +1,7 @@
 package com.soldesk.festival.mapper;
 
-import java.util.List;
 import java.util.Optional;
 
-import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
@@ -25,6 +23,7 @@ public interface CompanyMapper {
 		@Result(property="company_name", column="company_name"),
 		@Result(property="role", column= "role", typeHandler=MemberRoleTypeHandler.class)
 	})
+	
 	@Select("select * from company where member_id=#{member_id}")
 	Optional<CompanyDTO> findCompanyUserById(@Param("member_id")String member_id); //시스템 내부에서 조회용
     
@@ -47,23 +46,29 @@ public interface CompanyMapper {
 	})
 	@Select("select * from company where member_id=#{member_id}")
 	Optional<CompanyDTO> findCompanyDetailAllById(@Param("member_id")String id);
-
+	
 
 	@Select("select * from company where company_reg_num=#{company_reg_num}")
 	CompanyDTO findCompanyUserByregNum(@Param("company_reg_num")Integer regNum); //사용자용
     
-	@Select("select * from company where company_idx = #{company_idx}")
-	CompanyDTO selectCompanyByIdx(@Param("company_idx") int id);
 
 	@Options(useGeneratedKeys=true, keyProperty="company_idx")
 	@Insert("insert into company(company_name, member_id, member_pass, member_email, company_phone, company_reg_num, company_owner, company_open_date, role, company_address, company_account) "
 	+"values(#{company_name}, #{member_id}, #{member_pass}, #{member_email}, #{company_phone}, #{company_reg_num}, #{company_owner}, #{company_open_date}, #{role}, #{company_address}, #{company_account})")
 	void insertCompany(CompanyJoinDTO joinCompany);
+    
+	@Results({
+		@Result(property="company_idx", column="company_idx"),
+		@Result(property="company_name", column="company_name"),
+		@Result(property="member_id", column="member_id"),
+		@Result(property="member_email", column="member_email"),
+		@Result(property="company_owner", column="company_owner"),
+		@Result(property="company_open_date", column="company_open_date"),
+		@Result(property="company_address", column="company_address"),
+		@Result(property="role", column= "role", typeHandler=MemberRoleTypeHandler.class)
+	})
+	@Select("select company_idx, company_name, member_id, member_email, company_owner, company_open_date, company_address, role from company where member_id=#{member_id}")
+	Optional<CompanyDTO> findUserIdforUser(@Param("member_id")String userId);
 
-	@Select("select * from company")
-	List<CompanyDTO> getAllCompanys();
-
-	@Delete("delete from company where company_idx = #{company_idx}")
-	void deleteCompanyByAdmin(@Param("company_idx") int id);
-
+	
 }

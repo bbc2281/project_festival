@@ -1,39 +1,57 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="_csrf" th:content="${_csrf.token}"/>
+  <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
   <title>마이페이지 — FesLite</title>
   <link rel="stylesheet" th:href="@{/css/mystyle.css}" />
+  <!-- 일단 상단바 되나 테스트하려고 넣어봄(?) -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <script defer th:src="@{/js/myuser.js}"></script>
+  <script defer th:src="@{/authjs/myuser.js}"></script>
   <script defer th:src="@{/js/app.js}"></script>
-  <script defer th:src="@{/js/aside.js}"></script>
 
 </head>
 
 <body>
-  <!-- ✅ 헤더 -->
   <div th:replace="~{common/header :: header}"></div>
 
+<form style="display:none;" th:if="${_csrf}" th:action="@{/noop}">
+  <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+</form>
+
+
   <main class="mypage-wrapper">
-    <div th:replace="~{common/memberAside :: aside}"></div>
+    <aside class="sidebar">
+  <h2>마이페이지</h2>
+  <nav class="menu">
+    <a th:href="@{/member/info}">회원정보 수정<span>›</span></a>
+    <a th:href="@{/member/bookmark}">내가 찜한 페이지<span>›</span></a>
+    <a th:href="@{/member/review}">나의 리뷰<span>›</span></a>
+    <a th:href="@{/member/inquiry}">1:1 문의<span>›</span></a>
+    <a th:href="@{/member/delete}" style="color:#ef4444;">회원탈퇴<span>›</span></a>
+  </nav>
+</aside>
 
     <section class="main">
-      <section class="profile-card">
+      <section class="profile-card"> 
         <div class="profile-top">
           <div class="profile-left">
             <img th:src="@{/images/user_icon.png}" alt="프로필 이미지">
             <div class="profile-info">
-              <h3>[[${displayName}]] 님</h3>
-              <p th:text="${userInfo.member_email}"></p>
-              <div class="extra-info">
-                <!-- 가입일: <span th:text="${userInfo.member_regdate}"></span><br>  -->
-                닉네임: <span th:text="${userInfo.member_nickname}"></span>
+              <h3><span th:text="${userInfo.member_nickname}"></span>님</h3>
+              <p th:text="${userInfo.member_email}"></p> 
+              <div class="extra-info">  
+              <!-- 🚨 가입일 필드 (member_regdate)를 완전히 제거하여 템플릿 파싱 오류를 방지합니다. -->
+                회원 유형: <span th:text="${userInfo.role}"></span><br> 
+              <!-- 활동 지역도 DTO의 카멜 케이스 필드명 (memberRegion)을 따르도록 수정했습니다. -->
+                활동 지역: <span th:text="${userInfo.member_address}"></span><br>
+                포인트: <span th:text="${userInfo.member_point}"></span>
+             </div>
               </div>
             </div>
-          </div>
+          </div> 
         </div>
       </section>
 
@@ -41,11 +59,11 @@
       <section class="dashboard">
         <div class="dash-card dash-purple">
           <div class="dash-title">내가 찜한 축제</div>
-          <div class="dash-value" th:text="${fevoriteCount}"></div>
+          <div class="dash-value">12</div>
         </div>
         <div class="dash-card dash-orange">
           <div class="dash-title">나의 문의 내역</div>
-          <div class="dash-value" th:text="${inquiryCount}"></div>
+          <div class="dash-value">5</div>
         </div>
         <div class="dash-card dash-blue">
           <div class="dash-title">참여한 축제</div>
@@ -53,20 +71,22 @@
         </div>
         <div class="dash-card dash-green">
           <div class="dash-title">작성한 리뷰</div>
-          <div class="dash-value" th:text="${reviewCount}"></div>
+          <div class="dash-value">16</div>
         </div>
         <div class="dash-card dash-violet">
-          <div class="dash-title">작성한 댓글</div>
-          <div class="dash-value" th:text="${comment}">9</div>
+          <div class="dash-title">참여한 채팅방</div>
+          <div class="dash-value">9</div>
+        </div>
+        <div class="dash-card dash-yellow">
+          <div class="dash-title">이벤트 참여 수</div>
+          <div class="dash-value">3</div>
         </div>
       </section>
     </section>
   </main>
 
-  <!-- ✅ 푸터 -->
   <footer class="footer">
     <div class="container">© 2025 FesLite — 모두의 축제를 연결합니다 🎡</div>
   </footer>
 </body>
-
 </html>

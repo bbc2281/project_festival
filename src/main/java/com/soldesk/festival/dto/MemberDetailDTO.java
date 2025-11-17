@@ -16,16 +16,11 @@ public class MemberDetailDTO {
     private String member_id;
     private String member_name;
     private String member_email;
-    private String member_address;
-    private String member_pass;
-    private String member_pass2;
-    private String member_gender;
-    private String member_phone;
-    private String member_job;
+    //private String member_pass;
     private String member_nickname;
-    private String member_birth;
+    private String member_address;
+    private Integer member_point;
     private MemberRole role;
-    private int is_social;
 
 
 }

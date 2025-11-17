@@ -1,17 +1,21 @@
 package com.soldesk.festival.service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.soldesk.festival.config.AuthUtil;
 import com.soldesk.festival.config.MemberRole;
+import com.soldesk.festival.dto.LoginDTO;
 import com.soldesk.festival.dto.MemberDTO;
 import com.soldesk.festival.dto.MemberDetailDTO;
 import com.soldesk.festival.dto.MemberJoinDTO;
+import com.soldesk.festival.dto.MemberUpdateDTO;
+import com.soldesk.festival.exception.UserException;
 import com.soldesk.festival.mapper.MemberMapper;
 
 import lombok.RequiredArgsConstructor;
@@ -19,129 +23,170 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class MemberService {
-
+	
 	private final MemberMapper memberMapper;
 	private final AuthUtil authUtil;
 
-	public Optional<MemberDTO> findUserbyId(String userId) {
 
+	public Optional<MemberDTO> findUserbyId(String userId){
+		
 		return memberMapper.findMemberById(userId);
 	}
 
-	@Transactional(rollbackFor = com.soldesk.festival.exception.UserException.class)
+	public Optional<MemberDTO> getAllDetails(String userId){
+		return memberMapper.findUserDetailAllById(userId);
+	} //시스템용
+
+    
+	@Transactional(rollbackFor= com.soldesk.festival.exception.UserException.class)
 	public void join(MemberJoinDTO joinMember) {
-
-		/*
-		 * if(checkMemberIdExists(joinMember.getMember_id())) {
-		 * throw new UserException("이미 사용중인 아이디 입니다");
-		 * }
-		 */
-
-		joinMember.setMember_pass(authUtil.encodedPassword(joinMember.getMember_pass()));
+		
+		/* 
+        if(checkMemberIdExists(joinMember.getMember_id())) {
+           throw new UserException("이미 사용중인 아이디 입니다");
+        }
+		   */
+        
+        joinMember.setMember_pass(authUtil.encodedPassword(joinMember.getMember_pass()));
 		joinMember.setRole(MemberRole.USER);
-		joinMember.setMember_point(0);
+		joinMember.setMember_point(0); 
 		memberMapper.insertMember(joinMember);
-
+		
 	}
-
+	
 	public boolean checkMemberIdExists(String userId) {
-
-		if (userId != null && findUserbyId(userId).isPresent()) {
+		
+		if(userId != null && findUserbyId(userId).isPresent()) {
 			return true;
-		} else {
+		}else {
 			return false;
 		}
 	}
-
-	/*
-	 * @Transactional
-	 * public Optional<MemberDetailDTO> modifyMember(MemberUpdateDTO updateMember){
-	 * 
-	 * MemberDTO existingMember =
-	 * findUserbyId(updateMember.getMember_id()).orElseThrow(()-> new
-	 * UserException("아이디나 비밀번호가 일치하지 않습니다."));
-	 * 
-	 * if(updateMember.getMember_pass() != null &&
-	 * !updateMember.getMember_pass().isBlank()) {
-	 * updateMember.setMember_pass(authUtil.encodedPassword(updateMember.
-	 * getMember_pass()));
-	 * }else {
-	 * updateMember.setMember_pass(existingMember.getMember_pass());
-	 * }
-	 * 
-	 * memberMapper.updateMember(updateMember);
-	 * 
-	 * Optional<MemberDTO> finalMemberDTO =
-	 * memberMapper.findMemberById(updateMember.getMember_id());
-	 * 
-	 * return finalMemberDTO.map(dto -> MemberDetailDTO.builder()
-	 * .member_id(dto.getMember_id())
-	 * .member_name(dto.getMember_name())
-	 * .member_email(dto.getMember_email())
-	 * .role(dto.getRole())
-	 * .member_nickname(dto.getMember_nickname())
-	 * .build()
-	 * );
-	 * 
-	 * }
-	 */
+	
+	/* 
 	@Transactional
-	public void modifyMember(MemberDTO updateUser) {
-		if (updateUser.getIs_social() == 1 || updateUser.getMember_pass() == null
-				|| updateUser.getMember_pass().trim().isEmpty()) {
-			memberMapper.updateMemberNotPass(updateUser);
-		} else {
+	public Optional<MemberDetailDTO> modifyMember(MemberUpdateDTO updateMember){
+		
+		MemberDTO existingMember = findUserbyId(updateMember.getMember_id()).orElseThrow(()-> new UserException("아이디나 비밀번호가 일치하지 않습니다."));
+		
+		if(updateMember.getMember_pass() != null && !updateMember.getMember_pass().isBlank()) {
+			updateMember.setMember_pass(authUtil.encodedPassword(updateMember.getMember_pass()));
+		}else {
+			updateMember.setMember_pass(existingMember.getMember_pass());
+		}
+		
+		memberMapper.updateMember(updateMember);
+
+		Optional<MemberDTO> finalMemberDTO = memberMapper.findMemberById(updateMember.getMember_id());
+        
+		return finalMemberDTO.map(dto -> MemberDetailDTO.builder()
+		                                  .member_id(dto.getMember_id())
+										  .member_name(dto.getMember_name())
+										  .member_email(dto.getMember_email())
+										  .role(dto.getRole())
+										  .member_nickname(dto.getMember_nickname())
+										  .build()
+										  );
+					  
+		} */
+
+    @Transactional(rollbackFor= com.soldesk.festival.exception.UserException.class)
+	public void modifyMember(MemberUpdateDTO updateUser){
+
+		MemberDTO existingMember = findUserbyId(updateUser.getMember_id()).orElseThrow(()-> new UserException("아이디나 비밀번호가 일치하지 않습니다."));
+        if(updateUser.getMember_pass() != null && !updateUser.getMember_pass().isBlank()){
 			updateUser.setMember_pass(authUtil.encodedPassword(updateUser.getMember_pass()));
-			memberMapper.updateMember(updateUser);
+		}else {
+			updateUser.setMember_pass(existingMember.getMember_pass());
 		}
+
+		memberMapper.updateMember(updateUser);
+	}
+    
+	@Transactional(rollbackFor= com.soldesk.festival.exception.UserException.class)
+	public void deleteMember(LoginDTO deleteUser) {
+		
+		String id = deleteUser.getMember_id();
+		String pass = deleteUser.getMember_pass();
+
+		MemberDTO currentMember = findUserbyId(id).filter(member -> authUtil.checkPassword(pass, member.getMember_pass()))
+				.orElseThrow(()-> new UserException("아이디나 비밀번호가 일치하지 않습니다"));
+		
+        				
+		//currentMember.setDeleted(true);
+		//currentMember.setDeletedAt(LocalDateTime.now());
+		
+		memberMapper.deleteMember(currentMember);   //탈퇴기능 보류 -> db에 isdeleted로 논리탈퇴 할지 말지 고민중 
+		
 	}
 
-	@Transactional
-	public void deleteMember(int member_idx) {
-		memberMapper.deleteMember(member_idx);
-	}
 
-	public MemberDetailDTO getMemberDetails(String userId) {
-
+	public Optional <MemberDetailDTO> getMemberDetails(String userId){
+            
 		Optional<MemberDTO> opMember = memberMapper.findUserByIdforUser(userId);
-		if (opMember.isPresent()) {
-			MemberDTO member = opMember.get();
-			return MemberDetailDTO.builder()
-					.member_idx(member.getMember_idx())
-					.member_id(member.getMember_id())
-					.member_pass(member.getMember_pass())
-					.member_name(member.getMember_name())
-					.member_email(member.getMember_email())
-					.member_nickname(member.getMember_nickname())
-					.member_phone(member.getMember_phone())
-					.member_gender(member.getMember_gender())
-					.member_birth(member.getMember_birth())
-					.member_job(member.getMember_job())
-					.member_address(member.getMember_address())
-					.role(member.getRole())
-					.is_social(member.getIs_social())
-					.build();
+		if(opMember.isPresent()){
+			 MemberDTO member = opMember.get();
+             return Optional.of(
+			            MemberDetailDTO.builder()
+				                .member_idx(member.getMember_idx())
+								.member_id(member.getMember_id())
+								.member_name(member.getMember_name())
+								.member_nickname(member.getMember_nickname())
+								.member_email(member.getMember_email())
+								.member_address(member.getMember_address())
+								.member_point(member.getMember_point())
+								.role(member.getRole())
+								.build()
+			 );			 
 
 		}
-
-		throw new UsernameNotFoundException("해당하는 회원정보를 찾을 수 없습니다");
-
+        return Optional.empty();
 	}
+    
+	
+	public boolean checkpassword(String userId, String rawpass){
 
-	public Optional<MemberDTO> getAllDetails(String userId) {
-		return memberMapper.findUserDetailAllById(userId);
+		Optional<MemberDTO> opMember = findUserbyId(userId);
+
+		if(opMember.isEmpty()){
+			return false;
+		}
+
+		MemberDTO member = opMember.get();
+		String password = member.getMember_pass();
+
+		return authUtil.checkPassword(rawpass, password);
 	}
+    
 
-	public List<MemberDTO> getMemberList() {
+	
+	public List<MemberDetailDTO> getMemberListforAdmin(String userId){
+        
+       Optional<MemberDTO> opAdmin = memberMapper.findUserByIdforUser(userId);
+	   if(opAdmin.isPresent()){
+		  MemberDTO admin = opAdmin.get();
+		  
+		  if(admin.getRole().isAdmin()){
 
-		return memberMapper.getMemberList();
+			List<MemberDetailDTO> list = memberMapper.getMemberList();
+        
+		    return list.stream()
+		            .map(member ->  MemberDetailDTO.builder()
+					.member_id(member.getMember_id())
+					.member_name(member.getMember_name())
+					.member_nickname(member.getMember_nickname())
+					.member_email(member.getMember_email())
+					.role(member.getRole())
+					.build()
+					)
+					.collect(Collectors.toList());
+
+		  }
+	   }
+	   return Collections.emptyList();
+      
+		
 	}
+		
 
-	public int countMember() {
-		return memberMapper.countMember();
-	}
-
-	public MemberDTO findUserbyIdx(int member_idx) {
-		return memberMapper.findUserbyIdx(member_idx);
-	}
 }

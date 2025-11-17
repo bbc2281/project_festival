@@ -111,7 +111,7 @@ public class SecurityAllUsersDTO implements UserDetails, OAuth2User{
         return true;
     }
     
-    //유저의 idx값을 가져오는 메서드ㄴ
+    //유저의 idx값을 가져오는 메서드
 	public long getUserIdx(){
 		if(this.member != null){
 			return this.member.getMember_idx();

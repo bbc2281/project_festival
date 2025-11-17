@@ -7,6 +7,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -33,10 +34,10 @@ public class SecurityConfig {
         return authConfiguration.getAuthenticationManager();
     }
     
-    // @Bean
-    // public WebSecurityCustomizer webSecurityCustomizer(){
-    //     return (web-> web.ignoring().requestMatchers("/css/**", "/js/**", "/image/**"));
-    // }
+     @Bean
+     public WebSecurityCustomizer webSecurityCustomizer(){
+         return (web-> web.ignoring().requestMatchers("/css/**", "/js/**", "/image/**"));
+     }
 
     
     @Bean
@@ -44,7 +45,7 @@ public class SecurityConfig {
 
       
         
-        RequestMatcher apiMatcher = AntPathRequestMatcher.antMatcher("/**");
+        RequestMatcher apiMatcher = AntPathRequestMatcher.antMatcher("/api/**");
         
                                     
 
@@ -61,11 +62,11 @@ public class SecurityConfig {
                                                             "/api/v1/auth/login", "/api/v1/auth/join", "/api/v1/auth/checkId","/api/v1/auth/memberjoin",
                                                             "/api/v1/auth/joincompany").permitAll()
                                         .requestMatchers("/", "/css/**", "/js/**", "/image/**").permitAll() 
-                                        // .requestMatchers("/admin/**").hasRole(MemberRole.ADMIN.name())
-                                        // .requestMatchers("/member/**").hasAnyRole(MemberRole.USER.name())
-                                        // .requestMatchers("/company/**").hasAnyRole(MemberRole.COMPANY.name())                                       
-                                        .requestMatchers("/**").permitAll() //일단 모든 요청 접근가능하게함 나중에 정리해야댐
-                                        // .requestMatchers("/api/v1/auth/admin/**").hasRole(MemberRole.ADMIN.name())
+                                         .requestMatchers("/admin/**").hasRole(MemberRole.ADMIN.name())
+                                         .requestMatchers("/member/**").hasAnyRole(MemberRole.USER.name())
+                                         .requestMatchers("/company/**").hasAnyRole(MemberRole.COMPANY.name())                                       
+                                       // .requestMatchers("/**").permitAll() //일단 모든 요청 접근가능하게함 나중에 정리해야댐
+                                         .requestMatchers("/api/v1/auth/admin/**").hasRole(MemberRole.ADMIN.name())
                                         // .requestMatchers("/api/v1/auth/member/**").hasAnyRole(MemberRole.USER.name(), MemberRole.ADMIN.name(),
                                         //                                                 CompanyRole.COMPANY.name(), CompanyRole.FESTIVAL_PLANNER.name())
                                                                                   

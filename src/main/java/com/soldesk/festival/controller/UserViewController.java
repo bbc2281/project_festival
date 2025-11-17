@@ -1,229 +1,188 @@
 package com.soldesk.festival.controller;
 
-import java.util.List;
+import java.util.Optional;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.SessionAttribute;
 
-import com.soldesk.festival.dto.*;
-import com.soldesk.festival.service.*;
-import jakarta.servlet.http.HttpSession;
+import com.soldesk.festival.dto.CompanyDTO;
+import com.soldesk.festival.dto.CompanyDetailDTO;
+import com.soldesk.festival.dto.MemberDTO;
+import com.soldesk.festival.dto.MemberDetailDTO;
+import com.soldesk.festival.dto.SecurityAllUsersDTO;
+import com.soldesk.festival.service.CompanyService;
+import com.soldesk.festival.service.MemberService;
+
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Controller
 public class UserViewController {
 
-    private final SegFestivalService segFestivalService;
-
-    private final ReviewService reviewService;
-    private final MemberService memberService;
-    private final CompanyService companyService;
-    private final InquiryService inquiryService;
-    private final FavoriteService favoriteService;
-    private final CommentService commentService;
-    private final FundingFestivalService fundingFestivalService;
-
-
-    // 로그인품
+    public final MemberService memberService;
+    public final CompanyService companyService;
+    
+    //로그인품
     @GetMapping("/auth/loginPage")
-    public String loginForm() {
+    public String loginForm(){
         return "auth/loginPage";
     }
 
-    // 회원가입 유형 선택
+    //회원가입 유형 선택
     @GetMapping("/auth/join")
-    public String joinSelect() {
+    public String joinSelect(){
         return "auth/join";
     }
 
-    // 네이버로그인테스트
-    @GetMapping("/oauth2/authorization/naver")
-    public String naverLogin() {
-        return "auth/naverTest";
-    }
-
-    // -----일반회원--------------
-
-    // 회원가입:일반회원
+    //회원가입:일반회원
     @GetMapping("/auth/memberjoin")
-    public String joinForm() {
-        return "auth/memberJoin";
+    public String joinForm(){
+        return "auth/memberjoin";   
     }
-
-    // 일반회원 마이페이지(일반)
-    @GetMapping("/member/mypage")
-    public String mypageForm(@AuthenticationPrincipal SecurityAllUsersDTO userdetails, Model model, @SessionAttribute("loginMember")MemberDTO loginMember) {
-        if(userdetails == null) {
-            return "redirect:/auth/loginPage";
-        }
-        MemberDetailDTO userInfo = memberService.getMemberDetails(userdetails.getUsername());
-        model.addAttribute("userInfo", userInfo);
-        model.addAttribute("displayName", userdetails.getUserDisplayName());
-
-        List<FestivalDTO> festivalList = favoriteService.selectAllFavoriteByUser(loginMember);
-        int fevoriteCount = festivalList.size();
-        model.addAttribute("fevoriteCount", fevoriteCount);
-
-        List<InquiryDTO> inquiryList = inquiryService.selectInquiry(loginMember.getMember_idx());
-        int inquiryCount = inquiryList.size();
-        model.addAttribute("inquiryCount", inquiryCount);
-
-        List<ReviewDTO> reviewList = reviewService.infoReviewByMember(loginMember);
-        int reviewCount = reviewList.size();
-        model.addAttribute("reviewCount", reviewCount);
-
-
-        return "member/mypage";
-    }
-
-    @GetMapping("/mypage/edit")
-    public String myinfo(@AuthenticationPrincipal SecurityAllUsersDTO userdetails, Model model) {
-        if(userdetails == null) {
-            return "redirect:/auth/loginPage";
-        }
-        MemberDetailDTO userInfo = memberService.getMemberDetails(userdetails.getUsername());
-        model.addAttribute("userInfo", userInfo);
-        return "member/edit";
-    }
-
-    // 일반회원 찜한페이지
-    @GetMapping("/mypage/bookmark")
-    public String mypageBookmark(Model model, HttpSession session) {
-
-        MemberDTO loginMember = (MemberDTO) session.getAttribute("loginMember");
-
-        List<FestivalDTO> festivalList = favoriteService.selectAllFavoriteByUser(loginMember);
-
-        model.addAttribute("festivalList", festivalList);
-
-        return "member/bookmark";
-    }
-
-    // 일반회원 1:1문의
-    @GetMapping("/mypage/inquiry")
-    public String mypageInquiry(@ModelAttribute("inquiry") InquiryDTO inquiry, Model model,
-            @SessionAttribute("loginMember") MemberDTO loginMember) {
-
-        List<InquiryDTO> inquiryList = inquiryService.selectInquiry(loginMember.getMember_idx());
-        model.addAttribute("inquiryList", inquiryList);
-
-        return "member/inquiry";
-    }
-
-    @PostMapping("/mypage/regInquiry")
-    public String mypageInsertInquiry(@ModelAttribute("inquiry") InquiryDTO inquiry,
-            @SessionAttribute("loginMember") MemberDTO loginMember) {
-
-        inquiryService.insertInquiry(inquiry, loginMember);
-
-        return "redirect:/mypage/inquiry";
-    }
-
-    // 일반회원 리뷰작성정보
-    @GetMapping("/mypage/review")
-    public String mypageReview(Model model, HttpSession session){
-
-        MemberDTO loginMember = (MemberDTO) session.getAttribute("loginMember");
-
-        List<ReviewDTO> reviewList = reviewService.infoReviewByMember(loginMember);
-        System.out.println("@@@@@@@@@@@@@@@@@0"+reviewList.get(0).getFestival_name());
-
-        model.addAttribute("reviewList", reviewList);
-
-        return "member/review";
-    }
-
-    // 일반회원탈퇴페이지
-    @GetMapping("/mypage/delete")
-    public String accountWithdrawal() {
-        return "member/delete";
-    }
-
-    // -------기업회원------------
-
-    // 기업회원 가입
+    
+    //기업회원가입
     @GetMapping("/auth/companyjoin")
-    public String companyJoinForm() {
+    public String companyJoinForm(){
         return "auth/companyjoin";
     }
-
-    // 기업회원 마이페이지
-    @GetMapping("/company/mypage")
-    public String companyPageForm(@AuthenticationPrincipal SecurityAllUsersDTO userdetails, Model model){
+    
+    //일반회원 마이페이지(일반)
+    @GetMapping("/member/mypage")
+    public String mypageForm(@AuthenticationPrincipal SecurityAllUsersDTO userdetails, Model model){
 
         if(userdetails == null){
             return "redirect:/auth/loginPage";
         }
+        String userId = userdetails.getUsername();
+        System.out.println("인증된 사용자 : " + userId);
 
-        int idx = (int) userdetails.getUserIdx();
-        CompanyDTO login = companyService.selectCompanyByIdx(idx);
-        model.addAttribute("login", login);
+        Optional<MemberDetailDTO> opDetail = memberService.getMemberDetails(userId);
 
-        int segFestival = segFestivalService.countFestivalByCompany(idx);
-        int favorite = favoriteService.countFavoriteByCompany(idx);
-        int festival_funding = fundingFestivalService.countFundingByCompany(idx);
-        int payment = 0;
+        if(opDetail.isEmpty()){
 
-        model.addAttribute("segFestival", segFestival);
-        model.addAttribute("favorite", favorite);
-        model.addAttribute("festival_funding", festival_funding);
-        model.addAttribute("payment", payment);
+            return "redirect:/auth/loginPage?error=dataError";
+        }
 
-        List<FestivalDTO> commitFestivalList = segFestivalService.selectCommitFestival(idx);
+        MemberDetailDTO userInfo = opDetail.get();
+      
 
-        model.addAttribute("commitFestivalList", commitFestivalList);
+       model.addAttribute("userInfo", userInfo);
+       model.addAttribute("displayName", userdetails.getUserDisplayName());
+        // model.addAttribute("userIDX", userdetails.getUserIdx()); 이렇게해서도 idx가져올수있음
+
+       return "member/mypage";
+    }
+
+    
+    //기업회원 마이페이지
+    @GetMapping("/company/mypage")
+    public String companyPageForm(@AuthenticationPrincipal SecurityAllUsersDTO userdetails, Model model){
+        
+        if(userdetails == null){
+            return "redirect:/auth/loginPage";
+        }
+        String userId = userdetails.getUsername();
+        System.out.println("인증된 기업회원" + userId);
+        Optional<CompanyDetailDTO> opDetail = companyService.getDetails(userId);
+
+        if(opDetail.isEmpty()){
+
+            return "redirect:/auth/loginPage?error=dataError";
+        }
+
+        CompanyDetailDTO userInfo = opDetail.get();
+
+        model.addAttribute("userInfo", userInfo);
 
         return "company/mypage";
     }
+    
 
-    // 기업회원 정보수정
+
+    //일반회원 정보보기
+    
+    @GetMapping("/member/info")
+    public String myinfo(@AuthenticationPrincipal SecurityAllUsersDTO userdetails, Model model){
+
+        if(userdetails == null){
+            return "redirect:/auth/loginPage";
+        }
+        String userId = userdetails.getUsername();
+        System.out.println("인증된 사용자 : " + userId);
+
+        Optional<MemberDTO> opDetail = memberService.getAllDetails(userId);
+
+        if(opDetail.isEmpty()){
+
+            return "redirect:/auth/loginPage?error=dataError";
+        }
+
+        MemberDTO userInfo = opDetail.get();
+      
+       model.addAttribute("userInfo", userInfo);
+        // model.addAttribute("userIDX", userdetails.getUserIdx()); 이렇게해서도 idx가져올수있음
+        return "member/info";
+    }
+    
+    //일반회원 정보수정
+    @GetMapping("/member/edit")
+    public String mypageModifyForMember(@AuthenticationPrincipal SecurityAllUsersDTO userdetails, Model model){
+
+        if(userdetails == null){
+            return "redirect:/auth/loginPage";
+        }
+        String userId = userdetails.getUsername();
+        System.out.println("인증된 사용자가 회원정보 수정 페이지 진입");
+
+        Optional<MemberDTO> opDetail = memberService.getAllDetails(userId);
+
+        if(opDetail.isEmpty()){
+            return "redirect:/auth/loginPage?error=dataError";
+        }
+        MemberDTO userInfo = opDetail.get();
+
+        model.addAttribute("userInfo", userInfo);
+        
+        return "member/edit";
+    }
+
+    @GetMapping("/company/info")
+    public String companyinfoPage(@AuthenticationPrincipal SecurityAllUsersDTO userdetails, Model model){
+
+        if(userdetails == null){
+            return "redirect:/auth/loginPage";
+        }
+        String userId = userdetails.getUsername();
+        System.out.println("인증된 사용자 아이디" + userId);
+
+        Optional<CompanyDetailDTO> opDetail = companyService.getDetails(userId);
+
+        if(opDetail.isEmpty()){
+            return "redirect:/auth/loginPage?error=dataError";
+        }
+        CompanyDetailDTO userInfo = opDetail.get();
+        model.addAttribute("userInfo", userInfo);
+        return "company/info";
+
+
+    }
+    
+    //기업회원 정보수정
     @GetMapping("/company/edit")
-    public String mypageModifyForCompany() {
+    public String mypageModifyForCompany(){
         return "company/edit";
     }
-
-    // 기업회원 찜하기
-    @GetMapping("/company/favorite")
-    public String mypageFavoriteForCompany(Model model, HttpSession session) {
-
-        CompanyDTO company = (CompanyDTO) session.getAttribute("companyMember");
-
-        List<FestivalDTO> festivalList = favoriteService.selectAllFavoriteByCompany(company);
-
-        model.addAttribute("festivalList", festivalList);
-        return "company/favorite";
+    
+    //일반회원탈퇴페이지
+    @GetMapping("/member/delete")
+    public String accountWithdrawal(){
+        return "member/delete";
     }
 
-    // 기업회원 등록축제정보
-    @GetMapping("/company/festival")
-    public String mypageFestivalForCompany(Model model, HttpSession session){
 
-        CompanyDTO company = (CompanyDTO) session.getAttribute("companyMember");
-        int id = company.getCompany_idx();
-        List<FestivalDTO> festivalList = segFestivalService.selectFestivalByCompany(id);
-
-        model.addAttribute("festivalList", festivalList);
-
-        return "company/festival";
-    }
-
-    // 기업회원 후원정보
-    @GetMapping("/company/sponsor")
-    public String mypageSponsorForCompany() {
-        return "company/sponsor";
-    }
-
-    // 기업회원 회원탈퇴
-    @GetMapping("/company/delete")
-    public String mypageDeleteForCompany() {
-        return "company/delete";
-    }
+       
     
 
 }
