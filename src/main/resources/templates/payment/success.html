@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
@@ -157,12 +157,10 @@
 
             <!-- 버튼 -->
             <div class="btn-group">
-                <button type="button" class="btn-base btn-secondary" onclick="location.href='/funding/info'">
+                <!-- <button type="button" class="btn-base btn-secondary" onclick="location.href='/funding/info'">
                     펀딩 상세로 이동
-                </button>
-
-
-                <a href="/funding/main" style="flex:1;">
+                </button> -->
+                <a th:href="@{/funding/main}" style="flex:1;">
                     <button type="button" class="btn-base btn-main" style="width:100%;">
                         펀딩 메인으로 이동
                     </button>

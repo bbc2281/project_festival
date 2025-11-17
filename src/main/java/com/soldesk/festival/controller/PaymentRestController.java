@@ -106,6 +106,8 @@ public class PaymentRestController {
         try {
             paymentDTO.setOrder_id(request.get("orderId").toString());
             paymentService.modifyProcess(paymentDTO);
+            // 잡아다가 펀딩페스티벌 업데이트
+
             response.put("success", true);
         } catch (Exception e) {
             response.put("success", false);

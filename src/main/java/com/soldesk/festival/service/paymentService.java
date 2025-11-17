@@ -10,7 +10,7 @@ import com.soldesk.festival.dto.CompanyDTO;
 import com.soldesk.festival.dto.PaymentDTO;
 import com.soldesk.festival.dto.PaymentRequestDTO;
 
-import com.soldesk.festival.dto.fundingFestivalDTO;
+import com.soldesk.festival.dto.FundingFestivalDTO;
 
 import lombok.RequiredArgsConstructor;
 
@@ -19,13 +19,13 @@ import lombok.RequiredArgsConstructor;
 public class paymentService {
 
     private final paymentDAO paymentDAO;
-    private final FundingService fundingService;
+    private final FundingFestivalService fundingService;
 
     public String saveOrderAndReturnOrderId(PaymentRequestDTO requestDTO , CompanyDTO companyDTO){
         PaymentDTO paymentDTO = new PaymentDTO();
         String orderId = UUID.randomUUID().toString().replace("-", "").substring(0, 20);
         paymentDTO.setOrder_id(orderId);
-        fundingFestivalDTO fundingFestivalDTO = fundingService.selectFundingFestival(requestDTO.getFestivalIdx());
+        FundingFestivalDTO fundingFestivalDTO = fundingService.selectFunding(requestDTO.getFestivalIdx());
         paymentDTO.setCompany_idx(fundingFestivalDTO.getCompany_idx());
         paymentDTO.setPayment_account(fundingFestivalDTO.getCompany_account());
         paymentDTO.setPayment_amount(requestDTO.getAmount());
