@@ -1,7 +1,5 @@
 console.log('FesLite funding JS loaded');
-const festivalName = document.getElementById("festivalName").innerText;
-const festivalIdxStr = document.getElementById("funding_festival_idx").textContent;
-const festivalIdx = parseInt(festivalIdxStr, 10);
+
 
 
 // 검색기능
@@ -183,6 +181,9 @@ function _initFundingDetail(detail) {
   // === 후원 버튼 (알림)
   if (btnFund) {
     btnFund.addEventListener("click", async () => {
+      const festivalName = document.getElementById("festivalName").innerText;
+      const festivalIdxStr = document.getElementById("funding_festival_idx").textContent;
+      const festivalIdx = parseInt(festivalIdxStr, 10);
       const amount = myDonation;
       const requestData = {
         amount ,
