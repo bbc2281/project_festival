@@ -43,8 +43,8 @@ public class BoardService {
 	}
 
     public void writeProcess(BoardDTO writeBoard){
-        
         boardDAO.writeProcess(writeBoard);
+        
     }
 
     public BoardDTO infoProcess(int board_idx){
@@ -69,5 +69,27 @@ public class BoardService {
 
     public int countBoardNow(String date){
         return boardDAO.countBoardNow(date);
+    }
+
+    public List<BoardDTO> searchProcess(String keyword, String category, int page){
+        int start = (page - 1) *10;
+		int limit = 10 ; 
+        if (category.equals("전체")) {
+            return boardDAO.searchProcessAll(keyword,start,limit);
+        }else{
+        return boardDAO.searchProcessCategory(keyword, category,start,limit);
+        }
+    }
+
+    public PageDTO getPageDTOSearchCategory(int currentPage , String keyword , String category){
+        int boardCount = boardDAO.countSearchBoardCategory(keyword, category);
+        PageDTO pageDTO = new PageDTO(boardCount, currentPage);
+        return pageDTO;
+    }
+
+    public PageDTO getPageDTOSearchAll(int currentPage , String keyword){
+        int boardCount = boardDAO.countSearchBOardAll(keyword);
+        PageDTO pageDTO = new PageDTO(boardCount, currentPage);
+        return pageDTO;
     }
 }

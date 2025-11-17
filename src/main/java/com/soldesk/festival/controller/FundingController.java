@@ -1,5 +1,13 @@
 package com.soldesk.festival.controller;
 
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.soldesk.festival.dto.CompanyDTO;
+import com.soldesk.festival.dto.fundingFestivalDTO;
+import com.soldesk.festival.service.FundingService;
 import java.io.IOException;
 import java.util.List;
 
@@ -44,10 +52,17 @@ public class FundingController {
     }
 
     @GetMapping("/info")
-    public String info(@RequestParam("id") int idx, Model model){
+    public String info(@RequestParam("id") int idx, Model model, HttpSession session){
 
+         
+        //해당 객체를 모델에 넣어 보내야만 결제 시스템이 정상 작동 됩니다.
+        model.addAttribute("fundingFestival", fundingFestivalDTO);
+
+        //임시용 으로 세션에 객체를 넣었습니다.
+        CompanyDTO companyDTO = new CompanyDTO();
+        session.setAttribute("companyMember", companyDTO);
+      
         FundingFestivalDTO funding = fundingFestivalService.selectFunding(idx);
-        
         model.addAttribute("funding", funding);
 
         return "funding/info";
