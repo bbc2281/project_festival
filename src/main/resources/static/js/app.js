@@ -107,16 +107,35 @@ const qsa = (s,doc=document)=>Array.from(doc.querySelectorAll(s));
 
 function renderHome(){
   // Hero slides
-  const heroInner = qs('#heroInner');
-  FESTIVALS.slice(0,6).forEach((f,i)=>{
+  const heroInner = document.querySelector('#heroInner');
+  heroInner.innerHTML = ''; // 기존 내용 초기화
+
+  const itemsPerSlide = 3; // 한 슬라이드에 3개씩 표시
+  const totalSlides = Math.ceil(FESTIVALS.length / itemsPerSlide);
+
+  for (let i = 0; i < totalSlides; i++) {
     const item = document.createElement('div');
-    item.className = `carousel-item ${i===0?'active':''}`;
-    item.innerHTML = `<img class="d-block w-100 object-fit-cover" style="height:420px" src="${f.img}">
-    <div class="carousel-caption text-start bg-dark bg-opacity-50 rounded-3 p-3">
-      <h5>${f.name}</h5>
-    </div>`;
+    item.className = `carousel-item ${i === 0 ? 'active' : ''}`;
+
+    // 내부 슬라이드(이미지 3개) 묶음
+    const innerRow = document.createElement('div');
+    innerRow.className = 'd-flex justify-content-center gap-3 p-3';
+
+    FESTIVALS.slice(i * itemsPerSlide, (i + 1) * itemsPerSlide).forEach(f => {
+      const card = document.createElement('div');
+      card.className = 'flex-fill text-center';
+      card.innerHTML = `
+        <div class="rounded-4 overflow-hidden shadow-sm bg-dark bg-opacity-25">
+          <img src="${f.img}" class="w-100 object-fit-cover" style="height:280px; border-radius: 12px;">
+          <div class="p-2 text-white fw-semibold">${f.name}</div>
+        </div>
+      `;
+      innerRow.appendChild(card);
+    });
+
+    item.appendChild(innerRow);
     heroInner.appendChild(item);
-  });
+  };
 
   // Notices
   const ul = qs('#noticeList');

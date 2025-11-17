@@ -35,7 +35,7 @@ public class CommentService {
         commentDAO.deleteProcess(comment_idx);
     }
     
-    public int countCommentByMember(int idx){
+    public List<CommentDTO> countCommentByMember(int idx){
         return commentDAO.countCommentByMember(idx);
     }
 }

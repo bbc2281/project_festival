@@ -35,6 +35,6 @@ public interface CommentMapper {
     @Delete("delete from comment where comment_idx = #{comment_idx}")
     void deleteProcess(int comment_idx);
 
-    @Select("select count(*) from comment where member_idx = #{member_idx}")
-    int countCommentByMember(@Param("member_idx") int idx);
+    @Select("select * from comment where member_idx = #{member_idx}")
+    List<CommentDTO> countCommentByMember(@Param("member_idx") int idx);
 }

@@ -43,10 +43,6 @@ public class ReviewDAO {
         return reviewMapper.countReviewNow(date);
     }
     
-    public int countReviewByMember(int idx){
-        return reviewMapper.countReviewByMember(idx);
-    }
-
     public List<ReviewDTO> infoReviewByMember(int idx){
         return reviewMapper.infoReviewByMember(idx);
     }
