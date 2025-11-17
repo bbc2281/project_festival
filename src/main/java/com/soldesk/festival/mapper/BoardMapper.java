@@ -60,6 +60,8 @@ public interface BoardMapper {
     @Select("select count(*) from board where board_regDate = #{date}")
     int countBoardNow(@Param("date") String date);
     
+    @Select("select * from board order by board_idx desc limit #{limit} offset #{offset}")
+    List<BoardDTO> selectBoardPaged(@Param("offset") int offset, @Param("limit") int limit);
     
 } 
     

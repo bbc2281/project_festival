@@ -35,4 +35,7 @@ public interface FestivalMapper {
 
     @Select("select count(festival_idx) from festival")
     int countFestival();
+
+    @Select("select * from festival order by festival_idx desc limit #{limit} offset #{offset}")
+    List<FestivalDTO> selectFestivalPaged(@Param("offset") int offset, @Param("limit") int limit);
 }

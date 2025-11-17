@@ -14,20 +14,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.soldesk.festival.dto.BoardDTO;
 import com.soldesk.festival.dto.CompanyDTO;
 import com.soldesk.festival.dto.CountDTO;
-import com.soldesk.festival.mapper.BoardMapper;
 import com.soldesk.festival.dto.FestivalDTO;
 import com.soldesk.festival.dto.InquiryDTO;
 import com.soldesk.festival.dto.MemberDTO;
 import com.soldesk.festival.service.BoardService;
 import com.soldesk.festival.service.CompanyService;
-import com.soldesk.festival.service.FavoriteService;
 import com.soldesk.festival.service.FestivalService;
 import com.soldesk.festival.service.InquiryService;
 import com.soldesk.festival.service.MemberService;
 import com.soldesk.festival.service.ReviewService;
 import com.soldesk.festival.service.SegFestivalService;
 
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -38,14 +35,13 @@ public class AdminController {
     private final FestivalService festivalService;
     private final MemberService memberService;
     private final BoardService boardService;
-    private final BoardMapper boardMapper;
     private final SegFestivalService segFestivalService;
     private final ReviewService reviewService;
     private final InquiryService inquiryService;
     private final CompanyService companyService;
 
     @GetMapping("/main")
-    public String main(Model model){
+    public String main(Model model) {
 
         int countFestival = festivalService.countFestival();
         model.addAttribute("countFestival", countFestival);
@@ -65,106 +61,136 @@ public class AdminController {
         model.addAttribute("countInquiry", countInquiry);
         return "/admin/main";
     }
+
     @GetMapping("/event")
-    public String event(Model model){
-
-        List<BoardDTO> boardList = boardMapper.selectAllBoardNoLimits();
-
+    public String event(@RequestParam(defaultValue = "1") int page, Model model) {
+        int pageSize = 10;
+        int totalCount = boardService.countBoard();
+        List<BoardDTO> boardList = boardService.getBoardListPaged((page - 1) * pageSize, pageSize);
+        int totalPages = (int) Math.ceil((double) totalCount / pageSize);
         model.addAttribute("boardList", boardList);
-        
-
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
         return "/admin/event";
     }
-    @GetMapping("/festival")
-    public String festival(Model model){
 
-        List<FestivalDTO> festivals = festivalService.AllFestivals();
+    @GetMapping("/festival")
+    public String festival(@RequestParam(defaultValue = "1") int page, Model model) {
+        int pageSize = 10;
+        int totalCount = festivalService.countFestival();
+        List<FestivalDTO> festivals = festivalService.getFestivalListPaged((page - 1) * pageSize, pageSize);
+        int totalPages = (int) Math.ceil((double) totalCount / pageSize);
+
+        int blockSize = 10; // 페이지 블록 크기
+        int currentBlock = (int) Math.ceil((double) page / blockSize);
+        int startPage = (currentBlock - 1) * blockSize + 1;
+        int endPage = Math.min(startPage + blockSize - 1, totalPages);
+
+        int prevBlockPage = Math.max(startPage - blockSize, 1);
+        int nextBlockPage = Math.min(startPage + blockSize, totalPages);
 
         model.addAttribute("festivals", festivals);
-        
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+        model.addAttribute("prevBlockPage", prevBlockPage);
+        model.addAttribute("nextBlockPage", nextBlockPage);
+
         return "/admin/festival";
     }
+
     @GetMapping("/inquiry")
-    public String inquiry(Model model){
-
-        List<InquiryDTO> list = inquiryService.selectAllInquiry();
-
+    public String inquiry(@RequestParam(defaultValue = "1") int page, Model model) {
+        int pageSize = 10;
+        int totalCount = inquiryService.countInquiry();
+        List<InquiryDTO> list = inquiryService.getInquiryListPaged((page - 1) * pageSize, pageSize);
+        int totalPages = (int) Math.ceil((double) totalCount / pageSize);
         model.addAttribute("list", list);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
 
         return "/admin/inquiry";
     }
+
     @PostMapping("/answerInquiry")
-    public String answerInquiry(@RequestBody InquiryDTO inquiry){
-        
+    public String answerInquiry(@RequestBody InquiryDTO inquiry) {
+
         inquiryService.updateInquiry(inquiry);
 
         return "redirect:/admin/inquiry";
     }
 
     @GetMapping("/member")
-    public String member(Model model){
-
-        List<MemberDTO> members = memberService.getMemberList();
-        
+    public String member(@RequestParam(defaultValue = "1") int page, Model model) {
+        int pageSize = 10;
+        int totalCount = memberService.countMember();
+        List<MemberDTO> members = memberService.getMemberListPaged((page - 1) * pageSize, pageSize);
+        int totalPages = (int) Math.ceil((double) totalCount / pageSize);
         model.addAttribute("members", members);
-        
-
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
         return "/admin/member";
     }
 
     @GetMapping("/company")
-    public String company(Model model){
-
-        List<CompanyDTO> companyMember = companyService.getAllCompanys();
-        
+    public String company(@RequestParam(defaultValue = "1") int page, Model model) {
+        int pageSize = 10;
+        int totalCount = companyService.countCompany();
+        List<CompanyDTO> companyMember = companyService.getCompanyListPaged((page - 1) * pageSize, pageSize);
+        int totalPages = (int) Math.ceil((double) totalCount / pageSize);
         model.addAttribute("companyMember", companyMember);
-
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
         return "/admin/company";
     }
+
     @GetMapping("/proposal")
-    public String proposal(Model model, HttpSession session){
-
-        List<FestivalDTO> proposals = segFestivalService.selectAllFestivals();
-        
+    public String proposal(@RequestParam(defaultValue = "1") int page, Model model) {
+        int pageSize = 10;
+        int totalCount = segFestivalService.countProposal();
+        List<FestivalDTO> proposals = segFestivalService.getProposalListPaged((page - 1) * pageSize, pageSize);
+        int totalPages = (int) Math.ceil((double) totalCount / pageSize);
         model.addAttribute("proposals", proposals);
-
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
         return "/admin/proposal";
     }
-    
+
     @GetMapping("/analytics")
     @ResponseBody
-    public CountDTO analysics(@RequestParam("date") String date){
-        
+    public CountDTO analysics(@RequestParam("date") String date) {
+
         CountDTO countDTO = new CountDTO();
         int boardCount = boardService.countBoardNow(date);
-        int reviewCount= reviewService.countReviewNow(date);
+        int reviewCount = reviewService.countReviewNow(date);
 
         countDTO.setBoardCount(boardCount);
         countDTO.setReviewCount(reviewCount);
-        
+
         return countDTO;
     }
 
     @GetMapping("/delete")
-    public String deleteMember(@RequestParam("member_idx") Integer member_idx){
-        
-        if(member_idx != null){
-            memberService.adminDeleteMember(member_idx);
+    public String deleteMember(@RequestParam("member_idx") Integer member_idx) {
+
+        if (member_idx != null) {
+            memberService.deleteMember(member_idx);
         }
         return "redirect:/admin/member";
     }
 
     @GetMapping("/company/delete")
-    public String deleteCompany(@RequestParam("company_idx") Integer company_idx){
-        
-        if(company_idx != null){
+    public String deleteCompany(@RequestParam("company_idx") Integer company_idx) {
+
+        if (company_idx != null) {
             companyService.deleteCompanyByAdmin(company_idx);
         }
         return "redirect:/admin/member";
     }
 
     @GetMapping("/board/delete")
-    public String deleteBoard(@RequestParam("id") int board_idx){
+    public String deleteBoard(@RequestParam("id") int board_idx) {
 
         boardService.deleteProecess(board_idx);
 

@@ -70,4 +70,8 @@ public class BoardService {
     public int countBoardNow(String date){
         return boardDAO.countBoardNow(date);
     }
+
+    public List<BoardDTO> getBoardListPaged(int offset, int limit){
+        return boardDAO.selectBoardPaged(offset, limit);
+    }
 }

@@ -78,7 +78,8 @@ public class UserViewController {
         int reviewCount = reviewList.size();
         model.addAttribute("reviewCount", reviewCount);
 
-
+        int commentCount = commentService.countCommentByMember(loginMember.getMember_idx());
+        model.addAttribute("commentCount", commentCount);
         return "member/mypage";
     }
 

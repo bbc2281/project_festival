@@ -55,4 +55,12 @@ public class SegFestivalService {
     public List<FestivalDTO> selectCommitFestival(int idx){
         return segFestivalDAO.selectCommitFestival(idx);
     }
+
+    public int countProposal(){
+        return segFestivalDAO.countSegFestival();
+    }
+
+    public List<FestivalDTO> getProposalListPaged(int offset, int limit){
+        return segFestivalDAO.selectSegFestivalPaged(offset, limit);
+    }
 }

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,41 +12,132 @@
   <script defer th:src="@{/js/aside.js}"></script>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
-    body{margin:0;font-family:'Pretendard',sans-serif;background:#f5f6fa;display:flex;height:100vh;}
-    .sidebar{width:240px;background:#1f1f2e;color:#fff;padding:20px 0;display:flex;flex-direction:column;}
-    .sidebar a{display:block;padding:12px 20px;color:#ccc;text-decoration:none;}
-    .sidebar a:hover,.active{background:linear-gradient(135deg,#b5fffc 0%,#ffdee9 100%);color:#000 !important;font-weight:600;}
-    .main{flex:1;overflow-y:auto;}
-    header{background:#fff;box-shadow:0 1px 6px rgba(0,0,0,0.1);padding:15px 30px;display:flex;justify-content:space-between;}
-    table{background:#fff;margin:20px;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,0.08);}
+    body {
+      margin: 0;
+      font-family: 'Pretendard', sans-serif;
+      background: #f5f6fa;
+      display: flex;
+      height: 100vh;
+    }
+
+    .sidebar {
+      width: 240px;
+      background: #1f1f2e;
+      color: #fff;
+      padding: 20px 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar a {
+      display: block;
+      padding: 12px 20px;
+      color: #ccc;
+      text-decoration: none;
+    }
+
+    .sidebar a:hover,
+    .active {
+      background: linear-gradient(135deg, #b5fffc 0%, #ffdee9 100%);
+      color: #000 !important;
+      font-weight: 600;
+    }
+
+    .main {
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    header {
+      background: #fff;
+      box-shadow: 0 1px 6px rgba(0, 0, 0, 0.1);
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    table {
+      background: #fff;
+      margin: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    }
 
     .sidebar h2 {
-  text-align: center;
-  font-size: 20px;       /* ✅ 고정 크기 */
-  font-weight: 700;
-  margin-bottom: 30px;
-  line-height: 1.2;
-  white-space: nowrap;   /* ✅ 글자 줄바꿈 방지 */
-}
+      text-align: center;
+      font-size: 20px;
+      /* ✅ 고정 크기 */
+      font-weight: 700;
+      margin-bottom: 30px;
+      line-height: 1.2;
+      white-space: nowrap;
+      /* ✅ 글자 줄바꿈 방지 */
+    }
 
+    a.festival-link {
+      color: #007bff;
+      text-decoration: none;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    a.festival-link:hover {
+      text-decoration: underline;
+    }
   </style>
 </head>
+
 <body>
   <div th:replace="~{common/adminAside :: aside}"></div>
 
   <div class="main">
-    <header><h4>축제정보 관리</h4></header>
+    <header>
+      <h4>축제정보 관리</h4>
+    </header>
 
     <div class="p-4">
       <table class="table table-hover align-middle text-center">
         <thead class="table-light">
-          <tr><th>축제명</th><th>개최지</th><th>시작일</th><th>종료일</th><th></th></tr>
+          <tr>
+            <th>축제명</th>
+            <th>개최지</th>
+            <th>시작일</th>
+            <th>종료일</th>
+            <th></th>
+          </tr>
         </thead>
         <tbody>
-          <tr th:each="festival : ${festivals}"><td th:text="${festival.festival_name}"></td><td th:text="${festival.region_name}"></td><td th:text="${festival.festival_begin_date}"></td><td th:text="${festival.festival_end_date}"></td><td><a th:href="@{/festival/delete(festival_idx=${festival.festival_idx})}" class="btn btn-success btn-sm">삭제</a></td></tr>
+          <tr th:each="festival : ${festivals}">
+            <td><a class="festival-link" th:href="@{/festivalInfo(id=${festival.festival_idx})}"
+                th:text="${festival.festival_name}"></a></td>
+            <td th:text="${festival.region_name}"></td>
+            <td th:text="${festival.festival_begin_date}"></td>
+            <td th:text="${festival.festival_end_date}"></td>
+            <td><a th:href="@{/festival/delete(festival_idx=${festival.festival_idx})}"
+                class="btn btn-success btn-sm">삭제</a></td>
+          </tr>
         </tbody>
       </table>
+      <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+
+          <li th:classappend="${startPage == 1} ? 'disabled'" class="page-item">
+            <a class="page-link" th:href="@{'/admin/festival'(page=${prevBlockPage})}" tabindex="-1">이전</a>
+          </li>
+
+          <li th:each="i : ${#numbers.sequence(startPage, endPage)}"
+            th:classappend="${i == currentPage} ? 'active' : ''" class="page-item">
+            <a class="page-link" th:href="@{'/admin/festival'(page=${i})}" th:text="${i}"></a>
+          </li>
+
+          <li th:classappend="${endPage == totalPages} ? 'disabled'" class="page-item">
+            <a class="page-link" th:href="@{'/admin/festival'(page=${nextBlockPage})}">다음</a>
+          </li>
+
+        </ul>
+      </nav>
     </div>
   </div>
 </body>
+
 </html>

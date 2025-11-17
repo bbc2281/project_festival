@@ -88,7 +88,7 @@
       white-space: nowrap;
     }
 
-    .modal{
+    .modal {
       background: none;
     }
   </style>
@@ -140,6 +140,20 @@
           </tr>
         </tbody>
       </table>
+      <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+          <li th:if="${currentPage > 1}" class="page-item">
+            <a class="page-link" th:href="@{'/admin/inquiry'(page=${currentPage-1})}">이전</a>
+          </li>
+          <li th:each="i : ${#numbers.sequence(1, totalPages)}" th:classappend="${i == currentPage} ? 'active' : ''"
+            class="page-item">
+            <a class="page-link" th:href="@{'/admin/inquiry'(page=${i})}" th:text="${i}"></a>
+          </li>
+          <li th:if="${currentPage < totalPages}" class="page-item">
+            <a class="page-link" th:href="@{'/admin/inquiry'(page=${currentPage+1})}">다음</a>
+          </li>
+        </ul>
+      </nav>
     </div>
   </div>
 

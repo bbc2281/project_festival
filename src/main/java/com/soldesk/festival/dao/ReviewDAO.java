@@ -44,7 +44,7 @@ public class ReviewDAO {
     }
     
     public int countReviewByMember(int idx){
-        return reviewMapper.countReviewByMember(idx);
+        return reviewMapper.countReview(idx);
     }
 
     public List<ReviewDTO> infoReviewByMember(int idx){

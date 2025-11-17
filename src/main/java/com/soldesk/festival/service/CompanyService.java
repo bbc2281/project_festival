@@ -66,4 +66,12 @@ public class CompanyService {
 	public CompanyDTO selectCompanyByIdx(int idx){
 		return companyMapper.selectCompanyByIdx(idx);
 	}
+
+	public int countCompany(){
+		return companyMapper.CountCompany();
+	}
+
+	public List<CompanyDTO> getCompanyListPaged(int offset, int limit){
+		return companyMapper.selectCompanyPaged(offset, limit);
+	}
 }

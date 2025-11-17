@@ -45,4 +45,13 @@ public class InquiryService {
     public int countInquiryByMember(int idx){
         return inquiryDAO.countInquiryByMember(idx);
     }
+
+    public int countInquiry(){
+        return inquiryDAO.countInquiry();
+    }
+
+    public List<InquiryDTO> getInquiryListPaged(int offset, int limit) {
+        return inquiryDAO.selectInquiryPaged(offset, limit);
+	}
+
 }

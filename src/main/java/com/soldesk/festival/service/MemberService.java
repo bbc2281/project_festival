@@ -144,4 +144,7 @@ public class MemberService {
 	public MemberDTO findUserbyIdx(int member_idx) {
 		return memberMapper.findUserbyIdx(member_idx);
 	}
+	public List<MemberDTO> getMemberListPaged(int offset, int limit) {
+    return memberMapper.selectMemberPaged(offset, limit);
+	}
 }

@@ -34,7 +34,15 @@ public class InquiryDAO {
         return inquiryMapper.countInquiryByNUll();
     }
 
+    public int countInquiry(){
+        return inquiryMapper.countInquiry();
+    }
+
     public int countInquiryByMember(int idx){
         return inquiryMapper.countInquiryByMember(idx);
+    }
+
+    public List<InquiryDTO> selectInquiryPaged(int offset, int limit){
+        return inquiryMapper.selectInquiryPaged(offset, limit);
     }
 }

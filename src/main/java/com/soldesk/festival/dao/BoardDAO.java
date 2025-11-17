@@ -55,4 +55,7 @@ public class BoardDAO {
         return boardMapper.countBoardNow(date);
     }
 
+    public List<BoardDTO> selectBoardPaged(int offset, int limit){
+        return boardMapper.selectBoardPaged(offset, limit);
+    }
 }

@@ -14,6 +14,7 @@ import org.apache.ibatis.annotations.Select;
 
 import com.soldesk.festival.dto.CompanyDTO;
 import com.soldesk.festival.dto.CompanyJoinDTO;
+import com.soldesk.festival.dto.InquiryDTO;
 import com.soldesk.festival.handler.MemberRoleTypeHandler;
 
 @Mapper
@@ -66,4 +67,9 @@ public interface CompanyMapper {
 	@Delete("delete from company where company_idx = #{company_idx}")
 	void deleteCompanyByAdmin(@Param("company_idx") int id);
 
+	@Select("select count(*) from company")
+	int CountCompany();
+
+	@Select("select * from company order by company_idx desc limit #{limit} offset #{offset}")
+    List<CompanyDTO> selectCompanyPaged(@Param("offset")int offset, @Param("limit")int limit);
 }
