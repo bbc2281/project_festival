@@ -1,4 +1,8 @@
 console.log('FesLite funding JS loaded');
+const festivalName = document.getElementById("festivalName").innerText;
+const festivalIdxStr = document.getElementById("funding_festival_idx").textContent;
+const festivalIdx = parseInt(festivalIdxStr, 10);
+
 
 // 검색기능
 document.addEventListener("DOMContentLoaded", () => {
@@ -178,8 +182,26 @@ function _initFundingDetail(detail) {
 
   // === 후원 버튼 (알림)
   if (btnFund) {
-    btnFund.addEventListener("click", () => {
-      alert(`후원이 완료되었습니다!`);
+    btnFund.addEventListener("click", async () => {
+      const amount = myDonation;
+      const requestData = {
+        amount ,
+        orderName : `${festivalName} 후원`,
+        festivalIdx : festivalIdx
+      }
+      const response = await fetch("/payment/order",{
+        method : "POST",
+        headers : {"Content-type" : "application/json"},
+        body : JSON.stringify(requestData)
+      });
+
+      const result = await response.json();
+      const orderId = result.orderId;
+
+      console.log("오더아이디" + orderId);
+      console.log("페스티벌idx" + festivalIdx);
+
+     window.location.href = `/payment/main?orderId=${orderId}&festivalIdx=${festivalIdx}`
     });
   }
 }
@@ -188,3 +210,4 @@ function _initFundingDetail(detail) {
 window.initFundingDetail = _initFundingDetail;
 
 console.log("Funding detail interaction script loaded");
+

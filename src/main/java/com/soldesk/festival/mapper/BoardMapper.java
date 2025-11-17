@@ -59,6 +59,18 @@ public interface BoardMapper {
 
     @Select("select count(*) from board where board_regDate = #{date}")
     int countBoardNow(@Param("date") String date);
+
+    @Select("select * from board where board_title LIKE CONCAT('%', #{keyword}, '%') AND board_category = #{board_category} order by board_idx desc limit #{start}, #{limit} ")
+    List<BoardDTO> searchProcessCategory(String keyword, String board_category ,int start , int limit);
+
+    @Select("select * from board where board_title LIKE CONCAT('%', #{keyword}, '%') order by board_idx desc limit #{start}, #{limit} ")
+    List<BoardDTO> searchProcessAll(String keyword, int start ,int limit);
+
+    @Select("select count(*) from board where board_title LIKE CONCAT('%', #{keyword}, '%') AND board_category = #{board_category}")
+    int countSearchBoardCategory(String keyword , String board_category);
+
+    @Select("select count(*) from board where board_title LIKE CONCAT('%', #{keyword}, '%') ")
+    int countSearchBOardAll(String keyword);
     
     
 } 

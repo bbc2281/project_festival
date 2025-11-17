@@ -13,4 +13,5 @@ public class CommentDTO {
     private String member_nickname;
     private String comment_content;
     private String comment_regDate;
+    private String member_nickname;
 }

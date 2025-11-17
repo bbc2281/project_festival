@@ -63,7 +63,7 @@ public class BoardController {
     }
 
     @PostMapping("/write")
-    public String writeSubmit(@ModelAttribute("writeBoard")BoardDTO boardDTO , @SessionAttribute("loginMember")MemberDTO memberDTO ){
+    public String writeSubmit(@ModelAttribute("writeBoard")BoardDTO boardDTO ,@SessionAttribute("loginMember")MemberDTO memberDTO){
         boardDTO.setMember_idx(memberDTO.getMember_idx());
         Document doc = Jsoup.parse(boardDTO.getBoard_content());
         Element img = doc.selectFirst("img[src^=data:]");
@@ -107,70 +107,69 @@ public class BoardController {
         return"/board/modify";
     }
 
-@PostMapping("/modify")
-public String modifySubmit(@ModelAttribute("board_now") BoardDTO boardDTO) {
-    
-    BoardDTO modifyBoard = boardService.infoProcess(boardDTO.getBoard_idx());
+    @PostMapping("/modify")
+    public String modifySubmit(@ModelAttribute("board_now") BoardDTO boardDTO) {
+        
+        BoardDTO modifyBoard = boardService.infoProcess(boardDTO.getBoard_idx());
 
-    Document doc = Jsoup.parse(boardDTO.getBoard_content());
-    Element base64Img = doc.selectFirst("img[src^=data:]"); // 새로 추가/교체된 이미지가 Base64로 온 경우
-    boolean hasAnyImgTag = !doc.select("img").isEmpty();    // 에디터 최종 내용에 img 태그 존재 여부
+        Document doc = Jsoup.parse(boardDTO.getBoard_content());
+        Element base64Img = doc.selectFirst("img[src^=data:]"); // 새로 추가/교체된 이미지가 Base64로 온 경우
+        boolean hasAnyImgTag = !doc.select("img").isEmpty();    // 에디터 최종 내용에 img 태그 존재 여부
 
-    try {
-        if (base64Img != null && base64Img.hasAttr("src")) {
-            // 새 이미지가 추가되거나 교체된 경우
-            if (modifyBoard.getBoard_img_path() != null) {
-                String existingFile = fileUploadService.extractPathFromUrl(modifyBoard.getBoard_img_path());
-                if (existingFile != null) {
-                    fileUploadService.deleteFromFirebase(existingFile);
+        try {
+            if (base64Img != null && base64Img.hasAttr("src")) {
+                // 새 이미지가 추가되거나 교체된 경우
+                if (modifyBoard.getBoard_img_path() != null) {
+                    String existingFile = fileUploadService.extractPathFromUrl(modifyBoard.getBoard_img_path());
+                    if (existingFile != null) {
+                        fileUploadService.deleteFromFirebase(existingFile);
+                    }
                 }
+                String src = base64Img.attr("src");
+                String base64 = src.split(",")[1];
+                byte[] imageBytes = Base64.getDecoder().decode(base64);
+
+                String mimeType = src.substring(src.indexOf(":") + 1, src.indexOf(";")); 
+                String ext = mimeType.split("/")[1];                                     
+                String fileName = "editor-image." + ext;
+
+                MultipartFile multipartFile = new Base64MultipartFile(imageBytes, fileName, mimeType);
+                String firebaseUrl = fileUploadService.uploadToFirebase(multipartFile);
+
+                base64Img.attr("src", firebaseUrl);
+                boardDTO.setBoard_img_path(firebaseUrl);
+                boardDTO.setBoard_content(doc.body().html());
+
+                boardService.modifyProcess(boardDTO);
+
+            } else if (modifyBoard.getBoard_img_path() != null && !hasAnyImgTag) {
+                // 기존 이미지가 있었는데, 최종 내용에서 이미지가 완전히 삭제된 경우
+                String firebaseFile = fileUploadService.extractPathFromUrl(modifyBoard.getBoard_img_path());
+                if (firebaseFile != null) {
+                    fileUploadService.deleteFromFirebase(firebaseFile);
+                }
+                boardDTO.setBoard_img_path(null);
+                boardDTO.setBoard_content(doc.body().html());
+
+                boardService.modifyProcess(boardDTO);
+
+            } else if (modifyBoard.getBoard_img_path() != null && hasAnyImgTag) {
+                // 기존 이미지를 유지하고 내용만 수정하는 경우 
+                boardDTO.setBoard_img_path(modifyBoard.getBoard_img_path());
+                boardDTO.setBoard_content(doc.body().html());
+                boardService.modifyProcess(boardDTO);
+
+            } else {
+                // 이미지가 원래도 없고, 최종 내용에도 없음 → 내용만 수정
+                boardDTO.setBoard_img_path(null);
+                boardDTO.setBoard_content(doc.body().html());
+                boardService.modifyProcess(boardDTO);
             }
-            String src = base64Img.attr("src");
-            String base64 = src.split(",")[1];
-            byte[] imageBytes = Base64.getDecoder().decode(base64);
-
-            String mimeType = src.substring(src.indexOf(":") + 1, src.indexOf(";")); 
-            String ext = mimeType.split("/")[1];                                     
-            String fileName = "editor-image." + ext;
-
-            MultipartFile multipartFile = new Base64MultipartFile(imageBytes, fileName, mimeType);
-            String firebaseUrl = fileUploadService.uploadToFirebase(multipartFile);
-
-            base64Img.attr("src", firebaseUrl);
-            boardDTO.setBoard_img_path(firebaseUrl);
-            boardDTO.setBoard_content(doc.body().html());
-
-            boardService.modifyProcess(boardDTO);
-
-        } else if (modifyBoard.getBoard_img_path() != null && !hasAnyImgTag) {
-            // 기존 이미지가 있었는데, 최종 내용에서 이미지가 완전히 삭제된 경우
-            String firebaseFile = fileUploadService.extractPathFromUrl(modifyBoard.getBoard_img_path());
-            if (firebaseFile != null) {
-                fileUploadService.deleteFromFirebase(firebaseFile);
-            }
-            boardDTO.setBoard_img_path(null);
-            boardDTO.setBoard_content(doc.body().html());
-
-            boardService.modifyProcess(boardDTO);
-
-        } else if (modifyBoard.getBoard_img_path() != null && hasAnyImgTag) {
-            // 기존 이미지를 유지하고 내용만 수정하는 경우 
-            boardDTO.setBoard_img_path(modifyBoard.getBoard_img_path());
-            boardDTO.setBoard_content(doc.body().html());
-            boardService.modifyProcess(boardDTO);
-
-        } else {
-            // 이미지가 원래도 없고, 최종 내용에도 없음 → 내용만 수정
-            boardDTO.setBoard_img_path(null);
-            boardDTO.setBoard_content(doc.body().html());
-
-            boardService.modifyProcess(boardDTO);
+        } catch (Exception e) {
+            e.printStackTrace();     
         }
-    } catch (Exception e) {
-        e.printStackTrace();     
+        return "redirect:/board/info?board_idx=" + boardDTO.getBoard_idx();
     }
-    return "redirect:/board/info?board_idx=" + boardDTO.getBoard_idx();
-}
 
 
     @PostMapping("/delete")
@@ -186,9 +185,26 @@ public String modifySubmit(@ModelAttribute("board_now") BoardDTO boardDTO) {
         }
         return "redirect:/board/list";
     }
+
+    @GetMapping("/search")
+    public String searchForm(@RequestParam("keyword")String keyword, @RequestParam("searchcategory")String category, Model model ,
+    @RequestParam(name = "page" , defaultValue = "1") int page){
+        List<BoardDTO> searchList = boardService.searchProcess(keyword, category,page);
+        System.out.println("서치 리스트 " + searchList);
+        if (page < 1) page = 1;
+        PageDTO pageDTO;
+        if(category.trim().equals("전체")){
+           pageDTO =  boardService.getPageDTOSearchAll(page, keyword);
+        }else{
+           pageDTO =  boardService.getPageDTOSearchCategory(page, keyword, category);
+        }
+        model.addAttribute("pageDTO", pageDTO);
+        model.addAttribute("boards", searchList);
+        return "/board/search";
+    }
       
- public List<String> createCategoryList() {
-    return List.of("공지사항", "이벤트", "기타");
-}
+    public List<String> createCategoryList() {
+        return List.of("공지사항", "이벤트", "기타");
+    }
 
 }
