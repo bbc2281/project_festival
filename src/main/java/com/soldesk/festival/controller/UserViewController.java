@@ -58,27 +58,28 @@ public class UserViewController {
 
     // 일반회원 마이페이지(일반)
     @GetMapping("/member/mypage")
-    public String mypageForm(@AuthenticationPrincipal SecurityAllUsersDTO userdetails, Model model) {
+    public String mypageForm(@AuthenticationPrincipal SecurityAllUsersDTO userdetails, Model model, @SessionAttribute("loginMember")MemberDTO loginMember) {
         if(userdetails == null) {
             return "redirect:/auth/loginPage";
         }
+        MemberDetailDTO userInfo = memberService.getMemberDetails(userdetails.getUsername());
+        model.addAttribute("userInfo", userInfo);
+        model.addAttribute("displayName", userdetails.getUserDisplayName());
 
-       MemberDetailDTO userInfo = memberService.getMemberDetails(userdetails.getUsername());
-       int idx = userInfo.getMember_idx();
-       model.addAttribute("userInfo", userInfo);
-       model.addAttribute("displayName", userdetails.getUserDisplayName());
+        List<FestivalDTO> festivalList = favoriteService.selectAllFavoriteByUser(loginMember);
+        int fevoriteCount = festivalList.size();
+        model.addAttribute("fevoriteCount", fevoriteCount);
 
-       int favorite = favoriteService.countFavoriteByMember(idx);
-       int inquiry = inquiryService.countInquiryByMember(idx);
-       int review = reviewService.countReviewByMember(idx);
-       int comment = commentService.countCommentByMember(idx);
+        List<InquiryDTO> inquiryList = inquiryService.selectInquiry(loginMember.getMember_idx());
+        int inquiryCount = inquiryList.size();
+        model.addAttribute("inquiryCount", inquiryCount);
 
-       model.addAttribute("favorite", favorite);
-       model.addAttribute("inquiry", inquiry);
-       model.addAttribute("review", review);
-       model.addAttribute("comment", comment);
+        List<ReviewDTO> reviewList = reviewService.infoReviewByMember(loginMember);
+        int reviewCount = reviewList.size();
+        model.addAttribute("reviewCount", reviewCount);
 
-       return "member/mypage";
+
+        return "member/mypage";
     }
 
     @GetMapping("/mypage/edit")
@@ -109,8 +110,7 @@ public class UserViewController {
     public String mypageInquiry(@ModelAttribute("inquiry") InquiryDTO inquiry, Model model,
             @SessionAttribute("loginMember") MemberDTO loginMember) {
 
-        List<InquiryDTO> inquiryList = inquiryService.selectAllInquiry();
-        System.out.println(inquiryList);
+        List<InquiryDTO> inquiryList = inquiryService.selectInquiry(loginMember.getMember_idx());
         model.addAttribute("inquiryList", inquiryList);
 
         return "member/inquiry";
@@ -132,6 +132,7 @@ public class UserViewController {
         MemberDTO loginMember = (MemberDTO) session.getAttribute("loginMember");
 
         List<ReviewDTO> reviewList = reviewService.infoReviewByMember(loginMember);
+        System.out.println("@@@@@@@@@@@@@@@@@0"+reviewList.get(0).getFestival_name());
 
         model.addAttribute("reviewList", reviewList);
 

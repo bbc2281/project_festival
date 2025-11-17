@@ -18,6 +18,10 @@ public class InquiryDAO {
         return inquiryMapper.selectAllInquiry();
     }
 
+    public List<InquiryDTO> selectInquiry(int member_idx){
+        return inquiryMapper.selectInquiry(member_idx);
+    }
+
     public void insertInquiry(InquiryDTO inquiry){
         inquiryMapper.insertInquiry(inquiry);
     }

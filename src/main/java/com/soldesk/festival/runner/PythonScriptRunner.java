@@ -22,13 +22,15 @@ public class PythonScriptRunner implements ApplicationRunner {
     public void runPythonScript() throws IOException {
         //String pythonPath = "C:\\Users\\soldesk\\AppData\\Local\\Programs\\Python\\Python314\\python.exe";
         ClassPathResource resource_f = new ClassPathResource("static/py/festivalApi.py");
-        ClassPathResource resource_s = new ClassPathResource("static/py/news.py");
+        ClassPathResource resource_n = new ClassPathResource("static/py/news.py");
         ClassPathResource resource_a = new ClassPathResource("static/py/analytics.py");
+        ClassPathResource resource_d = new ClassPathResource("static/py/festivalData.py");
 
         
         Path path1 = Paths.get(resource_f.getURI());
-        Path path2 = Paths.get(resource_s.getURI());
+        Path path2 = Paths.get(resource_n.getURI());
         Path path3 = Paths.get(resource_a.getURI());
+        Path path4 = Paths.get(resource_d.getURI());
 
         ProcessBuilder pb1 = new ProcessBuilder("python", path1.toString());
         pb1.inheritIO();
@@ -41,6 +43,12 @@ public class PythonScriptRunner implements ApplicationRunner {
         ProcessBuilder pb3 = new ProcessBuilder("python", path3.toString());
         pb3.inheritIO();
         pb3.start();
+
+        ProcessBuilder pb4 = new ProcessBuilder("python", path4.toString());
+        pb4.inheritIO();
+        pb4.start();
+
+        System.out.println("path4 = " + path4);
     }
     
     public void runFastApiServer() throws IOException {

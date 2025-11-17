@@ -225,19 +225,19 @@ public class UserRestController {
 		}
 	}
 
-    @PostMapping("/modify")
-    public ResponseEntity<UserResponse> modifyProcess(@RequestBody MemberDTO userInfo, HttpSession session) {
-        try {
-            memberService.modifyMember(userInfo);
-            MemberDTO modifiedMember = memberService.findUserbyIdx(userInfo.getMember_idx());
-            session.setAttribute("loginMember", modifiedMember);
-            return ResponseEntity.ok(UserResponse.successMessage("회원정보 수정 성공"));
-        } catch(Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(UserResponse.error("회원정보 수정 중 오류가 발생했습니다."));
-        }
-    }
+	@PostMapping("/modify")
+	public ResponseEntity<UserResponse> modifyProcess(@RequestBody MemberDTO userInfo, HttpSession session) {
+		try {
+			memberService.modifyMember(userInfo);
+			MemberDTO modifiedMember = memberService.findUserbyIdx(userInfo.getMember_idx());
+			session.setAttribute("loginMember", modifiedMember);
+			return ResponseEntity.ok(UserResponse.successMessage("회원정보가 수정되었습니다"));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body(UserResponse.error("회원정보 수정 중 오류가 발생했습니다."));
+		}
+	}
 
 	@PostMapping("/delete")
 	public void deleteProcess(@SessionAttribute("loginMember") MemberDTO loginMember, HttpSession session,
@@ -247,7 +247,7 @@ public class UserRestController {
 		response.setContentType("text/html;charset=UTF-8");
 		PrintWriter out = response.getWriter();
 		out.println("<script>");
-		out.println("alert('회원탈퇴 성공');");
+		out.println("alert('회원탈퇴가 완료되었습니다');");
 		out.println("window.location.href='/';");
 		out.println("</script>");
 		out.close();
@@ -331,7 +331,7 @@ public class UserRestController {
 			joinDTO.setMember_pass("SOCIAL_LOGIN");
 			joinDTO.setMember_address("기타");
 			joinDTO.setMember_job("기타");
-			joinDTO.setIs_social(1);//소셜회원 = 1 일반회원 = 0
+			joinDTO.setIs_social(1);// 소셜회원 = 1 일반회원 = 0
 
 			memberService.join(joinDTO);
 			optionalMember = memberService.findUserbyId(naverId);
@@ -357,7 +357,7 @@ public class UserRestController {
 		response.setContentType("text/html;charset=UTF-8");
 		PrintWriter out = response.getWriter();
 		out.println("<script>");
-		out.println("alert('로그인 성공');");
+		out.println("alert('네이버 로그인 성공');");
 		out.println("if(window.opener && !window.opener.closed) {");
 		out.println("   window.opener.location.href='/';");
 		out.println("   window.close();");
@@ -367,6 +367,95 @@ public class UserRestController {
 		out.println("</script>");
 		out.close();
 		return null;
+	}
+
+	@PostMapping("/login/google")
+	public ResponseEntity<UserResponse> googleIdTokenLogin(
+			@RequestBody Map<String, String> payload,
+			HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+		String idToken = payload.get("id_token");
+		if (idToken == null || idToken.isBlank()) {
+			return ResponseEntity.badRequest()
+					.body(UserResponse.error("id_token 누락"));
+		}
+
+		RestTemplate restTemplate = new RestTemplate();
+
+		// 1) 구글 토큰 검증
+		String verifyUrl = "https://oauth2.googleapis.com/tokeninfo?id_token={id}";
+		ResponseEntity<String> verifyResp;
+
+		try {
+			verifyResp = restTemplate.getForEntity(verifyUrl, String.class, idToken);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+					.body(UserResponse.error("구글 토큰 검증 실패"));
+		}
+
+		ObjectMapper mapper = new ObjectMapper();
+		JsonNode info = mapper.readTree(verifyResp.getBody());
+
+		String aud = info.has("aud") ? info.get("aud").asText() : "";
+		String sub = info.has("sub") ? info.get("sub").asText() : "";
+		String email = info.has("email") ? info.get("email").asText() : "";
+		String name = info.has("name") ? info.get("name").asText() : "";
+
+		// 2) 내 앱 client_id 검증
+		final String CLIENT_ID = "425343923027-pvj5ai4vmc6r8l2fqj39hj9ct5a7i7i0.apps.googleusercontent.com";
+		if (!CLIENT_ID.equals(aud)) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+					.body(UserResponse.error("클라이언트 ID 불일치"));
+		}
+
+		if (sub.isBlank()) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+					.body(UserResponse.error("구글 sub 없음"));
+		}
+
+		// 3) 회원 조회·가입
+		Optional<MemberDTO> optionalMember = memberService.findUserbyId(sub);
+		MemberDTO member;
+
+		if (optionalMember.isEmpty()) {
+			MemberJoinDTO joinDTO = new MemberJoinDTO();
+			joinDTO.setMember_id(sub);
+			joinDTO.setMember_email(email);
+			joinDTO.setMember_name(name);
+			joinDTO.setMember_gender("O");
+			joinDTO.setMember_phone("010-0000-0000");
+			joinDTO.setMember_birth("2000-01-01");
+			joinDTO.setMember_pass("SOCIAL_LOGIN");
+			joinDTO.setMember_address("기타");
+			joinDTO.setMember_job("기타");
+			joinDTO.setIs_social(2);
+
+			memberService.join(joinDTO);
+			optionalMember = memberService.findUserbyId(sub);
+			member = optionalMember.get();
+		} else {
+			member = optionalMember.get();
+		}
+
+		// 4) Spring Security 인증 생성
+		List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_USER"));
+
+		SecurityContext context = SecurityContextHolder.createEmptyContext();
+		Authentication authentication = authenticationManager.authenticate(
+				new UsernamePasswordAuthenticationToken(member.getMember_id(), "SOCIAL_LOGIN", authorities));
+
+		context.setAuthentication(authentication);
+		SecurityContextHolder.setContext(context);
+
+		HttpSession session = request.getSession(true);
+		session.setMaxInactiveInterval(30 * 60);
+		session.setAttribute(
+				HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
+				SecurityContextHolder.getContext());
+		session.setAttribute("loginMember", member);
+
+		// 5) 응답
+		return ResponseEntity.ok(UserResponse.success("로그인 성공", member));
 	}
 
 }
