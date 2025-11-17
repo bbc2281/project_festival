@@ -1,27 +1,96 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>1:1 문의 관리 | FesLite</title>
   <base href="/">
   <link th:href="@{/css/adminStyle.css}" rel="stylesheet">
+  <script defer th:src="@{/js/app.js}"></script>
   <script defer th:src="@{/js/adminApp.js}"></script>
   <script defer th:src="@{/js/adminInquiry.js}"></script>
+  <script defer th:src="@{/js/aside.js}"></script>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <style>
-    body{margin:0;font-family:'Pretendard',sans-serif;background:#f5f6fa;display:flex;height:100vh;}
-    .sidebar{width:240px;background:#1f1f2e;color:#fff;padding:20px 0;display:flex;flex-direction:column;}
-    .sidebar a{display:block;padding:12px 20px;color:#ccc;text-decoration:none;}
-    .sidebar a:hover,.active{background:linear-gradient(135deg,#b5fffc 0%,#ffdee9 100%);color:#000;font-weight:600;}
-    .main{flex:1;overflow-y:auto;}
-    header{background:#fff;box-shadow:0 1px 6px rgba(0,0,0,0.1);padding:15px 30px;display:flex;justify-content:space-between;}
-    .content{padding:25px;}
-    table{background:#fff;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,0.08);}
-    a.inquiry-link {color:#007bff;text-decoration:none;font-weight:500;cursor:pointer;}
-    a.inquiry-link:hover {text-decoration:underline;}
-    .sidebar h2{text-align:center;font-size:20px;font-weight:700;margin-bottom:30px;line-height:1.2;white-space:nowrap;}
+    body {
+      margin: 0;
+      font-family: 'Pretendard', sans-serif;
+      background: #f5f6fa;
+      display: flex;
+      height: 100vh;
+    }
+
+    .sidebar {
+      width: 240px;
+      background: #1f1f2e;
+      color: #fff;
+      padding: 20px 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar a {
+      display: block;
+      padding: 12px 20px;
+      color: #ccc;
+      text-decoration: none;
+    }
+
+    .sidebar a:hover,
+    .active {
+      background: linear-gradient(135deg, #b5fffc 0%, #ffdee9 100%);
+      color: #000 !important;
+      font-weight: 600;
+    }
+
+    .main {
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    header {
+      background: #fff;
+      box-shadow: 0 1px 6px rgba(0, 0, 0, 0.1);
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .content {
+      padding: 25px;
+    }
+
+    table {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    }
+
+    a.inquiry-link {
+      color: #007bff;
+      text-decoration: none;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    a.inquiry-link:hover {
+      text-decoration: underline;
+    }
+
+    .sidebar h2 {
+      text-align: center;
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 30px;
+      line-height: 1.2;
+      white-space: nowrap;
+    }
+
+    .modal{
+      background: none;
+    }
   </style>
 </head>
 
@@ -47,18 +116,15 @@
             <th>관리</th>
           </tr>
         </thead>
-        
+
         <tbody>
-          <tr th:each="inquiry : ${list}">
+          <tr th:each="inquiry, i : ${list}">
             <td th:text="${inquiry.member_name}"></td>
             <td th:text="${inquiry.member_email}"></td>
 
             <td>
-              <a class="inquiry-link"
-                th:data-id="${inquiry.inquiry_idx}"
-                th:data-title="${inquiry.inquiry_title}"
-                th:data-content="${inquiry.inquiry_content}"
-                th:data-answer="${inquiry.inquiry_answer}"
+              <a class="inquiry-link" th:data-id="${inquiry.inquiry_idx}" th:data-title="${inquiry.inquiry_title}"
+                th:data-content="${inquiry.inquiry_content}" th:data-answer="${inquiry.inquiry_answer}"
                 onclick="openInquiryModal(this)">
                 <span th:text="${inquiry.inquiry_title}"></span>
               </a>
@@ -69,7 +135,8 @@
               <span th:if="${inquiry.inquiry_answer == null}" class="badge bg-warning text-dark">대기</span>
               <span th:if="${inquiry.inquiry_answer != null}" class="badge bg-success">완료</span>
             </td>
-            <td><button class="btn btn-success btn-sm" th:if="${inquiry.inquiry_answer == null}">답변하기</button></td>
+            <td><button id="ansBtn${i}" class="btn btn-success btn-sm"
+                th:if="${inquiry.inquiry_answer == null}">답변하기</button></td>
           </tr>
         </tbody>
       </table>
@@ -112,4 +179,5 @@
   </div>
 
 </body>
+
 </html>

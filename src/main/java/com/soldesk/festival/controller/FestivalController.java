@@ -16,7 +16,9 @@ import com.soldesk.festival.dto.FestivalDTO;
 import com.soldesk.festival.dto.ReviewDTO;
 import com.soldesk.festival.service.FestivalService;
 import com.soldesk.festival.service.ReviewService;
+import com.fasterxml.jackson.annotation.JsonCreator.Mode;
 import com.soldesk.festival.dto.ChatRoomDTO;
+import com.soldesk.festival.dto.CompanyDTO;
 import com.soldesk.festival.dto.FestivalCategoryDTO;
 import com.soldesk.festival.dto.MemberDTO;
 import com.soldesk.festival.dto.RegionDTO;
@@ -37,11 +39,12 @@ public class FestivalController {
     private final ReviewService reviewService;
     private final ChatService chatService;
     private final FileUploadService fileUploadService;
-    private final FavoriteService favoriteService; 
+    private final FavoriteService favoriteService;
 
     @GetMapping("/festivalInfo")
     public String info(@RequestParam("id") int id, Model model, HttpSession session){
         MemberDTO loginMember = (MemberDTO) session.getAttribute("loginMember");
+        CompanyDTO companyMember = (CompanyDTO) session.getAttribute("companyMember");
 
         FestivalDTO festival = festivalService.getFestival(id);
         model.addAttribute("festival", festival);
@@ -50,20 +53,27 @@ public class FestivalController {
         int festivalIdx = festival.getFestival_idx();
         List<ReviewDTO> reviewList = reviewService.selectAllReviews(festivalIdx);
         model.addAttribute("reviews", reviewList);
-
+        
         ChatRoomDTO chatRoom = chatService.getChatRoomById(id);
         model.addAttribute("chatRoom", chatRoom);
 
         boolean exist = false;
         if (loginMember != null) {
-            exist = favoriteService.existsFavorite(loginMember.getMember_idx(), festivalIdx);
+            exist = favoriteService.existsFavoriteByMember(loginMember.getMember_idx(), festivalIdx);
+            
             model.addAttribute("loginMember", loginMember);
             model.addAttribute("loggedIn", true);
+        }else if (companyMember != null) {
+            exist = favoriteService.existsFavoriteByCompany(festivalIdx, companyMember.getCompany_idx());
+            loginMember = new MemberDTO();
+            model.addAttribute("loginMember", loginMember);
+            model.addAttribute("loggedIn", false);
         } else {
             loginMember = new MemberDTO();
             model.addAttribute("loginMember", loginMember);
             model.addAttribute("loggedIn", false);
         }
+        System.out.println(exist);
         model.addAttribute("isFavorite", exist);
 
         return "festival/info";
@@ -87,18 +97,25 @@ public class FestivalController {
     }
 
     @GetMapping("/festival/permit")
-    public String permit(@RequestParam("festival_idx") int festival_idx){
-
-        FestivalDTO festival = segFestivalService.selectFestival(festival_idx);
+    public String permit(@RequestParam("festival_idx") int idx, Model model){
+        segFestivalService.updateSetLog(idx);
+        FestivalDTO festival = segFestivalService.selectFestival(idx);
+        
         festivalService.insertFestival(festival);
 
-        segFestivalService.deleteFestival(festival_idx);
         return "redirect:/admin/proposal";
     }
 
+    @GetMapping("/festival/refuse")
+    public String refuse(@RequestParam("festival_idx") int idx, Model model){
+        segFestivalService.updateDelLog(idx);
+
+        //segFestivalService.deleteFestival(idx);
+        return "redirect:/admin/proposal";
+    }
 
     @PostMapping("/festival/regSubData")
-    public String regFestival(@ModelAttribute("festival") FestivalDTO festivalDTO, @RequestParam("upload_file") MultipartFile file){
+    public String regFestival(@ModelAttribute("festival") FestivalDTO festivalDTO, @RequestParam("upload_file") MultipartFile file, @SessionAttribute("companyMember") CompanyDTO companyMember){
         
         if(!file.isEmpty()){
             String imageUrl;
@@ -113,7 +130,8 @@ public class FestivalController {
             }
         }
 
-        segFestivalService.insertSegFestival(festivalDTO);
+        
+        segFestivalService.insertSegFestival(festivalDTO, companyMember);
         return "redirect:/";
     }
 

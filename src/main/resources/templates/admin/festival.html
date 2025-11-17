@@ -6,13 +6,15 @@
   <title>축제정보 관리 | FesLite</title>
   <base href="/">
   <link th:href="@{/css/adminStyle.css}" rel="stylesheet">
+  <script defer th:src="@{/js/app.js}"></script>
   <script defer th:src="@{/js/adminApp.js}"></script>
+  <script defer th:src="@{/js/aside.js}"></script>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
     body{margin:0;font-family:'Pretendard',sans-serif;background:#f5f6fa;display:flex;height:100vh;}
     .sidebar{width:240px;background:#1f1f2e;color:#fff;padding:20px 0;display:flex;flex-direction:column;}
     .sidebar a{display:block;padding:12px 20px;color:#ccc;text-decoration:none;}
-    .sidebar a:hover,.active{background:linear-gradient(135deg,#b5fffc 0%,#ffdee9 100%);color:#000;font-weight:600;}
+    .sidebar a:hover,.active{background:linear-gradient(135deg,#b5fffc 0%,#ffdee9 100%);color:#000 !important;font-weight:600;}
     .main{flex:1;overflow-y:auto;}
     header{background:#fff;box-shadow:0 1px 6px rgba(0,0,0,0.1);padding:15px 30px;display:flex;justify-content:space-between;}
     table{background:#fff;margin:20px;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,0.08);}

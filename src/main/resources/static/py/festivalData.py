@@ -1,4 +1,3 @@
-import requests
 import pandas as pd
 from sqlalchemy import create_engine
 import logging
@@ -43,7 +42,9 @@ def prepare_festival_data():
             'member_address': '주소', 'member_gender': '성별', 'member_job': '직업', 
             'member_birth': '출생년도'
         }
+        
         festival_df = festival_df.rename(columns=mapping)
+        festival_df['주소'] = festival_df['주소'].apply(lambda addr: ' '.join(str(addr).split()[:2]) if pd.notna(addr) else addr)
         festival_df = festival_df.sort_values('축제번호')
 
         today = pd.Timestamp.today()

@@ -20,6 +20,10 @@ public class InquiryService {
         return inquiryDAO.selectAllInquiry();
     }
 
+    public List<InquiryDTO> selectInquiry(int member_idx){
+        return inquiryDAO.selectInquiry(member_idx);
+    }
+
     public void insertInquiry(InquiryDTO inquiry, MemberDTO loginMember){
         if(loginMember != null){
             inquiry.setMember_idx(loginMember.getMember_idx());
@@ -32,5 +36,13 @@ public class InquiryService {
         if(inquiry != null){
             inquiryDAO.updateInquiry(inquiry);
         }
+    }
+
+    public int countInquiryByNUll(){
+        return inquiryDAO.countInquiryByNUll();
+    }
+
+    public int countInquiryByMember(int idx){
+        return inquiryDAO.countInquiryByMember(idx);
     }
 }

@@ -25,6 +25,39 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
   });
+
+  // 메인 카드별 진행률 및 d-day계산
+   cards.forEach(card => {
+    const raised = parseInt(card.dataset.raised || 0, 10);
+    const goal = Math.max(1, parseInt(card.dataset.goal || 1, 10)); // 0분모 방지
+    const end = new Date(card.dataset.end);
+
+    // 진행률
+    const percent = Math.min(100, Math.floor((raised / goal) * 100));
+    const progressBar = card.querySelector(".progress-bar");
+    const percentTxt = card.querySelector(".percent-txt");
+    const raisedTxt = card.querySelector(".raised-txt");
+    const goalTxt = card.querySelector(".goal-txt");
+
+    if (percentTxt) percentTxt.textContent = percent;
+    if (raisedTxt) raisedTxt.textContent = raised.toLocaleString();
+    if (goalTxt) goalTxt.textContent = goal.toLocaleString();
+    if (progressBar) {
+      progressBar.style.width = `${percent}%`;
+      progressBar.setAttribute("aria-valuenow", percent);
+      progressBar.setAttribute("aria-valuemin", "0");
+      progressBar.setAttribute("aria-valuemax", "100");
+      progressBar.style.transition = "width 0.8s ease";
+    }
+
+    // D-day 계산
+    const today = new Date();
+    const diff = Math.ceil((end - today) / (1000 * 60 * 60 * 24));
+    const ddayTxt = card.querySelector(".dday-txt");
+    if (ddayTxt) ddayTxt.textContent = diff > 0 ? diff : 0;
+  });
+
+
 });
 
 /* ================================================

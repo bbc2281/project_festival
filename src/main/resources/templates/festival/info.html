@@ -47,7 +47,9 @@
                     class="btn btn-sm border-0 bg-transparent" 
                     id="btnFavorite"
                     th:data-festival-idx="${festival.festival_idx}"
-                    th:data-member-id="${session.loginMember != null ? session.loginMember.member_idx : 0}">
+                    th:data-member-id="${session.loginMember != null ? session.loginMember.member_idx : 0}"
+                    th:data-company-id="${session.companyMember != null ? session.companyMember.company_idx : 0}"
+                    >
                   <i class="bi" 
                     th:classappend="${isFavorite} ? 'bi-heart-fill text-danger fs-4' : 'bi-heart fs-4'"></i>
                 </button>
@@ -198,11 +200,20 @@
 
   <!-- 채팅 -->
   <script th:inline="javascript">
+        const festivalBeginDateStr = /*[[${festival.festival_begin_date}]]*/ '2025-11-01';
+        const festivalEndDateStr = /*[[${festival.festival_end_date}]]*/ '2025-11-30';
         const roomId = `[[${chatRoom.chat_room_idx}]]`;
         const isLogin = [[${loggedIn}]];
+        const socket = new SockJS("/ws");//웹소켓 연결 객체
+        let stompClient = Stomp.over(socket);//STOMP 프로토콜 이용
+        const chatBox = document.getElementById("chatBox");
+        const chatInput = document.getElementById("chatInput");
+        const btnSendChat = document.getElementById("btnSendChat");
+
         function isValid(value) {
           return value != null && value !== "" && value !== "null";
         }
+
         //닉네임 없으면 아이디, 아이디 없으면 이메일 출력
         let loginMember;
         let loginMemberIdx;
@@ -210,8 +221,6 @@
         if(isLogin){
           loginMember =  (isValid(`[[${loginMember.member_nickname}]]`) 
                                     ? `[[${loginMember.member_nickname}]]`
-                                    : isValid(`[[${loginMember.member_id}]]`)
-                                    ? `[[${loginMember.member_id}]]`
                                     : `[[${loginMember.member_email}]]`);
           loginMember = loginMember.replace(/^"(.*)"$/, '$1');
           loginMemberIdx =`[[${loginMember.member_idx}]]`;//현재 접속한 회원의 기본키
@@ -220,20 +229,21 @@
           loginMemberIdx = null;
         }
 
-        const socket = new SockJS("/ws");//웹소켓 연결 객체
-        let stompClient = Stomp.over(socket);//STOMP 프로토콜 이용
-        
-        const chatBox = document.getElementById("chatBox");
-        const chatInput = document.getElementById("chatInput");
-        const btnSendChat = document.getElementById("btnSendChat");
-
         //웹소켓 연결, 구독 설정(수신)
         stompClient.connect({}, function(response){
+          if (!isChatAllowed()) {
+            chatInput.disabled = true;
+            btnSendChat.disabled = true;
+            chatBox.innerHTML = `<span class="bubble system">채팅은 축제 시작 1달 전부터 종료 1달 후까지만 가능합니다.</span>`;
+            chatInput.placeholder = ``;
+            return;
+          }
           stompClient.subscribe(`/topic/chat/${roomId}`, function(message){
               let chatMessage = JSON.parse(message.body);
               //서버로부터 받은 메시지(JSON)를 자바스크립트 객체로 변환
               showMessage(chatMessage);
           });
+          
           if(!isLogin){
             chatInput.disabled = true;
             btnSendChat.disabled = true;
@@ -250,6 +260,22 @@
         }, function(error){
           console.log(`웹소켓 연결 실패`);  
         });
+
+    function isChatAllowed() {
+    const today = new Date();
+    const festivalBegin = new Date(festivalBeginDateStr);
+    const festivalEnd = new Date(festivalEndDateStr);
+
+    // 한 달 전, 한 달 후 날짜 계산
+    const monthBeforeBegin = new Date(festivalBegin);
+    monthBeforeBegin.setMonth(monthBeforeBegin.getMonth() - 1);
+
+    const monthAfterEnd = new Date(festivalEnd);
+    monthAfterEnd.setMonth(monthAfterEnd.getMonth() + 1);
+
+    // 오늘 날짜가 (축제 시작 1달 전) ~ (축제 종료 1달 후) 범위 내인가?
+    return (today >= monthBeforeBegin) && (today <= monthAfterEnd);
+}
   </script>
   
   <script th:src="@{/js/review.js}"></script>

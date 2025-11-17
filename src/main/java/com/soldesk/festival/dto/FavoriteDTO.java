@@ -8,8 +8,8 @@ import lombok.Setter;
 public class FavoriteDTO {
     
     private int favorite_idx;
-    private int member_idx;
-    private int company_idx;
-    private int festival_idx;
+    private Integer member_idx;
+    private Integer company_idx;
+    private Integer festival_idx;
     
 }
