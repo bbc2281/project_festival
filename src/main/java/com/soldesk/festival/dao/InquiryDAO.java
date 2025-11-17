@@ -33,4 +33,8 @@ public class InquiryDAO {
     public int countInquiryByNUll(){
         return inquiryMapper.countInquiryByNUll();
     }
+
+    public int countInquiryByMember(int idx){
+        return inquiryMapper.countInquiryByMember(idx);
+    }
 }

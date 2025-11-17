@@ -19,11 +19,16 @@ import lombok.RequiredArgsConstructor;
 @Controller
 public class UserViewController {
 
+    private final SegFestivalService segFestivalService;
+
     private final ReviewService reviewService;
     private final MemberService memberService;
     private final CompanyService companyService;
     private final InquiryService inquiryService;
     private final FavoriteService favoriteService;
+    private final CommentService commentService;
+    private final FundingFestivalService fundingFestivalService;
+
 
     // 로그인품
     @GetMapping("/auth/loginPage")
@@ -150,7 +155,30 @@ public class UserViewController {
 
     // 기업회원 마이페이지
     @GetMapping("/company/mypage")
-    public String companyPageForm() {
+    public String companyPageForm(@AuthenticationPrincipal SecurityAllUsersDTO userdetails, Model model){
+
+        if(userdetails == null){
+            return "redirect:/auth/loginPage";
+        }
+
+        int idx = (int) userdetails.getUserIdx();
+        CompanyDTO login = companyService.selectCompanyByIdx(idx);
+        model.addAttribute("login", login);
+
+        int segFestival = segFestivalService.countFestivalByCompany(idx);
+        int favorite = favoriteService.countFavoriteByCompany(idx);
+        int festival_funding = fundingFestivalService.countFundingByCompany(idx);
+        int payment = 0;
+
+        model.addAttribute("segFestival", segFestival);
+        model.addAttribute("favorite", favorite);
+        model.addAttribute("festival_funding", festival_funding);
+        model.addAttribute("payment", payment);
+
+        List<FestivalDTO> commitFestivalList = segFestivalService.selectCommitFestival(idx);
+
+        model.addAttribute("commitFestivalList", commitFestivalList);
+
         return "company/mypage";
     }
 
@@ -174,7 +202,14 @@ public class UserViewController {
 
     // 기업회원 등록축제정보
     @GetMapping("/company/festival")
-    public String mypageFestivalForCompany() {
+    public String mypageFestivalForCompany(Model model, HttpSession session){
+
+        CompanyDTO company = (CompanyDTO) session.getAttribute("companyMember");
+        int id = company.getCompany_idx();
+        List<FestivalDTO> festivalList = segFestivalService.selectFestivalByCompany(id);
+
+        model.addAttribute("festivalList", festivalList);
+
         return "company/festival";
     }
 

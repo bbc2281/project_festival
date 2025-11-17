@@ -27,4 +27,7 @@ public interface InquiryMapper {
 
     @Select("select count(*) from inquiry where inquiry_answer is null")
     int countInquiryByNUll();
+
+    @Select("select count(*) from inquiry where member_idx= #{member_idx}")
+    int countInquiryByMember(@Param("member_idx") int idx);
 }

@@ -57,6 +57,14 @@ public class FavoriteService {
         return favoriteMapper.countFavoriteByFestival(festival_idx);
     }
 
+    public int countFavoriteByMember(int member_idx){
+        return favoriteMapper.countFavoriteByMember(member_idx);
+    }
+
+    public int countFavoriteByCompany(int company_idx){
+        return favoriteMapper.countFavoriteByCompany(company_idx);
+    }
+
     public List<FestivalDTO> selectAllFavoriteByUser(MemberDTO loginMember){
         if(loginMember != null){
             int member_idx = loginMember.getMember_idx();

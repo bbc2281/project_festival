@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (editButton) {
         editButton.addEventListener('click', () => {
             console.log('Navigating to /mypage/mypageedit');
-            window.location.href = '/mypage/mypageedit';
+            window.location.href = '/mypage/edit';
         });
     }
 
@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (reviewsButton) {
         reviewsButton.addEventListener('click', () => {
             console.log('Navigating to /mypage/myreview');
-            window.location.href = '/mypage/mypagereview';
+            window.location.href = '/mypage/review';
         });
     }
 });

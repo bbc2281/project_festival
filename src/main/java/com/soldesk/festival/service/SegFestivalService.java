@@ -17,12 +17,19 @@ public class SegFestivalService {
     private final SegFestivalDAO segFestivalDAO;
 
     public void insertSegFestival(FestivalDTO festivalDTO, CompanyDTO company){
-        festivalDTO.setFestival_host(company.getCompany_name());
-        segFestivalDAO.insertSegFestival(festivalDTO);
+        if(company != null){
+            festivalDTO.setCompany_idx(company.getCompany_idx());
+            festivalDTO.setFestival_host(company.getCompany_name());
+            segFestivalDAO.insertSegFestival(festivalDTO);
+        }
     }
 
     public FestivalDTO selectFestival(int idx){
         return segFestivalDAO.selectFestival(idx);
+    }
+
+    public List<FestivalDTO> selectFestivalByCompany(int idx){
+        return segFestivalDAO.selectFestivalByCompany(idx);
     }
 
     public List<FestivalDTO> selectAllFestivals(){
@@ -31,5 +38,21 @@ public class SegFestivalService {
 
     public void deleteFestival(int idx){
         segFestivalDAO.deleteFestival(idx);
+    }
+
+    public void updateSetLog(int idx){
+        segFestivalDAO.updateSetLog(idx);
+    }
+
+    public void updateDelLog(int idx){
+        segFestivalDAO.updateDelLog(idx);
+    }
+
+    public int countFestivalByCompany(int idx){
+        return segFestivalDAO.countFestivalByCompany(idx);
+    }
+
+    public List<FestivalDTO> selectCommitFestival(int idx){
+        return segFestivalDAO.selectCommitFestival(idx);
     }
 }

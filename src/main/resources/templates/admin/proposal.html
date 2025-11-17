@@ -27,6 +27,23 @@
     a.festival-link { color: #007bff; text-decoration: none; font-weight: 500; cursor:pointer; }
     a.festival-link:hover { text-decoration: underline; }
     .modal{background: none;}
+    .badge {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: black;
+}
+
+.badge-success {
+  background-color: #28a745; /* 진한 초록색 */
+}
+
+.badge-pending {
+  background-color: #ffc107; /* 노란색 */
+  color: #333;
+}
   </style>
 </head>
 
@@ -50,7 +67,7 @@
             <th>예상 종료일</th>
             <th>축제 예정장소</th>
             <th>상태</th>
-            <th>승인/반려</th>
+            <th>승인</th>
           </tr>
         </thead>
         <tbody>
@@ -74,10 +91,15 @@
             <td th:text="${proposal.festival_begin_date}"></td>
             <td th:text="${proposal.festival_end_date}"></td>
             <td th:text="${proposal.festival_address}"></td>
-            <td><span class="badge badge-pending">승인대기</span></td>
             <td>
-              <a th:href="@{/festival/permit(festival_idx=${proposal.seg_festival_idx})}" class="btn btn-success btn-sm">승인</a>
-              <a class="btn btn-secondary btn-sm">반려</a>
+              <span class="badge"
+                th:text="${proposal.festival_reg_log == 1 ? '승인완료' : '승인대기'}"
+                th:classappend="${proposal.festival_reg_log == 1} ? 'badge-success' : 'badge-pending'">
+              </span>
+            </td>
+            <td>
+              <a th:unless="${proposal.festival_reg_log} == 1" th:href="@{/festival/permit(festival_idx=${proposal.seg_festival_idx})}" class="btn btn-success btn-sm">승인</a>
+              <a th:href="@{/festival/refuse(festival_idx=${proposal.seg_festival_idx})}" class="btn btn-secondary btn-sm">삭제</a>
             </td>
           </tr>
         </tbody>
