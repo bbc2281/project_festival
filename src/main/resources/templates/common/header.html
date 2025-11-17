@@ -1,0 +1,54 @@
+<nav class="navbar navbar-expand-lg bg-white shadow-sm sticky-top" th:fragment="header" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+  <div class="container">
+    <a class="navbar-brand fw-bold text-primary" th:href="@{/}">🎉 FesLite</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMain">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navMain">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item"><a class="nav-link" th:href="@{/}">홈</a></li>
+        <li class="nav-item"><a class="nav-link" th:href="@{/festival/search}">축제 찾기</a></li>
+        <li class="nav-item"><a class="nav-link" th:href="@{/board/list}">게시판</a></li>
+        <li class="nav-item"><a class="nav-link" th:href="@{/funding/main}">축제 펀딩</a></li>
+      </ul>
+      <div class="d-flex gap-2">
+        <!-- 로그인안한 사용자 -->
+        <div sec:authorize="isAnonymous()">
+        <a th:href="@{/auth/loginPage}" class="btn btn-outline-secondary" >로그인</a>
+        <a th:href="@{/auth/join}" class="btn btn-primary" >회원가입</a>
+        </div>
+
+        <!--일반회원  -->
+        <div sec:authorize="hasAuthority('ROLE_USER')">
+         <a th:href="@{/member/mypage}" class="btn btn-outline-primary">마이페이지</a>
+         <button type="button" class="btn btn-secondary" onclick="logout()">로그아웃</button>
+        </div>
+
+        <!-- 기업 회원 -->
+        <div sec:authorize="hasAuthority('ROLE_COMPANY')">
+         <a class="btn btn-outline-warning" th:href="@{/festival/registe}">축제 등록</a>
+         <a th:href="@{/company/mypage}" class="btn btn-outline-warning">기업 마이페이지</a>
+         <button type="button" class="btn btn-secondary" onclick="logout()">로그아웃</button>
+        </div>
+
+          <!-- 관리자 -->
+          <div sec:authorize="hasAuthority('ROLE_ADMIN')">
+            <a th:href="@{/admin/main}" class="btn btn-accent">관리자페이지</a>
+            <button type="button" class="btn btn-secondary" onclick="logout()">로그아웃</button>
+          </div>
+
+
+          
+       </div>
+      </div>
+    </div>
+  </div>
+
+         <!-- <div th:if="${session.loginMember != null}">
+          <li class="nav-item"><a class="nav-link" th:href="@{/logout}">로그아웃</a></li>
+        </div>
+        <div th:unless="${session.loginMember != null}">
+          <a th:href="@{/auth/loginPage}" class="btn btn-outline-secondary" >로그인</a>
+          <a th:href="@{/auth/join}" class="btn btn-primary" >회원가입</a>
+        </div> -->
+</nav>

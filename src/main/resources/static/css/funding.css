@@ -1,0 +1,155 @@
+:root{--brand-start:#ffdee9;--brand-end:#b5fffc;--shadow:0 6px 24px rgba(0,0,0,.08);}body{font-family:'Pretendard',sans-serif;background:linear-gradient(135deg,var(--brand-start),var(--brand-end));}
+
+/* === Top Banner (HappyBean-like) === */
+.top-banner {
+  background: #7b61ff;
+  color:#222;
+}
+.banner-slide {
+  min-height: 160px;
+  display:flex; align-items:center; justify-content:center;
+  gap:18px;
+  padding:18px 12px;
+}
+.banner-illust {
+  width: 92px; height: 92px; border-radius: 16px;
+  background: #fff3; display:flex; align-items:center; justify-content:center;
+  font-size: 44px;
+  box-shadow: 0 4px 14px rgba(0,0,0,.08);
+}
+.banner-copy h3 { margin:0; font-weight:800; font-size: clamp(18px, 2.4vw, 26px); }
+.banner-copy p  { margin:4px 0 0; opacity:.9; }
+.banner-pills .btn {
+  --bs-btn-bg:#fff; --bs-btn-border-color:#0000; --bs-btn-hover-bg:#fff;
+  border-radius: 999px; padding:6px 14px; box-shadow: var(--shadow);
+}
+.banner-pills { gap:8px; }
+@media (max-width: 768px){
+  .banner-illust{ display:none; }
+  .banner-slide{ min-height: 120px; }
+}
+
+/* Category Tabs Stylish */
+
+#categoryTabs .nav-link{
+  border-radius:50px;
+  color:#444;
+  background:#fff;
+  border:1px solid rgba(0,0,0,.05);
+  padding:8px 18px;
+  transition:all .2s ease;
+}
+
+#categoryTabs .nav-link{
+  border-radius:50px;
+  color:#444;
+  background:#fff;
+  border:1px solid rgba(0,0,0,.05);
+  padding:8px 18px;
+  transition:all .2s ease;
+}
+
+#categoryTabs .nav-link{
+  border-radius:50px;
+  color:#444;
+  background:#fff;
+  border:1px solid rgba(0,0,0,.05);
+  padding:8px 18px;
+  transition:all .2s ease;
+}
+
+#categoryTabs .nav-link:hover,
+#categoryTabs .nav-link.active {
+  background: linear-gradient(90deg, #b49eff, #a2e3ff);
+  color: #fff;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+  border: none;
+}
+
+/* === Updated Banner Style === */
+.top-banner {
+  position: relative;
+  overflow: hidden;
+}
+
+.banner-slide {
+  position: relative;
+  min-height: 320px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-size: cover;
+  background-position: center;
+  transition: transform 1s ease-in-out;
+}
+
+.banner-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+}
+
+.banner-copy {
+  position: relative;
+  z-index: 2;
+  max-width: 720px;
+  padding: 20px;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.5);
+}
+
+.banner-copy h3 {
+  font-weight: 700;
+  font-size: clamp(20px, 2.5vw, 32px);
+  margin-bottom: 10px;
+}
+
+.banner-copy p {
+  font-size: 16px;
+  opacity: 0.9;
+}
+
+/* ===== Full-width Top Banner ===== */
+.top-banner {
+  position: relative;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.banner-slide {
+  position: relative;
+  width: 100%;
+  min-height: 420px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.banner-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.banner-content {
+  position: relative;
+  z-index: 2;
+  max-width: 780px;
+  padding: 2rem;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+}
+
+.banner-content h3 {
+  font-size: clamp(1.5rem, 2.5vw, 2.2rem);
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+
+.banner-content p {
+  font-size: clamp(0.95rem, 1.5vw, 1.1rem);
+  margin: 0;
+  opacity: 0.9;
+}
