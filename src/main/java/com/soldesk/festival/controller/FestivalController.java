@@ -16,7 +16,6 @@ import com.soldesk.festival.dto.FestivalDTO;
 import com.soldesk.festival.dto.ReviewDTO;
 import com.soldesk.festival.service.FestivalService;
 import com.soldesk.festival.service.ReviewService;
-import com.fasterxml.jackson.annotation.JsonCreator.Mode;
 import com.soldesk.festival.dto.ChatRoomDTO;
 import com.soldesk.festival.dto.CompanyDTO;
 import com.soldesk.festival.dto.FestivalCategoryDTO;

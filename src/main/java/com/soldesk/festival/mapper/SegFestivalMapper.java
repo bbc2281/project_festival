@@ -40,4 +40,10 @@ public interface SegFestivalMapper {
 
     @Select("select * from seg_festival where company_idx = #{company_idx} and festival_reg_log = 1")
     List<FestivalDTO> selectCommitFestival(@Param("company_idx") int idx);
+
+    @Select("select * from seg_festival order by seg_festival_idx desc limit #{limit} offset #{offset}")
+    List<FestivalDTO> selectSegFestivalPaged(@Param("offset") int offset, @Param("limit") int limit);
+
+    @Select("select count(*) from seg_festival")
+    int countSegFestival();
 }

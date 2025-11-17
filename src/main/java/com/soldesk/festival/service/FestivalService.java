@@ -47,4 +47,8 @@ public class FestivalService {
     public int countFestival(){
         return festivalDAO.countFestival();
     }
+
+    public List<FestivalDTO> getFestivalListPaged(int offset, int limit) {
+        return festivalDAO.selectFestivalPaged(offset, limit);
+	}
 }

@@ -55,6 +55,9 @@ public class BoardDAO {
         return boardMapper.countBoardNow(date);
     }
 
+    public List<BoardDTO> selectBoardPaged(int offset, int limit){
+        return boardMapper.selectBoardPaged(offset, limit);
+    }
     public List<BoardDTO> searchProcessCategory(String keyword, String category,int start , int limit){
         return boardMapper.searchProcessCategory(keyword, category,start,limit);
     }

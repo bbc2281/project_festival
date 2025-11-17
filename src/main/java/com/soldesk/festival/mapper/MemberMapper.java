@@ -106,4 +106,6 @@ public interface MemberMapper {
 	@Select("select * from member where member_idx=#{member_idx}")
 	MemberDTO findUserbyIdx(@Param("member_idx") int member_idx);
 
+	@Select("select * from member order by member_idx desc limit #{limit} offset #{offset}")
+	List<MemberDTO> selectMemberPaged(@Param("offset") int offset, @Param("limit") int limit);
 }

@@ -50,4 +50,13 @@ public class SegFestivalDAO {
     public List<FestivalDTO> selectCommitFestival(int idx){
         return segFestivalMapper.selectCommitFestival(idx);
     }
+
+    public int countSegFestival(){
+        return segFestivalMapper.countSegFestival();
+    }
+
+    public List<FestivalDTO> selectSegFestivalPaged(int offset, int limit){
+        return segFestivalMapper.selectSegFestivalPaged(offset, limit);
+    }
+
 }

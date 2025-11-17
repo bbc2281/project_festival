@@ -72,6 +72,8 @@ public interface BoardMapper {
     @Select("select count(*) from board where board_title LIKE CONCAT('%', #{keyword}, '%') ")
     int countSearchBOardAll(String keyword);
     
+    @Select("select * from board order by board_idx desc limit #{limit} offset #{offset}")
+    List<BoardDTO> selectBoardPaged(@Param("offset") int offset, @Param("limit") int limit);
     
 } 
     
