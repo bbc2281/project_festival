@@ -28,14 +28,11 @@ public class CommentRestController {
 
     @PostMapping("/write")
     public ResponseEntity<Map<String,Object>>writeSubmit(@SessionAttribute("loginMember")MemberDTO memberDTO ,@RequestBody CommentDTO commentDTO){
-        
         commentDTO.setMember_idx(memberDTO.getMember_idx());
-        
         Map<String,Object> response = new HashMap<String,Object>();
         try {
             commentService.writeProcess(commentDTO);
             response.put("success", true);
-            
         } catch (Exception e) {
             response.put("suceess", false);
             response.put("message", e.getMessage());

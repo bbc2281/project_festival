@@ -1,6 +1,16 @@
 package com.soldesk.festival.controller;
 
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.soldesk.festival.dto.CompanyDTO;
+import com.soldesk.festival.dto.FundingFestivalDTO;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
@@ -44,10 +54,11 @@ public class FundingController {
     }
 
     @GetMapping("/info")
-    public String info(@RequestParam("id") int idx, Model model){
+    public String info(@RequestParam("id") int idx, Model model, HttpSession session){
 
+         
+      
         FundingFestivalDTO funding = fundingFestivalService.selectFunding(idx);
-        
         model.addAttribute("funding", funding);
 
         return "funding/info";
@@ -63,23 +74,38 @@ public class FundingController {
     }
 
     @PostMapping("/register")
-    public String regFunding(@ModelAttribute("funding") FundingFestivalDTO fundingDTO, @RequestParam("img_path") MultipartFile imgFile, HttpSession session){
+    public String regFunding(@ModelAttribute("funding") FundingFestivalDTO fundingDTO, @RequestParam(value = "img_path", required = false) MultipartFile imgFile,  @RequestParam(value = "upload_file", required = false) MultipartFile file, HttpSession session){
 
         CompanyDTO login = (CompanyDTO) session.getAttribute("companyMember");
 
-        if(!imgFile.isEmpty()){
-            String imageUrl;
-            try {
-            System.out.println("파일 이름: " + imgFile.getOriginalFilename());
-            System.out.println("파일 크기: " + imgFile.getSize());
-            imageUrl = fileUploadService.uploadToFirebase(imgFile);
-            fundingDTO.setFestival_img_path(imageUrl);
+        String uploadDir = "C:\\soldesk\\project_festival\\festival\\festival\\project_festival\\src\\main\\resources\\static\\uploads";
+        
+        try {
+            if(!imgFile.isEmpty()){
+                String imageUrl;
+                try {
+                System.out.println("파일 이름: " + imgFile.getOriginalFilename());
+                System.out.println("파일 크기: " + imgFile.getSize());
+                imageUrl = fileUploadService.uploadToFirebase(imgFile);
+                fundingDTO.setFestival_img_path(imageUrl);
             
-            } catch (IOException e) {
-                e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
-        }
 
+            if (!file.isEmpty()) {
+                String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+                Path savePath = Paths.get(uploadDir, fileName);
+                Files.createDirectories(savePath.getParent());
+                file.transferTo(savePath.toFile());
+
+                fundingDTO.setFestival_file("/uploads/" + fileName);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        };
+        
         fundingFestivalService.insertFunding(fundingDTO, login);
 
         return "redirect:/funding/main";

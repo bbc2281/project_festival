@@ -58,4 +58,20 @@ public class BoardDAO {
     public List<BoardDTO> selectBoardPaged(int offset, int limit){
         return boardMapper.selectBoardPaged(offset, limit);
     }
+    public List<BoardDTO> searchProcessCategory(String keyword, String category,int start , int limit){
+        return boardMapper.searchProcessCategory(keyword, category,start,limit);
+    }
+
+    public List<BoardDTO> searchProcessAll(String keyword, int start , int limit){
+        return boardMapper.searchProcessAll(keyword,start,limit);
+    }
+
+    public int countSearchBoardCategory(String keyword , String category){
+        return boardMapper.countSearchBoardCategory(keyword, category);
+    }
+
+    public int countSearchBOardAll(String keyword){
+        return boardMapper.countSearchBOardAll(keyword);
+    }
+
 }

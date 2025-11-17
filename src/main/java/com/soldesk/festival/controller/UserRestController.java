@@ -23,6 +23,8 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
+import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -113,9 +115,11 @@ public class UserRestController {
 			session.setMaxInactiveInterval(30 * 60);
 
 			SecurityAllUsersDTO user = (SecurityAllUsersDTO) authentication.getPrincipal();
+			SavedRequest savedRequest = new HttpSessionRequestCache().getRequest(request, res);
+			String redirectUrl = (savedRequest != null) ? savedRequest.getRedirectUrl() : "/";
 
 			UserResponse response = UserResponse.success("로그인 성공", user);
-
+			response.setRedirectUrl(redirectUrl);
 			return ResponseEntity.ok(response);
 
 		} catch (AuthenticationException e) {

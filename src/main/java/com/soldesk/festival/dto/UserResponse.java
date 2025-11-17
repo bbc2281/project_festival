@@ -14,6 +14,7 @@ public class UserResponse {
     private boolean success;
     private String message;
     private Object data;
+    private String redirectUrl;
     
     // 성공 data + message 반환
     public static UserResponse success(String message, Object data){
@@ -29,5 +30,9 @@ public class UserResponse {
     public static UserResponse error(String err){
         return UserResponse.builder().success(false).message(err).data(null).build();
     }
+
+    //로그인 요청페이지 저장
+    public String getRedirectUrl() { return redirectUrl; }
+    public void setRedirectUrl(String redirectUrl) { this.redirectUrl = redirectUrl; }
 
 }

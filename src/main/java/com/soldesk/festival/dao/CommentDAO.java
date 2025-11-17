@@ -35,7 +35,7 @@ public class CommentDAO {
         commentMapper.deleteProcess(comment_idx);
     }
 
-    public int countCommentByMember(int idx){
+    public List<CommentDTO> countCommentByMember(int idx){
         return commentMapper.countCommentByMember(idx);
     }
 }

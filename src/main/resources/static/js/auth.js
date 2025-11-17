@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (data.success) {
             // 로그인 성공
             alert(data.message || '로그인에 성공했습니다.');
-            window.location.href = '/';
+            window.location.href = data.redirectUrl;
         } else {
             // 로그인 실패
             errorMessageContainer.textContent = data.message || `로그인에 실패했습니다. (상태 코드: ${res.status})`;
