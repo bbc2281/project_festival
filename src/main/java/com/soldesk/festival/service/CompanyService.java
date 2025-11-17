@@ -1,6 +1,10 @@
 package com.soldesk.festival.service;
 
+import java.lang.StackWalker.Option;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -82,4 +86,59 @@ public class CompanyService {
 		
 		
 	}
+
+   
+	public List<CompanyDetailDTO> getCompanyList(String userId){
+
+		Optional<CompanyDTO> opCompany = companyMapper.findCompanyDetailAllById(userId);
+
+		if(opCompany.isPresent()){
+		   CompanyDTO admin = opCompany.get();
+
+		   if(admin.getRole().isAdmin()){
+			  
+			  List<CompanyDetailDTO> list = companyMapper.getCompanyList();
+			  
+			  return list.stream()
+			         .map(company -> CompanyDetailDTO.builder()
+					 .company_idx(company.getCompany_idx())
+					 .company_name(company.getCompany_name())
+					 .member_id(company.getMember_id())
+					 .member_email(company.getMember_email())
+					 .company_open_date(company.getCompany_open_date())
+					 .company_owner(company.getCompany_owner())
+					 .company_address(company.getCompany_address())
+					 .build()
+					 )
+					 .collect(Collectors.toList());
+					 
+
+		   }
+		}
+		return Collections.emptyList();
+	}
+
+
+   
+	public boolean checkPassword(String userId, String pass){
+
+		Optional<CompanyDTO> opCom = findCompanyUserById(userId);
+
+		if(opCom.isEmpty()){
+			return false;
+		}
+
+		CompanyDTO company = opCom.get();
+		String password = company.getMember_pass();
+
+		return authUtil.checkPassword(pass, password);
+
+	}
+
+
+    
+    
+
+
+	
 }

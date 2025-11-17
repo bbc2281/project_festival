@@ -47,11 +47,9 @@
     <section class="main">
       <h3>회원정보</h3>
       <div>
-        <p><strong>아이디:</strong> <span th:text="${userInfo.company_id}"></span></p>
+        <p><strong>아이디:</strong> <span th:text="${userInfo.member_id}"></span></p>
         <p><strong>회사 이름:</strong> <span th:text="${userInfo.company_name}"></span></p>
-        <p><strong>회사 이메일:</strong> <span th:text="${userInfo.company_email}"></span></p>
-        <p><strong>닉네임:</strong> <span th:text="${userInfo.company_nickname}"></span></p>
-        <p><strong>전화번호:</strong> <span th:text="${userInfo.company_phone}"></span></p>
+        <p><strong>회사 이메일:</strong> <span th:text="${userInfo.member_email}"></span></p>
         <p><strong>회사 대표자:</strong> <span th:text="${userInfo.company_owner}"></span></p>
         <p><strong>회사 소재지:</strong> <span th:text="${userInfo.company_address}"></span></p>
         <p><strong>등록된 계좌:</strong> <span th:text="${userInfo.company_account}"></span></p>

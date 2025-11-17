@@ -1,5 +1,6 @@
 package com.soldesk.festival.mapper;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.apache.ibatis.annotations.Insert;
@@ -11,6 +12,7 @@ import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 
 import com.soldesk.festival.dto.CompanyDTO;
+import com.soldesk.festival.dto.CompanyDetailDTO;
 import com.soldesk.festival.dto.CompanyJoinDTO;
 import com.soldesk.festival.handler.MemberRoleTypeHandler;
 
@@ -69,6 +71,11 @@ public interface CompanyMapper {
 	})
 	@Select("select company_idx, company_name, member_id, member_email, company_owner, company_open_date, company_address, role from company where member_id=#{member_id}")
 	Optional<CompanyDTO> findUserIdforUser(@Param("member_id")String userId);
+
+    
+	@Select("select company_idx, company_name, member_id, member_email, company_owner, company_address, company_open_date, role from company ")
+	List<CompanyDetailDTO> getCompanyList();
+    
 
 	
 }

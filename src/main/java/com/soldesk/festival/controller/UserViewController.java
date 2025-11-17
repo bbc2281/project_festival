@@ -162,10 +162,10 @@ public class UserViewController {
         if(opDetail.isEmpty()){
             return "redirect:/auth/loginPage?error=dataError";
         }
+        
         CompanyDetailDTO userInfo = opDetail.get();
         model.addAttribute("userInfo", userInfo);
         return "company/info";
-
 
     }
     
@@ -175,6 +175,8 @@ public class UserViewController {
         return "company/edit";
     }
     
+
+
     //일반회원탈퇴페이지
     @GetMapping("/member/delete")
     public String accountWithdrawal(){
