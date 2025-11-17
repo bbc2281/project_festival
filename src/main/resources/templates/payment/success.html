@@ -1,16 +1,180 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>FesLite — 결제 완료</title>
+
+    <!-- 폰트 -->
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Pretendard", sans-serif;
+            background: linear-gradient(135deg, #ffdee9 0%, #b5fffc 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .success-wrapper {
+            max-width: 480px;
+            width: 100%;
+            padding: 24px;
+        }
+
+        .success-card {
+            background: #ffffff;
+            border-radius: 22px;
+            padding: 28px 22px 24px;
+            text-align: center;
+            box-shadow: 0 18px 40px rgba(0, 0, 0, 0.12);
+            animation: floatIn 0.6s ease-out;
+        }
+
+        @keyframes floatIn {
+            from {
+                opacity: 0;
+                transform: translateY(18px) scale(0.98);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .success-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #7b61ff, #ff7b97);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            color: #fff;
+            font-size: 30px;
+            box-shadow: 0 10px 20px rgba(123, 97, 255, 0.4);
+        }
+
+        .success-title {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .summary-box {
+            background: #f6f7fb;
+            border-radius: 16px;
+            padding: 18px 16px;
+            margin-top: 20px;
+        }
+
+        .summary-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 14px;
+            word-break: break-all;
+        }
+
+        .summary-price {
+            font-size: 22px;
+            font-weight: 800;
+            color: #7b61ff;
+            margin-bottom: 6px;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn-base {
+            flex: 1;
+            padding: 12px 10px;
+            border-radius: 999px;
+            font-size: 14px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: 0.18s ease;
+        }
+
+        .btn-main {
+            background: linear-gradient(135deg, #7b61ff, #ff7b97);
+            color: #fff;
+        }
+
+        .btn-main:hover {
+            opacity: 0.9;
+        }
+
+        .btn-secondary {
+            background: #ffffff;
+            border: 1px solid #ddd;
+        }
+
+        .btn-secondary:hover {
+            background: #f4f4f9;
+        }
+
+        @media (max-width: 480px) {
+            .summary-price {
+                font-size: 19px;
+            }
+        }
+    </style>
 </head>
+
 <body>
-    결제성공페이지 123 <br>
-    페이먼트 키<p id="paymentKey"></p> <br>
-    오더아이디 <p id="orderId"></p> <br>
-    어마운트<p id="amount"></p> <br>
-    
+
+    <div class="success-wrapper">
+        <div class="success-card">
+
+            <div class="success-icon">✓</div>
+
+            <div class="success-title">결제가 완료되었습니다</div>
+
+            <!-- 요약 정보 박스 -->
+            <div class="summary-box">
+                <!-- 주문번호 (라벨 제거 → 숫자만) -->
+                <div class="summary-value" id="orderId">-</div>
+
+                <!-- 결제금액 (라벨 제거 → "100원"만) -->
+                <div class="summary-price"><span id="amount">0</span>원</div>
+            </div>
+
+            <!-- 버튼 -->
+            <div class="btn-group">
+                <button type="button" class="btn-base btn-secondary" onclick="location.href='/funding/info'">
+                    펀딩 상세로 이동
+                </button>
+
+
+                <a href="/funding/main" style="flex:1;">
+                    <button type="button" class="btn-base btn-main" style="width:100%;">
+                        펀딩 메인으로 이동
+                    </button>
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- 기존 JS 유지 -->
     <script src="/js/paymentSuccess.js"></script>
+
 </body>
+
 </html>

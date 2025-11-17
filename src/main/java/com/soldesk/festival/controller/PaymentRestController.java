@@ -39,7 +39,6 @@ public class PaymentRestController {
     @PostMapping("/order")
     //주문 요청 만들기 
     public ResponseEntity<Map<String,Object>> createOrder(@RequestBody PaymentRequestDTO requestDTO , @SessionAttribute("companyMember")CompanyDTO companyDTO){
-       
         Map<String,Object> response = new HashMap<String,Object>();
         try {   
             logger.info(" 주문 생성 요청 들어옴: {}", requestDTO); 

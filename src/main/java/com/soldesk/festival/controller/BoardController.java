@@ -63,8 +63,8 @@ public class BoardController {
     }
 
     @PostMapping("/write")
-    public String writeSubmit(@ModelAttribute("writeBoard")BoardDTO boardDTO){
-        boardDTO.setMember_idx(7);
+    public String writeSubmit(@ModelAttribute("writeBoard")BoardDTO boardDTO ,@SessionAttribute("loginMember")MemberDTO memberDTO){
+        boardDTO.setMember_idx(memberDTO.getMember_idx());
         Document doc = Jsoup.parse(boardDTO.getBoard_content());
         Element img = doc.selectFirst("img[src^=data:]");
             if(img != null){
@@ -163,7 +163,6 @@ public class BoardController {
                 // 이미지가 원래도 없고, 최종 내용에도 없음 → 내용만 수정
                 boardDTO.setBoard_img_path(null);
                 boardDTO.setBoard_content(doc.body().html());
-
                 boardService.modifyProcess(boardDTO);
             }
         } catch (Exception e) {

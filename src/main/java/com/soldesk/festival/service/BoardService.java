@@ -43,9 +43,8 @@ public class BoardService {
 	}
 
     public void writeProcess(BoardDTO writeBoard){
-        for(int i = 0; i<11; i++){
         boardDAO.writeProcess(writeBoard);
-        }
+        
     }
 
     public BoardDTO infoProcess(int board_idx){

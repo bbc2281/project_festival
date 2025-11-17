@@ -51,7 +51,6 @@ public class paymentService {
     }
 
     public PaymentDTO infoProcess(String orderId){
-
         return paymentDAO.infoProcess(orderId);
     }
     
