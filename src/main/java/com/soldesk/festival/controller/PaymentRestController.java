@@ -22,6 +22,7 @@ import com.soldesk.festival.config.TossConfig;
 import com.soldesk.festival.dto.PaymentRequestDTO;
 import com.soldesk.festival.dto.CompanyDTO;
 import com.soldesk.festival.dto.PaymentDTO;
+import com.soldesk.festival.service.FundingFestivalService;
 import com.soldesk.festival.service.paymentService;
 
 import lombok.RequiredArgsConstructor;
@@ -34,6 +35,7 @@ public class PaymentRestController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());//클래스 이름으로 구분해서 로그 찍는 변수.
     private final TossConfig tossConfig;
     private final paymentService paymentService;
+    private final FundingFestivalService fundingFestivalService;
     
     
     @PostMapping("/order")
@@ -47,6 +49,7 @@ public class PaymentRestController {
             response.put("orderId", orderId);
             response.put("amount", requestDTO.getAmount());
             response.put("orderName", requestDTO.getOrderName());
+            response.put("festivalIdx", requestDTO.getFestivalIdx());
             logger.info("저장되는 금액: {}", requestDTO.getAmount());
             logger.info("주문이름: {}", requestDTO.getOrderName());
             logger.info("toss register 요청 orderId={} amount={}", orderId, requestDTO.getAmount());
@@ -107,6 +110,10 @@ public class PaymentRestController {
             paymentDTO.setOrder_id(request.get("orderId").toString());
             paymentService.modifyProcess(paymentDTO);
             // 잡아다가 펀딩페스티벌 업데이트
+            
+            int amount = paymentService.selectFundingAmount(paymentDTO);
+            System.out.println(amount);
+            fundingFestivalService.insertFundingAmount(amount); //funding festival idx 업데이트 예정
 
             response.put("success", true);
         } catch (Exception e) {

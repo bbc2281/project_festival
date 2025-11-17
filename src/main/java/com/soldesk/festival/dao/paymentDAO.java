@@ -29,5 +29,9 @@ public class paymentDAO {
 
         return paymentMapper.infoProcess(orderId);
     }
+
+    public int selectFundingAmount(String orderId){
+        return paymentMapper.selectFundingAmount(orderId);
+    }
     
 }

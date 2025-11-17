@@ -3,6 +3,7 @@ package com.soldesk.festival.mapper;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
@@ -27,4 +28,7 @@ public interface PaymentMapper {
     " from payment "+ 
     " where order_id = #{order_id}")
     PaymentDTO infoProcess(String order_id);
+
+    @Select("select payment_amount from payment where order_id = #{order_id}")
+    int selectFundingAmount(@Param("order_id") String order_id);
 }

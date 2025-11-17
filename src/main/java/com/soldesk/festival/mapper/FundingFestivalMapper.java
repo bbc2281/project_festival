@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import com.soldesk.festival.dto.FundingFestivalDTO;
 
@@ -23,4 +24,7 @@ public interface FundingFestivalMapper {
 
     @Select("select count(*) from festival_funding where company_idx = #{company_idx}")
     int countFundingByCompany(@Param("company_idx") int idx);
+
+    @Update("")
+    void insertFundingAmount(@Param("festival_amount") int festival_amount);
 }

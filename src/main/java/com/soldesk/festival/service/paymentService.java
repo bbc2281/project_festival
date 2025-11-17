@@ -54,5 +54,14 @@ public class paymentService {
         return paymentDAO.infoProcess(orderId);
     }
     
+    public int selectFundingAmount(PaymentDTO paymentDTO){
+        if(paymentDTO != null){
+            String orderId = paymentDTO.getOrder_id();
+            return paymentDAO.selectFundingAmount(orderId);
+        }
+
+
+        return 0;
+    }
     
 }

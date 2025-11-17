@@ -38,4 +38,8 @@ public class FundingFestivalService {
     public int countFundingByCompany(int company_idx){
         return fundingFestivalMapper.countFundingByCompany(company_idx);
     }
+
+    public void insertFundingAmount(int amount){
+        fundingFestivalMapper.insertFundingAmount(amount);
+    }
 }
