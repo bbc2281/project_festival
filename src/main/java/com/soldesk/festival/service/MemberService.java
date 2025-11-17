@@ -146,5 +146,8 @@ public class MemberService {
 	}
 	public List<MemberDTO> getMemberListPaged(int offset, int limit) {
     return memberMapper.selectMemberPaged(offset, limit);
+
+	public void adminDeleteMember(int member_idx){
+		memberMapper.deleteMember(member_idx);
 	}
 }

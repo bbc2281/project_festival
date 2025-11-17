@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 
 import com.soldesk.festival.dto.*;
 import com.soldesk.festival.service.*;
+
+import io.grpc.xds.shaded.io.envoyproxy.envoy.api.v2.auth.CommonTlsContext;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
@@ -78,8 +80,10 @@ public class UserViewController {
         int reviewCount = reviewList.size();
         model.addAttribute("reviewCount", reviewCount);
 
-        int commentCount = commentService.countCommentByMember(loginMember.getMember_idx());
+        List<CommentDTO> commentList = commentService.countCommentByMember(loginMember.getMember_idx());
+        int commentCount = commentList.size();
         model.addAttribute("commentCount", commentCount);
+
         return "member/mypage";
     }
 

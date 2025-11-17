@@ -1,5 +1,26 @@
 console.log('FesLite funding JS loaded');
 
+
+
+// 검색기능
+document.addEventListener("DOMContentLoaded", () => {
+  const searchInput = document.getElementById("searchInput");
+  const cards = document.querySelectorAll(".funding-card");
+
+  if (!searchInput || !cards.length) return;
+
+  searchInput.addEventListener("input", () => {
+    const keyword = searchInput.value.trim().toLowerCase();
+
+    cards.forEach(card => {
+      const title = (card.dataset.title || "").toLowerCase();
+      const category = (card.dataset.category || "").toLowerCase();
+      const match = title.includes(keyword) || category.includes(keyword);
+      card.style.display = match ? "" : "none";
+    });
+  });
+});
+
 /* =========================
    1) 홈: 카테고리 필터 (기존 유지)
    ========================= */
@@ -29,7 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const end = new Date(card.dataset.end);
 
     // 진행률
-    const percent = Math.min(100, Math.floor((raised / goal) * 100));
+    const percent = Math.min(Math.floor((raised / goal) * 100));
     const progressBar = card.querySelector(".progress-bar");
     const percentTxt = card.querySelector(".percent-txt");
     const raisedTxt = card.querySelector(".raised-txt");
@@ -141,7 +162,7 @@ function _initFundingDetail(detail) {
   }
 
   function _updateUI(animated) {
-    const percent = Math.min(100, Math.floor((raised / goal) * 100));
+    const percent = Math.min(Math.floor((raised / goal) * 100));
     percentEl.textContent = String(percent);
     raisedEl.textContent = raised.toLocaleString();
 
@@ -159,8 +180,29 @@ function _initFundingDetail(detail) {
 
   // === 후원 버튼 (알림)
   if (btnFund) {
-    btnFund.addEventListener("click", () => {
-      alert(`후원이 완료되었습니다! 🎉\n총 후원 금액: ${myDonation.toLocaleString()}원`);
+    btnFund.addEventListener("click", async () => {
+      const festivalName = document.getElementById("festivalName").innerText;
+      const festivalIdxStr = document.getElementById("funding_festival_idx").textContent;
+      const festivalIdx = parseInt(festivalIdxStr, 10);
+      const amount = myDonation;
+      const requestData = {
+        amount ,
+        orderName : `${festivalName} 후원`,
+        festivalIdx : festivalIdx
+      }
+      const response = await fetch("/payment/order",{
+        method : "POST",
+        headers : {"Content-type" : "application/json"},
+        body : JSON.stringify(requestData)
+      });
+
+      const result = await response.json();
+      const orderId = result.orderId;
+
+      console.log("오더아이디" + orderId);
+      console.log("페스티벌idx" + festivalIdx);
+
+     window.location.href = `/payment/main?orderId=${orderId}&festivalIdx=${festivalIdx}`
     });
   }
 }
@@ -169,3 +211,4 @@ function _initFundingDetail(detail) {
 window.initFundingDetail = _initFundingDetail;
 
 console.log("Funding detail interaction script loaded");
+
