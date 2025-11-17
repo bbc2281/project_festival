@@ -11,9 +11,15 @@
   <base href="/">
   <link rel="stylesheet" th:href="@{/css/loginStyle.css}" />
   <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+  <script type="text/javascript" src="https://static.nid.naver.com/js/naverLogin_implicit-1.0.3.js"
+    charset="utf-8"></script>
+  <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
   <script defer th:src="@{/js/address.js}"></script>
   <script defer th:src="@{/js/sign.js}"></script>
   <script defer th:src="@{/js/app.js}"></script>
+  <script defer th:src="@{/js/naver.js}"></script>
+  <script defer th:src="@{/js/google.js}"></script>
   <style>
     .ppButton {
       margin-top: 20px;
@@ -139,9 +145,10 @@
         <div class="social-login text-center mt-4">
           <p class="social-label">또는 SNS 계정으로 회원가입</p>
           <div class="social-buttons">
-            <button class="social-btn kakao" onclick="socialSignup('kakao')">카카오로 회원가입</button>
-            <button class="social-btn google" onclick="socialSignup('google')">Google로 회원가입</button>
-            <button class="social-btn naver" onclick="socialSignup('naver')">네이버로 회원가입</button>
+            <a href="#" id="my-naver-btn" class="social-btn naver">Naver로 회원가입</a>
+            <div id="naver_id_login" style="display: none;"></div>
+            <a href="#" id="my-google-btn" class="social-btn google">Google로 회원가입</a>
+            <div id="googleSignInBtn" style="display: none;"></div>
           </div>
         </div>
       </div>

@@ -133,7 +133,6 @@ public class UserViewController {
         MemberDTO loginMember = (MemberDTO) session.getAttribute("loginMember");
 
         List<ReviewDTO> reviewList = reviewService.infoReviewByMember(loginMember);
-        System.out.println("@@@@@@@@@@@@@@@@@0"+reviewList.get(0).getFestival_name());
 
         model.addAttribute("reviewList", reviewList);
 
@@ -185,7 +184,15 @@ public class UserViewController {
 
     // 기업회원 정보수정
     @GetMapping("/company/edit")
-    public String mypageModifyForCompany() {
+    public String mypageModifyForCompany(@AuthenticationPrincipal SecurityAllUsersDTO userdetails, Model model) {
+        if(userdetails == null){
+            return "redirect:/auth/loginPage";
+        }
+
+        int idx = (int) userdetails.getUserIdx();
+        CompanyDTO loginMember = companyService.selectCompanyByIdx(idx);
+
+        model.addAttribute("loginMember", loginMember);
         return "company/edit";
     }
 

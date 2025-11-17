@@ -11,6 +11,7 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import com.soldesk.festival.dto.CompanyDTO;
 import com.soldesk.festival.dto.CompanyJoinDTO;
@@ -72,4 +73,7 @@ public interface CompanyMapper {
 
 	@Select("select * from company order by company_idx desc limit #{limit} offset #{offset}")
     List<CompanyDTO> selectCompanyPaged(@Param("offset")int offset, @Param("limit")int limit);
+
+	@Update("update company set company_name = #{company_name}, company_owner = #{company_owner}, member_email = #{member_email}, company_address = #{company_address}, company_phone = #{company_phone}, company_account = #{company_account} where company_idx = #{company_idx}")
+	void updateCompany(CompanyDTO companyDTO);
 }

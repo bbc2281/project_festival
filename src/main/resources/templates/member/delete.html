@@ -88,7 +88,7 @@
 
     <section class="main">
       <h3>회원탈퇴</h3>
-      <form th:action="@{/api/v1/auth/delete}" method="post" id="delete-form" class="form">
+      <form th:action="@{/api/v1/auth/delete}" method="post" id="deleteForm" class="form">
         <label for="password" style="margin-right: 10px;">비밀번호 입력 : </label><input id="password" type="password"> <br>
         <p style="color: red; margin-top: 10px; margin-bottom: 10px;">정말로 탈퇴하시겠습니까?<br>모든 회원 정보와 활동 내역이 삭제됩니다.</p>
         <button class="submit" id="deleteBtn" style="margin-top: 0;">회원탈퇴</button>
@@ -104,7 +104,6 @@
     document.getElementById('deleteForm').addEventListener('submit', (e) => {
       if (!confirm("정말로 탈퇴하시겠습니까?")) {
         e.preventDefault(); // 취소하면 제출 취소
-        logout();
       }
     });
   </script>
