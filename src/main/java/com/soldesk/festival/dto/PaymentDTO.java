@@ -19,7 +19,7 @@ public class PaymentDTO {
     private String payment_status; // 현재 결제 진행 상태
     private String order_id; //주문 번호 
     private String order_name; //주문 이름 
-
+    private int funding_festival_idx;
 
 
 }

@@ -47,12 +47,19 @@
         <div class="social-login text-center mt-4">
           <p class="social-label">또는 SNS 계정으로 로그인</p>
           <div class="social-buttons">
-            <a href="#" id="my-naver-btn" class="social-btn naver">Naver 로그인</a>
-            <div id="naver_id_login" style="display: none;"></div>
-            <a href="#" id="my-google-btn" class="social-btn google">Google 로그인</a>
+            <a href="#" id="my-google-btn" class="social-btn google-btn"> 
+              <img th:src="@{/images/google.png}" alt="Google Logo">
+              <span>Google 계정으로 로그인</span>
+            </a>
             <div id="googleSignInBtn" style="display: none;"></div>
+            <a href="#" id="my-naver-btn" class="social-btn naver-btn">
+              <img th:src="@{/images/naver.png}" alt="Naver Logo">
+              <span>네이버 계정으로 로그인</span>
+            </a>
+            <div id="naver_id_login" style="display: none;"></div>
           </div>
         </div>
+        
       </div>
     </section>
   </main>

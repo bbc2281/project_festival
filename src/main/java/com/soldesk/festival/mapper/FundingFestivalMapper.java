@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 import com.soldesk.festival.dto.FundingFestivalDTO;
+import com.soldesk.festival.dto.PaymentDTO;
 
 @Mapper
 public interface FundingFestivalMapper {
@@ -25,6 +26,6 @@ public interface FundingFestivalMapper {
     @Select("select count(*) from festival_funding where company_idx = #{company_idx}")
     int countFundingByCompany(@Param("company_idx") int idx);
 
-    @Update("")
-    void insertFundingAmount(@Param("festival_amount") int festival_amount);
+    @Update("update festival_funding set festival_amount = festival_amount + #{payment_amount} where funding_festival_idx = #{funding_festival_idx}")
+    void insertFundingAmount(PaymentDTO paymentDTO);
 }

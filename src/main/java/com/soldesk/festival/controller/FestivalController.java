@@ -63,7 +63,7 @@ public class FestivalController {
             model.addAttribute("loginMember", loginMember);
             model.addAttribute("loggedIn", true);
         }else if (companyMember != null) {
-            exist = favoriteService.existsFavoriteByCompany(festivalIdx, companyMember.getCompany_idx());
+            exist = favoriteService.existsFavoriteByCompany(companyMember.getCompany_idx(), festivalIdx);
             loginMember = new MemberDTO();
             model.addAttribute("loginMember", loginMember);
             model.addAttribute("loggedIn", false);
@@ -72,7 +72,6 @@ public class FestivalController {
             model.addAttribute("loginMember", loginMember);
             model.addAttribute("loggedIn", false);
         }
-        System.out.println(exist);
         model.addAttribute("isFavorite", exist);
 
         return "festival/info";

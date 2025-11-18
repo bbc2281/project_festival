@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.soldesk.festival.dto.CompanyDTO;
 import com.soldesk.festival.dto.FundingFestivalDTO;
+import com.soldesk.festival.dto.MemberDTO;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.soldesk.festival.dto.FestivalCategoryDTO;
+import com.soldesk.festival.service.FavoriteService;
 import com.soldesk.festival.service.FestivalService;
 import com.soldesk.festival.service.FileUploadService;
 import com.soldesk.festival.service.FundingFestivalService;
@@ -35,6 +38,7 @@ public class FundingController {
     private final FestivalService festivalService;
     private final FundingFestivalService fundingFestivalService;
     private final FileUploadService fileUploadService;
+    private final FavoriteService favoriteService;
 
     @GetMapping("/main")
     public String main(Model model){
@@ -50,8 +54,16 @@ public class FundingController {
 
     @GetMapping("/info")
     public String info(@RequestParam("id") int idx, Model model, HttpSession session){
+        MemberDTO loginMember = (MemberDTO) session.getAttribute("loginMember");
+        CompanyDTO companyMember = (CompanyDTO) session.getAttribute("companyMember");
 
-         
+        boolean exist = false;
+        if (loginMember != null) {
+            exist = favoriteService.existsFavoriteFundingByMember(loginMember.getMember_idx(), idx);
+        }else if (companyMember != null) {
+            exist = favoriteService.existsFavoriteFundingByCompany(companyMember.getCompany_idx(), idx);
+        }
+        model.addAttribute("isFavorite", exist);
       
         FundingFestivalDTO funding = fundingFestivalService.selectFunding(idx);
         model.addAttribute("funding", funding);

@@ -181,10 +181,26 @@ function _initFundingDetail(detail) {
   // === 후원 버튼 (알림)
   if (btnFund) {
     btnFund.addEventListener("click", async () => {
+      const memberId = btnFund.dataset.memberId;
+      const companyId = btnFund.dataset.companyId;
+
+      if (memberId == 0 && companyId == 0) {
+        alert("로그인 후 이용 가능합니다.");
+        return;
+    }else if(companyId == 0){
+        alert("기업회원만 이용가능합니다");
+        return;
+    }
+
       const festivalName = document.getElementById("festivalName").innerText;
       const festivalIdxStr = document.getElementById("funding_festival_idx").textContent;
       const festivalIdx = parseInt(festivalIdxStr, 10);
       const amount = myDonation;
+
+      if(amount == 0){
+        alert("금액을 입력해주세요");
+        return;
+      }
       const requestData = {
         amount ,
         orderName : `${festivalName} 후원`,

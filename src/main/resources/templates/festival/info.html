@@ -47,6 +47,7 @@
                     class="btn btn-sm border-0 bg-transparent" 
                     id="btnFavorite"
                     th:data-festival-idx="${festival.festival_idx}"
+                    data-funding-idx="0"
                     th:data-member-id="${session.loginMember != null ? session.loginMember.member_idx : 0}"
                     th:data-company-id="${session.companyMember != null ? session.companyMember.company_idx : 0}"
                     >

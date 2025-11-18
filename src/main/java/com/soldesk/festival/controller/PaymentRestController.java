@@ -111,9 +111,9 @@ public class PaymentRestController {
             paymentService.modifyProcess(paymentDTO);
             // 잡아다가 펀딩페스티벌 업데이트
             
-            int amount = paymentService.selectFundingAmount(paymentDTO);
-            System.out.println(amount);
-            fundingFestivalService.insertFundingAmount(amount); //funding festival idx 업데이트 예정
+            PaymentDTO updateAmount = paymentService.selectFundingAmount(paymentDTO);
+            System.out.println(updateAmount);
+            fundingFestivalService.insertFundingAmount(updateAmount); //funding festival idx 업데이트 예정
 
             response.put("success", true);
         } catch (Exception e) {

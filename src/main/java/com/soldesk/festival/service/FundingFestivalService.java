@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.soldesk.festival.dto.CompanyDTO;
 import com.soldesk.festival.dto.FundingFestivalDTO;
+import com.soldesk.festival.dto.PaymentDTO;
 import com.soldesk.festival.mapper.FundingFestivalMapper;
 
 import lombok.RequiredArgsConstructor;
@@ -39,7 +40,7 @@ public class FundingFestivalService {
         return fundingFestivalMapper.countFundingByCompany(company_idx);
     }
 
-    public void insertFundingAmount(int amount){
+    public void insertFundingAmount(PaymentDTO amount){
         fundingFestivalMapper.insertFundingAmount(amount);
     }
 }
