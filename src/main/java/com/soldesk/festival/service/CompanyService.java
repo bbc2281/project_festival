@@ -68,12 +68,20 @@ public class CompanyService {
 		return companyMapper.selectCompanyByIdx(idx);
 	}
 
-	public int countCompany(){
-		return companyMapper.CountCompany();
+	public int countCompany(String keyword){
+		if(keyword != null && !keyword.isEmpty()){
+			return companyMapper.CountCompanyByKeyword(keyword);
+		}else{
+			return companyMapper.CountCompany();
+		}
 	}
 
-	public List<CompanyDTO> getCompanyListPaged(int offset, int limit){
-		return companyMapper.selectCompanyPaged(offset, limit);
+	public List<CompanyDTO> getCompanyListPaged(String keyword, int offset, int limit){
+		if(keyword != null && !keyword.isEmpty()){
+			return companyMapper.selectCompanyPagedByKeyword(keyword, offset, limit);
+		}else{
+			return companyMapper.selectCompanyPaged(offset, limit);
+		}
 	}
 
 	@Transactional

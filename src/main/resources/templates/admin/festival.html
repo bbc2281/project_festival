@@ -95,6 +95,12 @@
       <h4>축제정보 관리</h4>
     </header>
 
+    <form th:action="@{/admin/festival}" method="get" class="d-flex mb-3">
+      <input type="text" name="keyword" th:value="${keyword}" placeholder="축제명, 개최지 등을 검색"
+        class="form-control me-2" />
+      <button type="submit" class="btn btn-primary">검색</button>
+    </form>
+
     <div class="p-4">
       <table class="table table-hover align-middle text-center">
         <thead class="table-light">
@@ -121,17 +127,17 @@
       <nav aria-label="Page navigation">
         <ul class="pagination justify-content-center">
 
-          <li th:classappend="${startPage == 1} ? 'disabled'" class="page-item">
-            <a class="page-link" th:href="@{'/admin/festival'(page=${prevBlockPage})}" tabindex="-1">이전</a>
+          <li th:if="${startPage != 1}" class="page-item">
+            <a class="page-link" th:href="@{'/admin/festival'(page=${prevBlockPage}, keyword=${keyword})}" tabindex="-1">이전</a>
           </li>
 
           <li th:each="i : ${#numbers.sequence(startPage, endPage)}"
             th:classappend="${i == currentPage} ? 'active' : ''" class="page-item">
-            <a class="page-link" th:href="@{'/admin/festival'(page=${i})}" th:text="${i}"></a>
+            <a class="page-link" th:href="@{'/admin/festival'(page=${i}, keyword=${keyword})}" th:text="${i}"></a>
           </li>
 
-          <li th:classappend="${endPage == totalPages} ? 'disabled'" class="page-item">
-            <a class="page-link" th:href="@{'/admin/festival'(page=${nextBlockPage})}">다음</a>
+          <li th:if="${endPage != totalPages}" class="page-item">
+            <a class="page-link" th:href="@{'/admin/festival'(page=${nextBlockPage}, keyword=${keyword})}">다음</a>
           </li>
 
         </ul>

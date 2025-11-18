@@ -44,8 +44,14 @@ public class FestivalDAO {
     public int countFestival(){
         return festivalMapper.countFestival();
     }
+    public int countFestivalByKeyword(String keyword){
+        return festivalMapper.countFestivalByKeyword(keyword);
+    }
 
     public List<FestivalDTO> selectFestivalPaged(int offset, int limit){
         return festivalMapper.selectFestivalPaged(offset, limit);
+    }
+    public List<FestivalDTO> selectFestivalPagedByKeyword(String keyword, int offset, int limit){
+        return festivalMapper.selectFestivalPagedByKeyword(keyword, offset, limit);
     }
 }

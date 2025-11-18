@@ -103,9 +103,15 @@ public interface MemberMapper {
 	@Select("select count(member_idx) from member")
 	int countMember();
 
+	@Select("select count(*) from member where member_id like concat('%', #{keyword}, '%') or member_name like concat('%', #{keyword}, '%') or member_email like concat('%', #{keyword}, '%')")
+	int countMemberByKeyword(@Param("keyword") String keyword);
+
 	@Select("select * from member where member_idx=#{member_idx}")
 	MemberDTO findUserbyIdx(@Param("member_idx") int member_idx);
 
 	@Select("select * from member order by member_idx desc limit #{limit} offset #{offset}")
 	List<MemberDTO> selectMemberPaged(@Param("offset") int offset, @Param("limit") int limit);
+
+	@Select("select * from member where member_id like concat('%', #{keyword}, '%') or member_name like concat('%', #{keyword}, '%') or member_email like concat('%', #{keyword}, '%') order by member_idx desc limit #{limit} offset #{offset}")
+	List<MemberDTO> selectMemberPagedByKewWord(@Param("keyword") String keyword, @Param("offset") int offset, @Param("limit") int limit);
 }

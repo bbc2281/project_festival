@@ -137,17 +137,26 @@ public class MemberService {
 		return memberMapper.getMemberList();
 	}
 
-	public int countMember() {
-		return memberMapper.countMember();
+	public int countMember(String keyword) {
+		if(keyword != null && !keyword.isEmpty()){
+			return memberMapper.countMemberByKeyword(keyword);
+		}else{
+			return memberMapper.countMember();
+		}
 	}
-
 	public MemberDTO findUserbyIdx(int member_idx) {
 		return memberMapper.findUserbyIdx(member_idx);
 	}
-	public List<MemberDTO> getMemberListPaged(int offset, int limit) {
-    return memberMapper.selectMemberPaged(offset, limit);
-
+	public List<MemberDTO> getMemberListPaged(String keyword, int offset, int limit) {
+		if(keyword != null && !keyword.isEmpty()){
+			return memberMapper.selectMemberPagedByKewWord(keyword, offset, limit);
+		}else{
+			return memberMapper.selectMemberPaged(offset, limit);
+		}
+	}
 	public void adminDeleteMember(int member_idx){
 		memberMapper.deleteMember(member_idx);
 	}
+
+	
 }

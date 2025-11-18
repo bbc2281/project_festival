@@ -44,11 +44,18 @@ public class FestivalService {
         festivalDAO.deleteFestival(festival_idx);
     }
     
-    public int countFestival(){
-        return festivalDAO.countFestival();
+    public int countFestival(String keyword){
+        if(keyword != null && !keyword.isEmpty()){
+            return festivalDAO.countFestivalByKeyword(keyword);
+        }else{
+            return festivalDAO.countFestival();
+        }
     }
 
-    public List<FestivalDTO> getFestivalListPaged(int offset, int limit) {
-        return festivalDAO.selectFestivalPaged(offset, limit);
+    public List<FestivalDTO> getFestivalListPaged(String keyword, int offset, int limit) {
+        if(keyword != null && !keyword.isEmpty()){
+            return festivalDAO.selectFestivalPagedByKeyword(keyword, offset, limit);
+        }else{
+            return festivalDAO.selectFestivalPaged(offset, limit);}
 	}
 }

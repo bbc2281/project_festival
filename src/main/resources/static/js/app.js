@@ -126,8 +126,10 @@ function renderHome(){
       card.className = 'flex-fill text-center';
       card.innerHTML = `
         <div class="rounded-4 overflow-hidden shadow-sm bg-dark bg-opacity-25">
-          <img src="${f.img}" class="w-100 object-fit-cover" style="height:280px; border-radius: 12px;">
-          <div class="p-2 text-white fw-semibold">${f.name}</div>
+          <a href="/festivalInfo?id=${f.id}" style="text-decoration: none;">
+            <img src="${f.img}" class="w-100 object-fit-cover" style="height:280px; border-radius: 12px;">
+            <div class="p-2 text-white fw-semibold">${f.name}</div>
+          </a>
         </div>
       `;
       innerRow.appendChild(card);

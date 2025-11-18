@@ -36,6 +36,12 @@ public interface FestivalMapper {
     @Select("select count(festival_idx) from festival")
     int countFestival();
 
-    @Select("select * from festival order by festival_idx desc limit #{limit} offset #{offset}")
+    @Select("select count(festival_idx) from festival f join region r on f.region_idx = r.region_idx where f.festival_name like concat('%', #{keyword}, '%') or r.region_name like concat('%', #{keyword}, '%')")
+    int countFestivalByKeyword(@Param("keyword") String keyword);
+
+    @Select("select * from festival f join region r on f.region_idx = r.region_idx order by f.festival_idx desc limit #{limit} offset #{offset}")
     List<FestivalDTO> selectFestivalPaged(@Param("offset") int offset, @Param("limit") int limit);
+
+    @Select("select * from festival f join region r on f.region_idx = r.region_idx where f.festival_name like concat('%', #{keyword}, '%') or r.region_name like concat('%', #{keyword}, '%') order by f.festival_idx desc limit #{limit} offset #{offset}")
+    List<FestivalDTO> selectFestivalPagedByKeyword(@Param("keyword") String keyword, @Param("offset") int offset, @Param("limit") int limit);
 }
