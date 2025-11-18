@@ -95,13 +95,16 @@
       <h4>축제정보 관리</h4>
     </header>
 
-    <form th:action="@{/admin/festival}" method="get" class="d-flex mb-3">
-      <input type="text" name="keyword" th:value="${keyword}" placeholder="축제명, 개최지 등을 검색"
-        class="form-control me-2" />
-      <button type="submit" class="btn btn-primary">검색</button>
+    <form th:action="@{/admin/festival}" method="get" class="search-wrapper d-flex justify-content-end mb-1 px-2">
+      <div class="custom-search-bar">
+        <input type="text" name="keyword" th:value="${keyword}" placeholder="축제명, 개최지 등을 검색" class="search-input" />
+        <button type="submit" class="search-btn">
+          🔍
+        </button>
+      </div>
     </form>
 
-    <div class="p-4">
+    <div style="margin-right: 2%;">
       <table class="table table-hover align-middle text-center">
         <thead class="table-light">
           <tr>
@@ -128,7 +131,8 @@
         <ul class="pagination justify-content-center">
 
           <li th:if="${startPage != 1}" class="page-item">
-            <a class="page-link" th:href="@{'/admin/festival'(page=${prevBlockPage}, keyword=${keyword})}" tabindex="-1">이전</a>
+            <a class="page-link" th:href="@{'/admin/festival'(page=${prevBlockPage}, keyword=${keyword})}"
+              tabindex="-1">이전</a>
           </li>
 
           <li th:each="i : ${#numbers.sequence(startPage, endPage)}"

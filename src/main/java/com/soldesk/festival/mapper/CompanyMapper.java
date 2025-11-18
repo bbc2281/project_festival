@@ -15,7 +15,6 @@ import org.apache.ibatis.annotations.Update;
 
 import com.soldesk.festival.dto.CompanyDTO;
 import com.soldesk.festival.dto.CompanyJoinDTO;
-import com.soldesk.festival.dto.InquiryDTO;
 import com.soldesk.festival.handler.MemberRoleTypeHandler;
 
 @Mapper

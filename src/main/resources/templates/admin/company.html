@@ -88,13 +88,17 @@
       </h4>
     </header>
 
-    <form th:action="@{/admin/company}" method="get" class="d-flex mb-3">
-      <input type="text" name="keyword" th:value="${keyword}" placeholder="아이디, 기업명, 대표이사, 이메일 등을 검색"
-        class="form-control me-2" />
-      <button type="submit" class="btn btn-primary">검색</button>
+    <form th:action="@{/admin/company}" method="get" class="search-wrapper d-flex justify-content-end mb-1 px-2">
+      <div class="custom-search-bar">
+        <input type="text" name="keyword" th:value="${keyword}" placeholder="아이디, 기업명, 대표이사, 이메일 등을 검색"
+          class="search-input" />
+        <button type="submit" class="search-btn">
+          🔍
+        </button>
+      </div>
     </form>
 
-    <div class="p-4">
+    <div style="margin-right: 2%;">
       <table class="table table-hover align-middle text-center">
         <thead class="table-light">
           <tr>
