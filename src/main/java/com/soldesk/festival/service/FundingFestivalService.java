@@ -43,4 +43,16 @@ public class FundingFestivalService {
     public void insertFundingAmount(PaymentDTO amount){
         fundingFestivalMapper.insertFundingAmount(amount);
     }
+
+    public int countFunding(){
+        return fundingFestivalMapper.countFunding();
+    }
+
+    public List<FundingFestivalDTO> getFestivalListPaged(int offset, int limit) {
+        return fundingFestivalMapper.getFestivalListPaged(offset, limit);
+	}
+
+    public void deleteFunding(int idx){
+        fundingFestivalMapper.deleteFunding(idx);
+    }
 }

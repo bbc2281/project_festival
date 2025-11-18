@@ -93,8 +93,8 @@
   <div class="main">
     <header>
       <h4>
-        <a th:href="@{/admin/festival}" style="all: unset; cursor:pointer; color:inherit; text-decoration:none;">축제 관리</a> / 
-        <a th:href="@{/admin/funding}" style="all: unset; cursor:pointer; color:darkgray; text-decoration:none;">펀딩 관리</a>
+        <a th:href="@{/admin/festival}" style="all: unset; cursor:pointer; color:darkgray; text-decoration:none;">축제 관리</a> / 
+        <a th:href="@{/admin/funding}" style="all: unset; cursor:pointer; color:inherit; text-decoration:none;">펀딩 관리</a>
       </h4>
     </header>
 
@@ -102,21 +102,21 @@
       <table class="table table-hover align-middle text-center">
         <thead class="table-light">
           <tr>
-            <th>축제명</th>
-            <th>개최지</th>
-            <th>시작일</th>
-            <th>종료일</th>
+            <th>펀딩명</th>
+            <th>축제장소</th>
+            <th>모금액</th>
+            <th>모금목표액</th>
             <th></th>
           </tr>
         </thead>
         <tbody>
-          <tr th:each="festival : ${festivals}">
-            <td><a class="festival-link" th:href="@{/festivalInfo(id=${festival.festival_idx})}"
-                th:text="${festival.festival_name}"></a></td>
-            <td th:text="${festival.region_name}"></td>
-            <td th:text="${festival.festival_begin_date}"></td>
-            <td th:text="${festival.festival_end_date}"></td>
-            <td><a th:href="@{/festival/delete(festival_idx=${festival.festival_idx})}"
+          <tr th:each="funding : ${fundings}">
+            <td><a class="festival-link" th:href="@{/funding/info(id=${funding.funding_festival_idx})}"
+                th:text="${funding.festival_name}"></a></td>
+            <td th:text="${funding.festival_address}"></td>
+            <td th:text="${funding.festival_amount}"></td>
+            <td th:text="${funding.festival_total_amount}"></td>
+            <td><a th:href="@{/funding/delete(id=${funding.funding_festival_idx})}"
                 class="btn btn-success btn-sm">삭제</a></td>
           </tr>
         </tbody>
@@ -125,16 +125,16 @@
         <ul class="pagination justify-content-center">
 
           <li th:classappend="${startPage == 1} ? 'disabled'" class="page-item">
-            <a class="page-link" th:href="@{'/admin/festival'(page=${prevBlockPage})}" tabindex="-1">이전</a>
+            <a class="page-link" th:href="@{'/admin/funding'(page=${prevBlockPage})}" tabindex="-1">이전</a>
           </li>
 
           <li th:each="i : ${#numbers.sequence(startPage, endPage)}"
             th:classappend="${i == currentPage} ? 'active' : ''" class="page-item">
-            <a class="page-link" th:href="@{'/admin/festival'(page=${i})}" th:text="${i}"></a>
+            <a class="page-link" th:href="@{'/admin/funding'(page=${i})}" th:text="${i}"></a>
           </li>
 
           <li th:classappend="${endPage == totalPages} ? 'disabled'" class="page-item">
-            <a class="page-link" th:href="@{'/admin/festival'(page=${nextBlockPage})}">다음</a>
+            <a class="page-link" th:href="@{'/admin/funding'(page=${nextBlockPage})}">다음</a>
           </li>
 
         </ul>

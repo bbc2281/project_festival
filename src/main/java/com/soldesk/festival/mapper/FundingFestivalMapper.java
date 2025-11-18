@@ -2,12 +2,14 @@ package com.soldesk.festival.mapper;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
+import com.soldesk.festival.dto.FestivalDTO;
 import com.soldesk.festival.dto.FundingFestivalDTO;
 import com.soldesk.festival.dto.PaymentDTO;
 
@@ -28,4 +30,13 @@ public interface FundingFestivalMapper {
 
     @Update("update festival_funding set festival_amount = festival_amount + #{payment_amount} where funding_festival_idx = #{funding_festival_idx}")
     void insertFundingAmount(PaymentDTO paymentDTO);
+
+    @Select("select count(*) from festival_funding")
+    int countFunding();
+
+    @Select("select * from festival_funding order by funding_festival_idx desc limit #{limit} offset #{offset}")
+    List<FundingFestivalDTO> getFestivalListPaged(@Param("offset") int offset, @Param("limit") int limit);
+
+    @Delete("delete from festival_funding where funding_festival_idx=#{funding_festival_idx}")
+    void deleteFunding(@Param("funding_festival_idx") int idx);
 }

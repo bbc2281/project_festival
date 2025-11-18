@@ -52,13 +52,19 @@
             </ul>
           </div>
         </div>
-        <div id="opt-social" class="option-card" style="margin-top: 10px; padding: 10px; height: fit-content;">
-          <p class="card-title mt-3">또는 SNS 계정으로 가입</p>
+        <div class="social-login text-center mt-4">
+          <h3 class="social-label" style="color: white;">SNS 계정으로 회원가입</h3>
           <div class="social-buttons">
-            <a href="#" id="my-naver-btn" class="social-btn naver">Naver로 가입</a>
-            <div id="naver_id_login" style="display: none;"></div>
-            <a href="#" id="my-google-btn" class="social-btn google">Google로 가입</a>
+            <a href="#" id="my-google-btn" class="social-btn google-btn"> 
+              <img th:src="@{/images/google.png}" alt="Google Logo">
+              <span>Google 계정으로 회원가입</span>
+            </a>
             <div id="googleSignInBtn" style="display: none;"></div>
+            <a href="#" id="my-naver-btn" class="social-btn naver-btn">
+              <img th:src="@{/images/naver.png}" alt="Naver Logo">
+              <span>네이버 계정으로 회원가입</span>
+            </a>
+            <div id="naver_id_login" style="display: none;"></div>
           </div>
         </div>
 

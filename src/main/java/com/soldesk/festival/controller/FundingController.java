@@ -117,4 +117,10 @@ public class FundingController {
 
         return "redirect:/funding/main";
     }
+
+    @GetMapping("/delete")
+    public String delete(@RequestParam("id") int idx){
+        fundingFestivalService.deleteFunding(idx);
+        return "redirect:/admin/funding";
+    }
 }
