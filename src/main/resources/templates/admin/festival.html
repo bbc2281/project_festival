@@ -137,7 +137,7 @@
 
           <li th:each="i : ${#numbers.sequence(startPage, endPage)}"
             th:classappend="${i == currentPage} ? 'active' : ''" class="page-item">
-            <a class="page-link" th:href="@{'/admin/festival'(page=${i}, keyword=${keyword})}" th:text="${i}"></a>
+            <a th:if="${i != 0}" class="page-link" th:href="@{'/admin/festival'(page=${i}, keyword=${keyword})}" th:text="${i}"></a>
           </li>
 
           <li th:if="${endPage != totalPages}" class="page-item">

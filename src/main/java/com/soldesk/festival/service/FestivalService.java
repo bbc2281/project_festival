@@ -45,7 +45,8 @@ public class FestivalService {
     }
     
     public int countFestival(String keyword){
-        if(keyword != null && !keyword.isEmpty()){
+        if(keyword != null && !keyword.trim().isEmpty()){
+			keyword = keyword.trim();
             return festivalDAO.countFestivalByKeyword(keyword);
         }else{
             return festivalDAO.countFestival();
@@ -53,7 +54,8 @@ public class FestivalService {
     }
 
     public List<FestivalDTO> getFestivalListPaged(String keyword, int offset, int limit) {
-        if(keyword != null && !keyword.isEmpty()){
+        if(keyword != null && !keyword.trim().isEmpty()){
+			keyword = keyword.trim();
             return festivalDAO.selectFestivalPagedByKeyword(keyword, offset, limit);
         }else{
             return festivalDAO.selectFestivalPaged(offset, limit);}

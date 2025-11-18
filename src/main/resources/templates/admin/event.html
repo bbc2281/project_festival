@@ -134,7 +134,7 @@
           </li>
           <li th:each="i : ${#numbers.sequence(1, totalPages)}" th:classappend="${i == currentPage} ? 'active' : ''"
             class="page-item">
-            <a class="page-link" th:href="@{'/admin/event'(page=${i})}" th:text="${i}"></a>
+            <a th:if="${i != 0}" class="page-link" th:href="@{'/admin/event'(page=${i})}" th:text="${i}"></a>
           </li>
           <li th:if="${currentPage < totalPages}" class="page-item">
             <a class="page-link" th:href="@{'/admin/event'(page=${currentPage+1})}">다음</a>

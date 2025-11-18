@@ -68,7 +68,8 @@ public class CompanyService {
 	}
 
 	public int countCompany(String keyword){
-		if(keyword != null && !keyword.isEmpty()){
+		if(keyword != null && !keyword.trim().isEmpty()){
+			keyword = keyword.trim();
 			return companyMapper.CountCompanyByKeyword(keyword);
 		}else{
 			return companyMapper.CountCompany();
@@ -76,7 +77,8 @@ public class CompanyService {
 	}
 
 	public List<CompanyDTO> getCompanyListPaged(String keyword, int offset, int limit){
-		if(keyword != null && !keyword.isEmpty()){
+		if(keyword != null && !keyword.trim().isEmpty()){
+			keyword = keyword.trim();
 			return companyMapper.selectCompanyPagedByKeyword(keyword, offset, limit);
 		}else{
 			return companyMapper.selectCompanyPaged(offset, limit);
