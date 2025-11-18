@@ -157,13 +157,12 @@ public class UserViewController {
         String userId = userdetails.getUsername();
         System.out.println("인증된 사용자 아이디" + userId);
 
-        Optional<CompanyDetailDTO> opDetail = companyService.getDetails(userId);
-
+        Optional<CompanyDTO> opDetail = companyService.findCompanyDetailAllById(userId);
         if(opDetail.isEmpty()){
             return "redirect:/auth/loginPage?error=dataError";
         }
         
-        CompanyDetailDTO userInfo = opDetail.get();
+        CompanyDTO userInfo = opDetail.get();
         model.addAttribute("userInfo", userInfo);
         return "company/info";
 
@@ -171,7 +170,22 @@ public class UserViewController {
     
     //기업회원 정보수정
     @GetMapping("/company/edit")
-    public String mypageModifyForCompany(){
+    public String mypageModifyForCompany(@AuthenticationPrincipal SecurityAllUsersDTO userdetails, Model model){
+
+        if(userdetails == null){
+            return "redirect:/auth/loginPage";
+        }
+        String userId = userdetails.getUsername();
+        System.out.println("인증된 사용자 아이디 " + userId);
+
+        Optional<CompanyDTO> opCom = companyService.findCompanyDetailAllById(userId);
+        if(opCom.isEmpty()){
+            return "redirect:/auth/loginPage?error=dataError";
+        }
+
+        CompanyDTO userInfo = opCom.get();
+        model.addAttribute("userInfo", userInfo);
+        System.out.println("GetMapping ");
         return "company/edit";
     }
     

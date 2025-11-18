@@ -1,5 +1,6 @@
 package com.soldesk.festival.service;
 
+import java.lang.reflect.Member;
 import java.util.Map;
 import java.util.Optional;
 
@@ -10,6 +11,8 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
 import com.soldesk.festival.dto.MemberDTO;
+import com.soldesk.festival.dto.OAuth2DTO;
+
 import com.soldesk.festival.dto.SocialAttributes;
 import com.soldesk.festival.mapper.CompanyMapper;
 import com.soldesk.festival.mapper.MemberMapper;
@@ -40,12 +43,32 @@ public class CustomOAuth2Service extends DefaultOAuth2UserService {
         String memberId = registrationId + "_" + socialAttributes.getId();
         
         Optional<MemberDTO> opMember = memberService.getAllDetails(memberId);
+        MemberDTO member;
+
+        if(opMember.isPresent()){
+            member = opMember.get();
+        }else {
+
+        }
+        
         
         
 
         return super.loadUser(userRequest);
     }
+    
+    /* 
+    private OAuth2DTO toNewMember(String memberId, SocialAttributes attributes){
+        
+        return OAuth2DTO.builder()
+                        .member_id(memberId)
+                        .member_name(attributes.getName())
+                        .member_email(attributes.getEmail())
+                        .role(attributes.getRole())
+                        .build
+                        
 
+    }  */
 
      
 

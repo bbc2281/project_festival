@@ -14,6 +14,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,7 +22,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.google.rpc.context.AttributeContext.Response;
 import com.soldesk.festival.dto.CompanyJoinDTO;
+import com.soldesk.festival.dto.CompanyUpdateDTO;
 import com.soldesk.festival.dto.LoginDTO;
 import com.soldesk.festival.dto.MemberJoinDTO;
 import com.soldesk.festival.dto.MemberUpdateDTO;
@@ -271,6 +274,68 @@ public class UserRestController {
 
 
 	}
+
+	
+	@PostMapping("/coverifypass")
+	public ResponseEntity<UserResponse> coverifypass(@AuthenticationPrincipal SecurityAllUsersDTO userdetails, @Valid @RequestBody PasswordVerifyDTO passcheck){
+
+		String userId = userdetails.getUsername();
+		String rawpass = passcheck.getCurrent_pass();
+		boolean isMatch = companyService.checkPassword(userId, rawpass);
+
+		try {
+			if(isMatch){
+
+				UserResponse response = UserResponse.successMessage("비밀번호 확인 중 오류가 발생하였습니다");
+				return ResponseEntity.ok(response);
+			}else {
+				String err = "비밀번호가 일치하지 않습니다";
+				UserResponse response = UserResponse.error(err);
+				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+
+			}
+		} catch (UserException e) {
+				UserResponse response = UserResponse.error(e.getMessage());
+			    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+
+		}catch (Exception e) {
+			UserResponse response = UserResponse.error("비밀번호 확인 중 오류가 발생하였습니다");
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+		}
+
+	}
+
+    
+	
+	@PostMapping("/modifycom")
+	public ResponseEntity<UserResponse> modifycoInfo(@AuthenticationPrincipal SecurityAllUsersDTO userdetails, @Valid @RequestBody CompanyUpdateDTO updateco){
+
+		if(userdetails == null){
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(UserResponse.error("인증되지 않은 사용자입니다"));
+		}
+
+        System.out.println("postMapping ");
+		try {
+			updateco.setMember_id(userdetails.getUsername());
+			companyService.updateCompany(updateco);
+
+			UserResponse response = UserResponse.successMessage("기업회원정보 수정에 성공하였습니다");
+			return ResponseEntity.ok(response);
+			
+		} catch (UserException e) {
+
+			UserResponse response = UserResponse.error(e.getMessage());
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+		
+		}catch (Exception e){
+			e.printStackTrace();
+			UserResponse response = UserResponse.error("회원정보 수정 중 오류가 발생하였습니다");
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+
+		}
+
+	}
+	
 
 
 	

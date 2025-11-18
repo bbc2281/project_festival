@@ -8,18 +8,18 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter
-public class CompanyUpdate {
+public class CompanyUpdateDTO {
 
     
 	private Integer company_idx;
 	
-	@NotBlank(message="회사이름을 입력해주세요")
+	@Setter
 	private String company_name;
 	
-	@NotBlank(message="아이디를 입력해주세요")
+	@Setter
 	private String member_id;
 	
-	@NotBlank(message="비밀번호를 입력해주세요")
+	//@NotBlank(message="비밀번호를 입력해주세요")
     @Setter
 	private String member_pass;
 	
@@ -35,13 +35,13 @@ public class CompanyUpdate {
 	private String company_phone;
 	
 	@NotBlank(message="사업자 번호를 입력해주시길 바랍니다")
+	@Setter
 	private String company_reg_num;
 	
-	@NotBlank(message="사업주 이름을 입력해주세요")
-	private String company_owner;
+	//@NotBlank(message="사업주 이름을 입력해주세요")
+	//private String company_owner;
 	
-	@NotBlank(message="회사 창립날짜를 입력해주세요")
-	private String company_open_date;
+	//private String company_open_date;
 	
 	@NotBlank(message="회사 소재지 주소를 입력해주세요")
     @Setter
@@ -50,8 +50,6 @@ public class CompanyUpdate {
 	@NotBlank(message="계좌 번호를 입력해주세요")
     @Setter
 	private String company_account;
-	
-	private MemberRole role;
 	
 	//private boolean deleted;
 	//private LocalDateTime deletedAt;

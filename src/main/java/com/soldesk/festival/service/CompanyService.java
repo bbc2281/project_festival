@@ -14,6 +14,7 @@ import com.soldesk.festival.config.MemberRole;
 import com.soldesk.festival.dto.CompanyDTO;
 import com.soldesk.festival.dto.CompanyDetailDTO;
 import com.soldesk.festival.dto.CompanyJoinDTO;
+import com.soldesk.festival.dto.CompanyUpdateDTO;
 import com.soldesk.festival.exception.UserException;
 import com.soldesk.festival.mapper.CompanyMapper;
 
@@ -31,6 +32,10 @@ public class CompanyService {
 		
 		return companyMapper.findCompanyUserById(companyId);
 	} 
+
+	public Optional<CompanyDTO> findCompanyDetailAllById(String comId){
+		return companyMapper.findCompanyDetailAllById(comId);
+	}
 	
 	//기업회원용 사업자번호로 기업회원찾기
 	@Transactional(readOnly=true)
@@ -135,6 +140,21 @@ public class CompanyService {
 
 	}
 
+    @Transactional(rollbackFor = com.soldesk.festival.exception.UserException.class)
+	public void updateCompany(CompanyUpdateDTO updateUser){
+
+		CompanyDTO existingMember = findCompanyUserById(updateUser.getMember_id()).orElseThrow(() -> new UserException("아이디나 비밀번호가 일치하지 않습니다"));
+
+	    if(updateUser.getMember_pass() == null || updateUser.getMember_pass().isBlank()){
+			updateUser.setMember_pass(existingMember.getMember_pass());
+		}else{
+		    		
+			updateUser.setMember_pass(authUtil.encodedPassword(updateUser.getMember_pass()));
+		}
+		companyMapper.updateCompany(updateUser);
+
+	}
+    
 
     
     

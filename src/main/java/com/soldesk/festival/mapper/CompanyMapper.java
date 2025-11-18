@@ -3,6 +3,7 @@ package com.soldesk.festival.mapper;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
@@ -10,10 +11,12 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import com.soldesk.festival.dto.CompanyDTO;
 import com.soldesk.festival.dto.CompanyDetailDTO;
 import com.soldesk.festival.dto.CompanyJoinDTO;
+import com.soldesk.festival.dto.CompanyUpdateDTO;
 import com.soldesk.festival.handler.MemberRoleTypeHandler;
 
 @Mapper
@@ -75,7 +78,13 @@ public interface CompanyMapper {
     
 	@Select("select company_idx, company_name, member_id, member_email, company_owner, company_address, company_open_date, role from company ")
 	List<CompanyDetailDTO> getCompanyList();
-    
 
+		
+	@Update("update company set company_name=#{company_name}, member_pass=#{member_pass}, company_reg_num=#{company_reg_num}, member_email=#{member_email}, company_phone=#{company_phone}, company_address=#{company_address}, company_account=#{company_account} where member_id=#{member_id}")
+	void updateCompany(CompanyUpdateDTO updateMember); //아이디 제외
+    
+	@Delete("delete from company where member_id=#{member_id} and member_pass=#{member_pass}")
+    void deleteCompany(CompanyDTO deleteCo);
+	
 	
 }
