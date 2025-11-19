@@ -18,7 +18,7 @@ import lombok.RequiredArgsConstructor;
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/payment")
-public class paymentController {
+public class PaymentController {
     
     private final FundingFestivalService fundingService;
     private final paymentService paymentService;

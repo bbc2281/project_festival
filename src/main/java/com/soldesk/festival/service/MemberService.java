@@ -137,17 +137,44 @@ public class MemberService {
 		return memberMapper.getMemberList();
 	}
 
-	public int countMember() {
-		return memberMapper.countMember();
+	public int countMember(String keyword) {
+		if(keyword != null && !keyword.trim().isEmpty()){
+			keyword = keyword.trim();
+			int social = 10;
+			if(keyword.equals("일반") || keyword.equals("일반 회원")){
+				social = 0;
+			}else if(keyword.equals("네이버") || keyword.equals("네이버 회원")){
+				social = 1;
+			}else if(keyword.equals("구글") || keyword.equals("구글 회원")){
+				social = 2;
+			}
+			return memberMapper.countMemberByKeyword(keyword, social);
+		}else{
+			return memberMapper.countMember();
+		}
 	}
-
 	public MemberDTO findUserbyIdx(int member_idx) {
 		return memberMapper.findUserbyIdx(member_idx);
 	}
-	public List<MemberDTO> getMemberListPaged(int offset, int limit) {
-    return memberMapper.selectMemberPaged(offset, limit);
-
+	public List<MemberDTO> getMemberListPaged(String keyword, int offset, int limit) {
+		if(keyword != null && !keyword.trim().isEmpty()){
+			keyword = keyword.trim();
+			int social = 10;
+			if(keyword.equals("일반") || keyword.equals("일반 회원")){
+				social = 0;
+			}else if(keyword.equals("네이버") || keyword.equals("네이버 회원")){
+				social = 1;
+			}else if(keyword.equals("구글") || keyword.equals("구글 회원")){
+				social = 2;
+			}
+			return memberMapper.selectMemberPagedByKewWord(keyword, offset, limit, social);
+		}else{
+			return memberMapper.selectMemberPaged(offset, limit);
+		}
+	}
 	public void adminDeleteMember(int member_idx){
 		memberMapper.deleteMember(member_idx);
 	}
+
+	
 }

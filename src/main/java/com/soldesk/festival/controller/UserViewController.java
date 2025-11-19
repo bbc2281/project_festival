@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 import com.soldesk.festival.dto.*;
 import com.soldesk.festival.service.*;
 
-import io.grpc.xds.shaded.io.envoyproxy.envoy.api.v2.auth.CommonTlsContext;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 

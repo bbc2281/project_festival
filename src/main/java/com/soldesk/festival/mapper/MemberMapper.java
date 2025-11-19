@@ -82,7 +82,7 @@ public interface MemberMapper {
 	Optional<MemberDTO> selectUserByEmail(@Param("member_email")String userEmail);
 	
     
-	@Select("select * from member where role = 'USER' order by member_idx desc")
+	@Select("select * from member where role = 'USER' and member_idx != 0 order by member_idx desc")
 	List<MemberDTO> getMemberList();
 
 	@Options(useGeneratedKeys=true, keyProperty="member_idx")
@@ -100,12 +100,18 @@ public interface MemberMapper {
 	@Delete("delete from member where member_idx=#{member_idx}")
 	void deleteMember(@Param("member_idx") int member_idx);
 	
-	@Select("select count(member_idx) from member")
+	@Select("select count(member_idx) from member where member_idx != 0")
 	int countMember();
+
+	@Select("select count(*) from member where member_id like concat('%', #{keyword}, '%') or member_name like concat('%', #{keyword}, '%') or member_email like concat('%', #{keyword}, '%') or is_social = #{social} and member_idx != 0")
+	int countMemberByKeyword(@Param("keyword") String keyword, @Param("social") int social);
 
 	@Select("select * from member where member_idx=#{member_idx}")
 	MemberDTO findUserbyIdx(@Param("member_idx") int member_idx);
 
-	@Select("select * from member order by member_idx desc limit #{limit} offset #{offset}")
+	@Select("select * from member where member_idx != 0 order by member_idx desc limit #{limit} offset #{offset}")
 	List<MemberDTO> selectMemberPaged(@Param("offset") int offset, @Param("limit") int limit);
+
+	@Select("select * from member where member_id like concat('%', #{keyword}, '%') or member_name like concat('%', #{keyword}, '%') or member_email like concat('%', #{keyword}, '%') or is_social = #{social} and member_idx != 0 order by member_idx desc limit #{limit} offset #{offset}")
+	List<MemberDTO> selectMemberPagedByKewWord(@Param("keyword") String keyword, @Param("offset") int offset, @Param("limit") int limit, @Param("social") int social);
 }

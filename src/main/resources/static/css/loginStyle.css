@@ -356,9 +356,8 @@ a:hover{ text-decoration:underline }
 }
 
 /* 서비스별 색상 */
-.social-btn.kakao { background: #FEE500; color: #3A1D1D; }
 .social-btn.google { background: #fff; color: #333; border: 1px solid #ccc; }
-.social-btn.naver { background: #03C75A; }
+.social-btn.naver { background: #03C75A; } 
 
 .social-btn:hover {
   transform: translateY(-2px);
