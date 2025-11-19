@@ -22,10 +22,31 @@
 <script defer th:src="@{/js/favorite.js}"></script>
 <script th:src="@{/js/filtering.js}"></script>
 <script type="text/javascript" src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=u4pl1guhug"></script>
+<style>
+    /* 🖼️ 모달 스타일 */
+    .gallery-thumb {
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
 
+    .gallery-thumb:hover {
+      transform: scale(1.05);
+    }
+
+    .gallery-modal img {
+      width: 100%;
+      max-width: 800px;
+      height: auto;
+      object-fit: contain;
+      border-radius: 12px;
+    }
+  </style>
 </head>
 
 <body class="bg-gradient-festive">
+  <div id="sessionInfo"
+     th:data-login-id="${session.loginMember != null ? session.loginMember.member_idx : 0}">
+  </div>
   <!-- 상단 네비바 -->
   <div th:replace="~{common/header :: header}"></div>
 
@@ -171,23 +192,68 @@
       <div class="col-12">
         <div class="gradient-card" style="height: 650px;">
           <div class="body d-flex flex-column h-100">
-                 <h5 class="fw-bold mb-3">리뷰</h5>
-                    <div th:each="review : ${reviews}" class="border rounded p-2 bg-light review-box">
-                       <b th:text="${review.member_nickname}"></b> — 
-                         <span class="review-content" th:text="${review.review_content}"></span><br>
-                           <img th:if="${review.review_img_path != null}" th:src="@{${review.review_img_path}}" class="img-fluid mt-2 review-image" style="max-height: 200px;">
-                          <button class="btnModifyReview"
-                              th:data-review-idx="${review.review_idx}"
-                              th:data-review-content="${review.review_content}">수정하기
-                          </button>
-                          <button class="btnDeleteReview" th:data-review-idx="${review.review_idx}">삭제하기</button>
-                          <button class="commentBtn" id="commentBtn" th:data-review-idx="${review.review_idx}">답글</button>
-                   </div>
-            <div class="mb-2">
-              <input type="file" id="reviewImage" class="form-control mb-2" accept="image/*">
-              <input type="text" class="form-control" id="reviewText" placeholder="한줄 리뷰 또는 댓글 입력" />
-            </div>
-            <button class="btn-gradient mt-auto" id="btnAddReview">등록</button>
+                <h5 class="fw-bold mb-3">
+                리뷰
+                <span id="reviewCount" class="text-muted ms-2" style="font-size: 0.9rem;"></span>
+              </h5>
+
+              <!-- 🖼 한 줄 고정 리뷰 갤러리 -->
+              <div id="reviewGalleryFixed" class="mb-3 shadow-sm">
+
+                <!-- 왼쪽 이미지 영역 -->
+                <div class="left-strip">
+                  <div th:each="review : ${reviews}" th:if="${review.review_img_path != null}" class="thumb-box">
+                    <img class="gallery-thumb" th:src="@{${review.review_img_path}}"
+                      th:attr="data-src=@{${review.review_img_path}}">
+                  </div>
+                </div>
+
+                <!-- 오른쪽 “더보기” -->
+                <div class="more-box" id="openGalleryModal">
+                  <div class="count" th:text="${#lists.size(reviews.?[review_img_path != null])}"></div>
+                  <div class="more-text">더보기</div>
+                </div>
+
+              </div>
+
+
+
+              <hr class="my-3">
+
+              <!-- 리뷰 목록 -->
+              <div id="reviewList" class="flex-grow-1 overflow-auto">
+                <div th:each="review : ${reviews}" class="border rounded p-2 bg-light mb-2 review-box">
+                  <b th:text="${review.member_nickname}"></b> —
+                  <span class="review-content" th:text="${review.review_content}"></span><br>
+
+                  <img th:if="${review.review_img_path != null}" th:src="@{${review.review_img_path}}"
+                    class="img-fluid mt-2 review-image" style="max-height:200px;">
+
+                  <div class="mt-2 d-flex gap-2">
+                    
+                    <button class="review-btn modify btnModifyReview" th:data-review-idx="${review.review_idx}"
+                      th:data-review-content="${review.review_content}" data-writer-id="${review.member_idx}">
+                      ✏ 수정
+                    </button>
+
+                    <button class="review-btn delete btnDeleteReview" th:data-review-idx="${review.review_idx}" data-writer-id="${review.member_idx}">
+                      🗑 삭제
+                    </button>
+                    
+
+                    <button class="review-btn reply commentBtn" th:data-review-idx="${review.review_idx}" data-writer-id="${review.member_idx}" >
+                      💬 답글
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 리뷰 작성 -->
+              <div class="mt-3" sec:authorize="hasAuthority('ROLE_USER')">
+                <input type="file" id="reviewImage" class="form-control mb-2" accept="image/*">
+                <input type="text" class="form-control" id="reviewText" placeholder="한줄 리뷰 또는 댓글 입력">
+                <button class="btn-gradient mt-2 w-100" id="btnAddReview">등록</button>
+              </div>
           </div>
         </div>
       </div>
@@ -278,9 +344,107 @@
     return (today >= monthBeforeBegin) && (today <= monthAfterEnd);
 }
   </script>
-  
-  <script th:src="@{/js/review.js}"></script>
-  <script th:src="@{/js/comment.js}"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- 모달 스크립트 -->
 
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const modal = new bootstrap.Modal(document.getElementById("galleryModal"));
+      const modalImg = document.getElementById("galleryModalImg");
+
+      const thumbs = Array.from(document.querySelectorAll(".gallery-thumb"));
+      let index = 0;
+
+      function show(indexNum) {
+        modalImg.src = thumbs[indexNum].getAttribute("data-src");
+        index = indexNum;
+        modal.show();
+      }
+
+      thumbs.forEach((img, i) => {
+        img.addEventListener("click", () => show(i));
+      });
+
+      
+      // ← → 키보드로 이전/다음 사진 넘기기
+      document.addEventListener("keydown", (e) => {
+        if (!document.getElementById("galleryModal").classList.contains("show")) return;
+        if (e.key === "ArrowRight") {
+          index = (index + 1) % thumbs.length;
+          show(index);
+        }
+        if (e.key === "ArrowLeft") {
+          index = (index - 1 + thumbs.length) % thumbs.length;
+          show(index);
+        }
+      });
+    });
+  </script>
+
+  <!-- 📌 전체 이미지 갤러리 모달 -->
+<div class="modal fade" id="galleryAllModal" tabindex="-1">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content p-3">
+      <button type="button" class="btn-close ms-auto mb-2" data-bs-dismiss="modal"></button>
+       <!-- 총 개수 표시 -->
+        <h5 id="galleryAllCount" class="fw-bold mb-3 text-center"></h5>
+      <div class="row g-3" id="galleryAllContainer"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  const allModal = new bootstrap.Modal(document.getElementById("galleryAllModal"));
+  const container = document.getElementById("galleryAllContainer");
+  const countBox = document.getElementById("galleryAllCount");
+
+  document.getElementById("openGalleryModal")?.addEventListener("click", (e) => {
+
+    e.stopPropagation(); // 단일모달 이벤트 막기
+
+    const allThumbs = Array.from(document.querySelectorAll(".gallery-thumb"));
+
+    // 🔥 총 이미지 개수 표시
+    countBox.textContent = `📷 전체 이미지 (총 ${allThumbs.length}개)`;
+
+    container.innerHTML = ""; // 기존 이미지 비우기
+
+    allThumbs.forEach(t => {
+      const col = document.createElement("div");
+      col.className = "col-4";
+
+      const img = document.createElement("img");
+      img.src = t.dataset.src;
+      img.style.cursor = "pointer";
+
+      // 전체 보기 상태에서도 개별 클릭 시 큰 모달 띄우기
+      img.addEventListener("click", () => {
+        document.getElementById("galleryModalImg").src = t.dataset.src;
+        const big = new bootstrap.Modal(document.getElementById("galleryModal"));
+        big.show();
+      });
+
+      col.appendChild(img);
+      container.appendChild(col);
+    });
+
+    allModal.show();
+  });
+});
+</script>
+<script>
+    const loginId = [[${session.loginMember != null ? session.loginMember.member_idx : 0}]];
+
+    document.querySelectorAll(".btnModifyReview, .btnDeleteReview, .commentBtn").forEach(btn => {
+    if (btn.dataset.writerId != loginId) {
+        btn.style.display = "none";
+    }
+    }); 
+</script>
+<script th:src="@{/js/review.js}"></script>
+<script th:src="@{/js/comment.js}"></script>
 </body>
 </html>

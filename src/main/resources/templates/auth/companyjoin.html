@@ -16,6 +16,23 @@
   <script defer th:src="@{/js/cop_check.js}"></script>
   <script defer th:src="@{/js/jquery-3.7.1.min.js}"></script>
   <script defer th:src="@{/js/app.js}"></script>
+  <style>
+  .check-success {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background-color: #e6f7ef; /* 연한 초록 */
+    color: #03c75a; /* 진한 초록 */
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-weight: 500;
+    font-size: 0.9rem;
+  }
+   #check_btn:disabled {
+    background-color: #cccccc; /* 회색 */
+    cursor: not-allowed;
+  }
+</style>
 </head>
 <body>
   <div th:replace="~{common/loginHeader :: loginHeader}"></div>
@@ -81,6 +98,7 @@
                 <input id="company_reg_num" name="company_reg_num" class="input" placeholder="숫자만 입력하세요" required />
                 <button onclick="cop_check()"  type="button" class="btn btn-secondary check-btn" data-target="company_reg_num">사업자확인</button>
               </div>
+              <span id="cop_check_msg"></span>
             </div>
             <div>
               <label for="member_email">이메일</label>
@@ -107,7 +125,7 @@
             <input type="hidden" id="sample6_detailAddress" placeholder="상세주소">
             <input type="hidden" id="sample6_extraAddress" placeholder="참고항목">
             <input type="button" onclick="sample6_execDaumPostcode()" value="주소 찾기">
-            <input type="text" id="sample6_address" name="company_address" class="input" placeholder="서울특별시 ..." required/>
+            <input type="text" id="member_address" name="company_address" class="input" placeholder="서울특별시 ..." required/>
           </div>
 
           <div>
@@ -117,7 +135,7 @@
 
           <input type="hidden" name="role" value="COMPANY" />
 
-          <button id="check_btn" class="btn btn-primary btn-block mt-3" type="submit">가입 완료</button>
+          <button id="check_btn" class="btn btn-primary btn-block mt-3" type="submit" disabled>가입 완료</button>
           <p class="small mt-3">제출 시 콘솔/알림으로만 확인됩니다.</p>
         </form>
 

@@ -24,7 +24,6 @@ public class CompanyService {
 
     //내부 시스템 조회용 
 	public Optional<CompanyDTO> findCompanyUserById(String companyId){
-		
 		return companyMapper.findCompanyUserById(companyId);
 	} 
 	

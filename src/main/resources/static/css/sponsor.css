@@ -1,0 +1,73 @@
+#festival-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+  }
+
+  #festival-table th, 
+  #festival-table td {
+    padding: 14px 18px;
+    text-align: left;
+  }
+
+  #festival-table th {
+    background: #6b21a8;
+    color: #fff;
+    font-weight: 600;
+    font-size: 1rem;
+  }
+
+  #festival-table tr {
+    border-bottom: 1px solid #f0f0f0;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  #festival-table tr:hover {
+    background: #f9f5ff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  }
+
+  #festival-table td {
+    color: #333;
+    font-size: 0.95rem;
+  }
+
+  #festival-table td:nth-child(3) {
+    font-weight: 700;
+    color: #ff4500; /* 후원 금액 강조 */
+  }
+
+  #festival-table td:nth-child(4) {
+    color: #888; /* 마감일 보조 색상 */
+    font-size: 0.9rem;
+  }
+
+  @media (max-width: 768px) {
+    #festival-table, #festival-table thead, #festival-table tbody, #festival-table th, #festival-table td, #festival-table tr {
+      display: block;
+    }
+    #festival-table tr {
+      margin-bottom: 16px;
+      border-bottom: none;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      border-radius: 12px;
+      padding: 12px;
+    }
+    #festival-table th {
+      display: none;
+    }
+    #festival-table td {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 12px;
+    }
+    #festival-table td::before {
+      content: attr(data-label);
+      font-weight: 600;
+      color: #6b21a8;
+    }
+  }

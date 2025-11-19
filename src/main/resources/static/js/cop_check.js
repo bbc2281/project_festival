@@ -3,8 +3,13 @@
 function cop_check() {
     
     reg_num = document.getElementById("company_reg_num").value;
+    const msgSpan = document.getElementById("cop_check_msg");
+    const submitBtn = document.getElementById("check_btn");
 
     console.log(reg_num);
+
+    msgSpan.innerHTML = '';
+    submitBtn.disabled = true;
 
     if(!reg_num) {
         alert("사업자등록번호를 입력해주세요.");
@@ -30,10 +35,12 @@ function cop_check() {
             if(result.match_cnt == "1") {
                 //성공
                 console.log("success");
-                document.getElementById("cop_check").innerHTML += '<br><span style="color: #03C75A;">등록 확인</span>';
+                msgSpan.innerHTML = '<span class="check-success">✅ 등록 확인</span>';
+                submitBtn.disabled = false;
             } else {
                 //실패
                 console.log("fail");
+                msgSpan.innerHTML = '';
                 document.getElementById("company_reg_num").value = '';
                 alert(result.data[0]["tax_type"]);
             }

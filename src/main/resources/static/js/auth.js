@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         errorMessageContainer.textContent = ''; // 에러 메시지 초기화
-
+        console.log(member_id);
         // API 호출을 위한 헤더 설정
         const headers = { 'Content-Type': 'application/json' };
         if (csrfToken) headers[csrfHeader] = csrfToken;
@@ -49,6 +49,8 @@ document.addEventListener('DOMContentLoaded', () => {
             // 🚨 응답을 JSON으로 파싱. JSON이 아니면 자동으로 catch 블록으로 이동.
 
             const data = await res.json(); 
+            console.log(data.member_id);
+            console.log(data.member_pass);
 
         if (data.success) {
             // 로그인 성공

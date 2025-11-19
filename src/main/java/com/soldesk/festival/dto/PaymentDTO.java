@@ -21,5 +21,8 @@ public class PaymentDTO {
     private String order_name; //주문 이름 
     private int funding_festival_idx;
 
+    private String festival_name;
+    private String funding_end_date;
+    private String festival_short;
 
 }

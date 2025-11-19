@@ -39,4 +39,7 @@ public interface FundingFestivalMapper {
 
     @Delete("delete from festival_funding where funding_festival_idx=#{funding_festival_idx}")
     void deleteFunding(@Param("funding_festival_idx") int idx);
+
+    @Select("select * from festival_funding where company_idx = #{company_idx}")
+    List<FundingFestivalDTO> selectFundingByCompany(@Param("company_idx") int idx);
 }

@@ -1,5 +1,7 @@
 package com.soldesk.festival.dao;
 
+import java.util.List;
+
 import org.springframework.stereotype.Repository;
 
 import com.soldesk.festival.dto.PaymentDTO;
@@ -34,4 +36,11 @@ public class PaymentDAO {
         return paymentMapper.selectFundingAmount(orderId);
     }
     
+    public List<PaymentDTO> selectFundingByCompany(int idx){
+        return paymentMapper.selectFundingByCompany(idx);
+    }
+
+    public int countPaymentByCompany(int idx){
+        return paymentMapper.countPaymentByCompany(idx);
+    }
 }

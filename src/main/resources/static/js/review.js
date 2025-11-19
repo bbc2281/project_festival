@@ -1,17 +1,23 @@
+// ===============================
+// review.js (완성본)
+// ===============================
+
+// 요소 캐시
 const btnAdd = document.getElementById("btnAddReview");
 const textarea = document.getElementById("reviewText");
-const uploadFile =  document.getElementById("reviewImage");
+const uploadFile = document.getElementById("reviewImage");
+
+// 이미지 미리보기 컨테이너 준비 (파일 선택창 '위'에 위치)
 const reviewPreview = document.getElementById("reviewPreview") || document.createElement("div");
-
-
 if (!reviewPreview.id) {
   reviewPreview.id = "reviewPreview";
   reviewPreview.className = "d-flex flex-wrap gap-2 mb-2";
-  uploadFile.parentNode.insertBefore(reviewPreview, uploadFile.nextSibling);
+  uploadFile.parentNode.insertBefore(reviewPreview, uploadFile);
 }
 
-// 이미지 미리보기
+// ===============================
 // 이미지 미리보기 + 개별 삭제
+// ===============================
 uploadFile.addEventListener("change", (e) => {
   reviewPreview.innerHTML = "";
   const files = Array.from(e.target.files);
@@ -30,14 +36,38 @@ uploadFile.addEventListener("change", (e) => {
       img.style.objectFit = "cover";
 
       const delBtn = document.createElement("button");
-      delBtn.innerHTML = "✕";
-      delBtn.className = "btn btn-sm btn-danger position-absolute top-0 end-0 translate-middle rounded-circle";
-      delBtn.style.fontSize = "10px";
-      delBtn.style.padding = "2px 5px";
+      delBtn.type = "button";
+      delBtn.innerHTML = '<i class="bi bi-x-lg"></i>';
+      delBtn.className = "position-absolute btn btn-sm btn-danger rounded-circle";
+      Object.assign(delBtn.style, {
+        top: "0",
+        right: "0",
+        transform: "translate(40%, -40%)",
+        width: "22px",
+        height: "22px",
+        fontSize: "10px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        border: "none",
+        backgroundColor: "#ff4d4d",
+        color: "white",
+        boxShadow: "0 0 4px rgba(0,0,0,0.2)",
+        cursor: "pointer",
+        zIndex: "10"
+      });
+
+      delBtn.addEventListener("mouseenter", () => {
+        delBtn.style.backgroundColor = "#ff6666";
+        delBtn.style.transform = "translate(40%, -40%) scale(1.1)";
+      });
+      delBtn.addEventListener("mouseleave", () => {
+        delBtn.style.backgroundColor = "#ff4d4d";
+        delBtn.style.transform = "translate(40%, -40%) scale(1)";
+      });
 
       delBtn.addEventListener("click", () => {
         container.remove();
-        // input 파일에서 해당 이미지 제거
         const dt = new DataTransfer();
         files.forEach((f, i) => {
           if (i !== index) dt.items.add(f);
@@ -53,157 +83,158 @@ uploadFile.addEventListener("change", (e) => {
   });
 });
 
-document.querySelectorAll(".btnModifyReview").forEach(btn => {
-  btn.addEventListener("click", () => {
-    const reviewBox = btn.closest(".review-box");
-    const span = reviewBox.querySelector(".review-content");
-    const reviewIdx = btn.dataset.reviewIdx;
-    const existingImg = reviewBox.querySelector(".review-image");
+// 공용 헬퍼: JSON/텍스트 유연 파싱
+async function parseJsonFlexible(res) {
+  const text = await res.text();
+  try {
+    return JSON.parse(text);
+  } catch {
+    console.error("서버가 JSON이 아닌 응답을 반환:", text);
+    return { success: false, message: "서버가 JSON 응답을 반환하지 않았습니다." };
+  }
+}
 
-    console.log("리뷰아이디엑스 : " ,reviewIdx);
+// ===============================
+// 리뷰 수정 (이벤트 위임)
+//  - 아이콘(<i>) 클릭도 처리되도록 closest로 버튼 찾기
+//  - 입력칸은 .review-content(span) 바로 뒤(afterend)에 삽입 → DOM 안정
+// ===============================
+document.addEventListener("click", async (e) => {
+  const modifyBtn = e.target.closest(".btnModifyReview");
+  if (!modifyBtn) return;
 
-    // 이미 수정 중이면 저장 처리
-    if (btn.classList.contains("saving")) {
-    console.log("저장처리 들어왔는지?")
-      const input = reviewBox.querySelector("input");
-      const newContent = input.value.trim();
-      if (!newContent) {
-        alert("내용을 입력하세요");
-        input.focus();
-        return;
+  const reviewBox = modifyBtn.closest(".review-box");
+  const span = reviewBox.querySelector(".review-content");
+  const reviewIdx = modifyBtn.dataset.reviewIdx;
+  const existingImg = reviewBox.querySelector(".review-image");
+
+  // 저장 처리
+  if (modifyBtn.classList.contains("saving")) {
+    const input = reviewBox.querySelector(".review-edit-input");
+    if (!input) return;
+
+    const newContent = input.value.trim();
+    if (!newContent) {
+      alert("내용을 입력하세요");
+      input.focus();
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("review_idx", reviewIdx);
+    formData.append("review_content", newContent);
+
+    const imgInput = reviewBox.querySelector(".review-modify-file");
+    if (imgInput && imgInput.files.length > 0) {
+      formData.append("upload_file", imgInput.files[0]);
+    }
+
+    try {
+      const res = await fetch("/review/modify", { method: "POST", body: formData });
+      const data = await parseJsonFlexible(res);
+      if (data.success) {
+        // 화면 갱신
+        span.textContent = newContent;
+        span.style.display = "inline";
+
+        // 임시 UI 제거
+        input.remove();
+        const preview = reviewBox.querySelector(".review-temp-preview");
+        const notice = reviewBox.querySelector(".review-temp-notice");
+        if (preview) preview.remove();
+        if (notice) notice.remove();
+
+        modifyBtn.textContent = "수정하기";
+        modifyBtn.classList.remove("saving");
+        if (existingImg) existingImg.style.display = "block";
+
+        alert("리뷰가 수정되었습니다.");
+        location.reload();
+      } else {
+        alert(data.message || "수정 실패");
       }
-
-      const formData = new FormData();
-      formData.append("review_idx", reviewIdx);
-      formData.append("review_content", newContent);
-
-        const imgInput = reviewBox.querySelector(".review-modify-file");
-        if (imgInput && imgInput.files.length > 0) {
-        formData.append("upload_file", imgInput.files[0]);
-        }
-        console.log("수정되는 이미지 잡히는지 ?" + imgInput)
-        
-      fetch("/review/modify", {
-        method: "POST",
-        body: formData
-      })
-        .then(async res => {
-          const data = await res.json();
-          if (data.success) {
-            span.textContent = newContent;
-            span.style.display = "inline";
-            input.remove();
-            btn.textContent = "수정";
-            btn.classList.remove("saving");
-              if (existingImg) {
-                existingImg.style.display = "block";
-                 }
-            
-            alert("리뷰가 수정되었습니다.");
-            location.reload();
-          } else {
-            alert(data.message || "수정 실패");
-          }
-        })
-        .catch(err => {
-          console.error("에러", err);
-          alert("요청 중 오류가 발생했습니다.");
-        });
-
-      return; // 저장 처리 후 종료
+    } catch (err) {
+      console.error("수정 요청 에러", err);
+      alert("요청 중 오류가 발생했습니다.");
     }
+    return;
+  }
 
-    // 수정 모드 진입
-    const originalText = span.textContent;    
-    span.style.display = "none";
-    const input = document.createElement("input");
-    input.type = "text";
-    input.className = "form-control mt-2";
-    input.value = originalText;
-    reviewBox.insertBefore(input, btn);
+  // 이미 수정 모드면 중복 생성 방지
+  if (reviewBox.querySelector(".review-edit-input")) return;
 
-    const imgInput = document.createElement("input");
-    imgInput.type = "file";
-    imgInput.className = "form-control mb-2 review-modify-file"; 
-    imgInput.name = "upload_file";
-    reviewBox.insertBefore(imgInput, btn);
+  // === 수정 모드 진입 ===
+  const originalText = span.textContent;
+  span.style.display = "none";
 
-    imgInput.addEventListener("change", (e) => {
-    const file = e.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = (ev) => {
-        const newPreview = document.createElement("img");
-        newPreview.src = ev.target.result;
-        newPreview.className = "img-fluid rounded mb-2 border border-primary";
-        newPreview.style.maxHeight = "120px";
+  // 1) 텍스트 입력칸: span 바로 뒤에 삽입 (DOM 안전)
+  const input = document.createElement("input");
+  input.type = "text";
+  input.className = "form-control mt-2 review-edit-input";
+  input.value = originalText;
+  span.insertAdjacentElement("afterend", input);
 
+  // 2) 이미지 선택 인풋: 입력칸 바로 뒤
+  const imgInput = document.createElement("input");
+  imgInput.type = "file";
+  imgInput.className = "form-control mb-2 review-modify-file";
+  imgInput.name = "upload_file";
+  input.insertAdjacentElement("afterend", imgInput);
 
-        
-
-        const notice = document.createElement("small");
-        notice.textContent = "저장 시 기존 이미지는 새 이미지로 교체됩니다.";
-        notice.className = "text-muted d-block mb-2";
-
-        if (existingImg) existingImg.style.opacity = "0.5";
-
-        reviewBox.insertBefore(newPreview, btn);
-        reviewBox.insertBefore(notice, btn);
-        };
-        reader.readAsDataURL(file);
-    }
-    });
-
-
-
-
-    if (existingImg) {
+  // 3) 기존 이미지 미리보기 + 삭제 안내
+  if (existingImg) {
     const preview = document.createElement("img");
-    existingImg.style.display = "none"
+    existingImg.style.display = "none";
     preview.src = existingImg.src;
-    preview.className = "img-fluid rounded mb-2";
+    preview.className = "img-fluid rounded mb-2 review-temp-preview";
     preview.style.maxHeight = "120px";
 
-    const delBtn = document.createElement("button");
-    delBtn.textContent = "✕ ";
-    delBtn.className = "btn btn-sm btn-outline-danger mb-2";
-    delBtn.addEventListener("click", () => {
-        const formData = new FormData();
-        formData.append("review_idx", reviewIdx);
+    const notice = document.createElement("small");
+    notice.textContent = "새 이미지를 선택하면 기존 이미지는 교체됩니다.";
+    notice.className = "text-muted d-block mb-2 review-temp-notice";
 
-    fetch("/review/delete-image", {
-        method: "POST",
-        body: formData
-    })
-    .then(res => res.json())
-    .then(data => {
-    if (data.success) {
-        preview.remove();
-        delBtn.remove();
-        alert("이미지가 삭제되었습니다.");
-    } else {
-        alert(data.message || "삭제 실패");
-    }
-    })
-    .catch(err => {
-    console.error("이미지 삭제 오류", err);
-    alert("요청 중 오류 발생");
-    });
- 
-    });
-    reviewBox.insertBefore(preview, btn);
-    reviewBox.insertBefore(delBtn, btn);
-    }
+    imgInput.insertAdjacentElement("afterend", preview);
+    preview.insertAdjacentElement("afterend", notice);
+  }
 
-    btn.textContent = "저장";
-    btn.classList.add("saving");
+  // 새 이미지 선택 시 즉시 미리보기 추가
+  imgInput.addEventListener("change", (ev) => {
+    const file = ev.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (fev) => {
+      // 기존 temp preview/notice 제거 후 새로 표시
+      const oldPreview = reviewBox.querySelector(".review-temp-preview");
+      const oldNotice = reviewBox.querySelector(".review-temp-notice");
+      if (oldPreview) oldPreview.remove();
+      if (oldNotice) oldNotice.remove();
+
+      const newPreview = document.createElement("img");
+      newPreview.src = fev.target.result;
+      newPreview.className = "img-fluid rounded mb-2 border border-primary review-temp-preview";
+      newPreview.style.maxHeight = "120px";
+
+      const notice = document.createElement("small");
+      notice.textContent = "저장 시 이 이미지로 교체됩니다.";
+      notice.className = "text-muted d-block mb-2 review-temp-notice";
+
+      imgInput.insertAdjacentElement("afterend", newPreview);
+      newPreview.insertAdjacentElement("afterend", notice);
+    };
+    reader.readAsDataURL(file);
   });
+
+  // 버튼 상태 전환
+  modifyBtn.textContent = "저장";
+  modifyBtn.classList.add("saving");
 });
 
-
+// ===============================
 // 리뷰 등록
-btnAdd.addEventListener("click", () => {
-  const content = textarea.value.trim();
+// ===============================
+btnAdd.addEventListener("click", async () => {
+  const content = (textarea.value || "").trim();
   if (!content) {
     alert("리뷰를 입력하세요");
     textarea.focus();
@@ -216,57 +247,69 @@ btnAdd.addEventListener("click", () => {
   const file = uploadFile.files[0];
   if (file) formData.append("upload_file", file);
 
-  fetch("/review/write", {
-    method: "POST",
-    body: formData
-  })
-    .then(async res => {
-      if (!res.ok) {
-        const text = await res.text();
-        console.error("서버 응답 오류:", text);
-        alert("서버 오류 발생: " + res.status);
-        return;
-      }
-      const data = await res.json();
-      if (data.success) {
-        alert("리뷰가 등록되었습니다.");
-        location.reload();
-      } else {
-        alert(data.message);
-      }
-    })
-    .catch(err => {
-      console.error("에러", err);
-      alert("요청 중 오류가 발생했습니다.");
-    });
+  try {
+    const res = await fetch("/review/write", { method: "POST", body: formData });
+    if (!res.ok) {
+      const text = await res.text();
+      console.error("서버 응답 오류:", text);
+      alert("서버 오류 발생: " + res.status);
+      return;
+    }
+    const data = await parseJsonFlexible(res);
+    if (data.success) {
+      alert("리뷰가 등록되었습니다.");
+      location.reload();
+    } else {
+      alert(data.message || "등록 실패");
+    }
+  } catch (err) {
+    console.error("등록 에러", err);
+    alert("요청 중 오류가 발생했습니다.");
+  }
 });
 
-document.querySelectorAll(".btnDeleteReview").forEach(btn => {
-    btn.addEventListener("click" ,() => {
+// ===============================
+// 리뷰 삭제 (이벤트 위임 + closest로 보강)
+// ===============================
+document.addEventListener("click", async (e) => {
+  const delBtn = e.target.closest(".btnDeleteReview");
+  if (!delBtn) return;
 
-        fetch("/review/delete",{
-            method : "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ review_idx: btn.dataset.reviewIdx })
-        })
-        .then(async response => {
-            if (!response.ok){
-                const text = await response.text();
-                console.error("서버 응답 오류" + text)
-                alert("서버 오류 발생 " + response.status);
-                return;
-            }
-            const data = await response.json();
-            if(data.success) {
-                alert("리뷰 삭제가 완료 되었습니다.")
-                location.reload();
-            }else{
-                alert(data.message);
-            }
-        })
-        .catch(err => {
-            console.error("에러" , err)
-            alert("요청 중 오류가 발생헀습니다.")
-        });
+  if (!confirm("정말 삭제하시겠습니까?")) return;
+
+  try {
+    const res = await fetch("/review/delete", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ review_idx: delBtn.dataset.reviewIdx })
     });
+    if (!res.ok) {
+      const text = await res.text();
+      console.error("서버 응답 오류", text);
+      alert("서버 오류 발생 " + res.status);
+      return;
+    }
+    const data = await parseJsonFlexible(res);
+    if (data.success) {
+      alert("리뷰 삭제가 완료되었습니다.");
+      location.reload();
+    } else {
+      alert(data.message || "삭제 실패");
+    }
+  } catch (err) {
+    console.error("삭제 에러", err);
+    alert("요청 중 오류가 발생했습니다.");
+  }
 });
+
+// ===============================
+// 리뷰 개수 카운트 표시 (즉시 실행 버전)
+// ===============================
+(function updateReviewCount() {
+  const reviewBoxes = document.querySelectorAll(".review-box");
+  const reviewCount = document.getElementById("reviewCount");
+  if (reviewBoxes && reviewCount) {
+    reviewCount.textContent = `(${reviewBoxes.length})`;
+  }
+})();
+
