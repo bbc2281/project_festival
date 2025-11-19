@@ -232,16 +232,16 @@
                   <div class="mt-2 d-flex gap-2">
                     
                     <button class="review-btn modify btnModifyReview" th:data-review-idx="${review.review_idx}"
-                      th:data-review-content="${review.review_content}" data-writer-id="${review.member_idx}">
+                      th:data-review-content="${review.review_content}" th:data-writer-id="${review.member_idx}">
                       ✏ 수정
                     </button>
 
-                    <button class="review-btn delete btnDeleteReview" th:data-review-idx="${review.review_idx}" data-writer-id="${review.member_idx}">
+                    <button class="review-btn delete btnDeleteReview" th:data-review-idx="${review.review_idx}" th:data-writer-id="${review.member_idx}">
                       🗑 삭제
                     </button>
                     
 
-                    <button class="review-btn reply commentBtn" th:data-review-idx="${review.review_idx}" data-writer-id="${review.member_idx}" >
+                    <button class="review-btn reply commentBtn" th:data-review-idx="${review.review_idx}" th:data-writer-id="${review.member_idx}" >
                       💬 답글
                     </button>
                   </div>
@@ -437,10 +437,11 @@ document.addEventListener("DOMContentLoaded", () => {
 </script>
 <script>
     const loginId = [[${session.loginMember != null ? session.loginMember.member_idx : 0}]];
-
+    console.log(loginId);
     document.querySelectorAll(".btnModifyReview, .btnDeleteReview, .commentBtn").forEach(btn => {
     if (btn.dataset.writerId != loginId) {
         btn.style.display = "none";
+        console.log(btn.dataset.writerId);
     }
     }); 
 </script>
