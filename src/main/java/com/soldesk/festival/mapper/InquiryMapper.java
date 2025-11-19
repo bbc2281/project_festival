@@ -34,6 +34,6 @@ public interface InquiryMapper {
     @Select("select count(*) from inquiry")
     int countInquiry();
 
-    @Select("select * from inquiry order by inquiry_idx desc limit #{limit} offset #{offset}")
+    @Select("select * from inquiry i join member m on i.member_idx = m.member_idx order by i.inquiry_idx desc limit #{limit} offset #{offset}")
     List<InquiryDTO> selectInquiryPaged(@Param("offset")int offset, @Param("limit")int limit);
 }

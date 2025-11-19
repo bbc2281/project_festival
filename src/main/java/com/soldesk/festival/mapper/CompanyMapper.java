@@ -15,7 +15,6 @@ import org.apache.ibatis.annotations.Update;
 
 import com.soldesk.festival.dto.CompanyDTO;
 import com.soldesk.festival.dto.CompanyJoinDTO;
-import com.soldesk.festival.dto.InquiryDTO;
 import com.soldesk.festival.handler.MemberRoleTypeHandler;
 
 @Mapper
@@ -71,8 +70,14 @@ public interface CompanyMapper {
 	@Select("select count(*) from company")
 	int CountCompany();
 
+	@Select("select count(*) from company where member_id like concat('%', #{keyword}, '%') or company_name like concat('%', #{keyword}, '%') or company_owner like concat('%', #{keyword}, '%') or member_email like concat('%', #{keyword}, '%')")
+	int CountCompanyByKeyword(@Param("keyword") String keyword);
+
 	@Select("select * from company order by company_idx desc limit #{limit} offset #{offset}")
     List<CompanyDTO> selectCompanyPaged(@Param("offset")int offset, @Param("limit")int limit);
+
+	@Select("select * from company where member_id like concat('%', #{keyword}, '%') or company_name like concat('%', #{keyword}, '%') or company_owner like concat('%', #{keyword}, '%') or member_email like concat('%', #{keyword}, '%') order by company_idx desc limit #{limit} offset #{offset}")
+    List<CompanyDTO> selectCompanyPagedByKeyword(@Param("keyword") String keyword, @Param("offset")int offset, @Param("limit")int limit);
 
 	@Update("update company set company_name = #{company_name}, company_owner = #{company_owner}, member_email = #{member_email}, company_address = #{company_address}, company_phone = #{company_phone}, company_account = #{company_account} where company_idx = #{company_idx}")
 	void updateCompany(CompanyDTO companyDTO);

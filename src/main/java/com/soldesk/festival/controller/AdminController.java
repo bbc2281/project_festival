@@ -46,7 +46,7 @@ public class AdminController {
     @GetMapping("/main")
     public String main(Model model) {
 
-        int countFestival = festivalService.countFestival();
+        int countFestival = festivalService.countFestival(null);
         model.addAttribute("countFestival", countFestival);
 
         int countBoard = boardService.countBoard();
@@ -56,7 +56,7 @@ public class AdminController {
         model.addAttribute("boardList", boardList.stream().limit(5).toList());
 
         List<MemberDTO> memberList = memberService.getMemberList();
-        int countMember = memberService.countMember();
+        int countMember = memberService.countMember(null);
         model.addAttribute("memberList", memberList.stream().limit(5).toList());
         model.addAttribute("countMember", countMember);
 
@@ -78,10 +78,10 @@ public class AdminController {
     }
 
     @GetMapping("/festival")
-    public String festival(@RequestParam(defaultValue = "1") int page, Model model) {
+    public String festival(@RequestParam(defaultValue = "1") int page, @RequestParam(required = false) String keyword, Model model) {
         int pageSize = 10;
-        int totalCount = festivalService.countFestival();
-        List<FestivalDTO> festivals = festivalService.getFestivalListPaged((page - 1) * pageSize, pageSize);
+        int totalCount = festivalService.countFestival(keyword);
+        List<FestivalDTO> festivals = festivalService.getFestivalListPaged(keyword, (page - 1) * pageSize, pageSize);
         int totalPages = (int) Math.ceil((double) totalCount / pageSize);
 
         int blockSize = 10; // 페이지 블록 크기
@@ -99,6 +99,7 @@ public class AdminController {
         model.addAttribute("endPage", endPage);
         model.addAttribute("prevBlockPage", prevBlockPage);
         model.addAttribute("nextBlockPage", nextBlockPage);
+        model.addAttribute("keyword", keyword);
 
         return "/admin/festival";
     }
@@ -151,26 +152,29 @@ public class AdminController {
     }
 
     @GetMapping("/member")
-    public String member(@RequestParam(defaultValue = "1") int page, Model model) {
+    public String member(@RequestParam(defaultValue = "1") int page, @RequestParam(required = false) String keyword, Model model) {
         int pageSize = 10;
-        int totalCount = memberService.countMember();
-        List<MemberDTO> members = memberService.getMemberListPaged((page - 1) * pageSize, pageSize);
+        int totalCount = memberService.countMember(keyword);
+        List<MemberDTO> members = memberService.getMemberListPaged(keyword, (page - 1) * pageSize, pageSize);
+        
         int totalPages = (int) Math.ceil((double) totalCount / pageSize);
         model.addAttribute("members", members);
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", totalPages);
+        model.addAttribute("keyword", keyword);
         return "/admin/member";
     }
 
     @GetMapping("/company")
-    public String company(@RequestParam(defaultValue = "1") int page, Model model) {
+    public String company(@RequestParam(defaultValue = "1") int page, @RequestParam(required = false) String keyword, Model model) {
         int pageSize = 10;
-        int totalCount = companyService.countCompany();
-        List<CompanyDTO> companyMember = companyService.getCompanyListPaged((page - 1) * pageSize, pageSize);
+        int totalCount = companyService.countCompany(keyword);
+        List<CompanyDTO> companyMember = companyService.getCompanyListPaged(keyword, (page - 1) * pageSize, pageSize);
         int totalPages = (int) Math.ceil((double) totalCount / pageSize);
         model.addAttribute("companyMember", companyMember);
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", totalPages);
+        model.addAttribute("keyword", keyword);
         return "/admin/company";
     }
 

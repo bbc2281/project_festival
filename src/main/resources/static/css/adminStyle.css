@@ -413,3 +413,58 @@ a:hover{ text-decoration:underline }
   transform: scale(1.03);
   box-shadow: 0 0 8px rgba(0,0,0,0.15);
 }
+
+    /* 전체 검색바 컨테이너 */
+
+    .search-wrapper {
+      margin-top: 20px;
+    }
+
+    .custom-search-bar {
+      display: flex;
+      align-items: center;
+      background: #fff;
+      border-radius: 50px;
+      padding: 8px 16px;
+      width: 320px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      transition: 0.2s ease;
+    }
+
+    /* 포커스 시 약간 강조 */
+    .custom-search-bar:focus-within {
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    /* 입력창 */
+    .search-input {
+      flex: 1;
+      border: none;
+      outline: none;
+      font-size: 15px;
+      background: transparent;
+    }
+
+    /* 검색 버튼 */
+    .search-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: none;
+      background: #1e90ff;
+      color: #fff;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .search-btn:hover {
+      background: #0d6efd;
+    }
+
+    .table table-hover {
+      margin-top: 0;
+    }

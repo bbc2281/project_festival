@@ -74,7 +74,7 @@ public class BoardService {
     public List<BoardDTO> getBoardListPaged(int offset, int limit){
         return boardDAO.selectBoardPaged(offset, limit);
     }
-    
+  
     public List<BoardDTO> searchProcess(String keyword, String category, int page){
         int start = (page - 1) *10;
 		int limit = 10 ; 

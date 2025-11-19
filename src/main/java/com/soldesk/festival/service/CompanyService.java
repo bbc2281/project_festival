@@ -10,7 +10,6 @@ import com.soldesk.festival.config.AuthUtil;
 import com.soldesk.festival.config.MemberRole;
 import com.soldesk.festival.dto.CompanyDTO;
 import com.soldesk.festival.dto.CompanyJoinDTO;
-import com.soldesk.festival.dto.MemberDTO;
 import com.soldesk.festival.exception.UserException;
 import com.soldesk.festival.mapper.CompanyMapper;
 
@@ -68,12 +67,22 @@ public class CompanyService {
 		return companyMapper.selectCompanyByIdx(idx);
 	}
 
-	public int countCompany(){
-		return companyMapper.CountCompany();
+	public int countCompany(String keyword){
+		if(keyword != null && !keyword.trim().isEmpty()){
+			keyword = keyword.trim();
+			return companyMapper.CountCompanyByKeyword(keyword);
+		}else{
+			return companyMapper.CountCompany();
+		}
 	}
 
-	public List<CompanyDTO> getCompanyListPaged(int offset, int limit){
-		return companyMapper.selectCompanyPaged(offset, limit);
+	public List<CompanyDTO> getCompanyListPaged(String keyword, int offset, int limit){
+		if(keyword != null && !keyword.trim().isEmpty()){
+			keyword = keyword.trim();
+			return companyMapper.selectCompanyPagedByKeyword(keyword, offset, limit);
+		}else{
+			return companyMapper.selectCompanyPaged(offset, limit);
+		}
 	}
 
 	@Transactional
