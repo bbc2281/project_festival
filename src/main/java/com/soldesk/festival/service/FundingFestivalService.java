@@ -55,4 +55,8 @@ public class FundingFestivalService {
     public void deleteFunding(int idx){
         fundingFestivalMapper.deleteFunding(idx);
     }
+
+    public List<FundingFestivalDTO> selectFundingByCompany(int idx){
+        return fundingFestivalMapper.selectFundingByCompany(idx);
+    }
 }

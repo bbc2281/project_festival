@@ -332,17 +332,20 @@
       <section class="activity-box">
         <h4>최근 승인된 축제</h4>
         <ul>
-          <li th:each="festival : ${commitFestivalList}"><span th:text="${festival.festival_name}"></span><span
-              th:text="${festival.festival_info}"></span></li>
+          <li th:each="festival : ${commitFestivalList}">
+            <span th:text="${festival.festival_name}"></span>
+            <span th:text="${festival.festival_info}"></span>
+          </li>
         </ul>
       </section>
 
       <section class="activity-box">
-        <h4>최근 후원 내역(연동필요)</h4>
+        <h4>최근 후원 내역</h4>
         <ul>
-          <li><span>서울 불빛정원</span><span>₩450,000</span></li>
-          <li><span>가을빛 음악제</span><span>₩300,000</span></li>
-          <li><span>봄꽃 페스티벌</span><span>₩450,000</span></li>
+          <li th:each="payment : ${paymentList}">
+            <span th:text="${payment.festival_name}"></span>
+            <span th:text="${payment.payment_amount + '원'}"></span>
+          </li>
         </ul>
       </section>
     </section>

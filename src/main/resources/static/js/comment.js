@@ -1,13 +1,16 @@
 const buttons = document.querySelectorAll('.commentBtn')
+const loginIdx = document.getElementById("sessionInfo").dataset.loginId;
 
 buttons.forEach(btn => {
 btn.addEventListener('click', () => {
-const reviewBox = btn.closest(".review-box");
-const reviewIdx = btn.getAttribute("data-review-idx"); 
+  const reviewBox = btn.closest(".review-box");
+  const reviewIdx = btn.getAttribute("data-review-idx"); 
 
     if (!reviewBox.querySelector(".comment-list")) {
       loadCommentList(reviewIdx,reviewBox);
     }
+
+    
       
     const existingInput = reviewBox.querySelector(".comment-input");
     const existingSaveBtn = reviewBox.querySelector(".comment-save-btn");
@@ -83,6 +86,8 @@ function loadCommentList(reviewIdx,reviewBox) {
             const reply = document.createElement("div");
             reply.className = "comment-reply";
             reply.textContent = `${comment.member_nickname} : ${comment.comment_content} ${comment.comment_regDate}`;
+            
+            if(comment.member_idx == loginIdx){
             const modifyButton = document.createElement("button");
             modifyButton.textContent = "수정";
             modifyButton.className = "btn btn-sm btn-outline-secondary ms-2";
@@ -103,6 +108,8 @@ function loadCommentList(reviewIdx,reviewBox) {
               });
             });
             reply.appendChild(deleteButton);
+            }
+
             commentList.appendChild(reply);
         });
         reviewBox.appendChild(commentList);

@@ -52,10 +52,10 @@ public class FestivalController {
         int festivalIdx = festival.getFestival_idx();
         List<ReviewDTO> reviewList = reviewService.selectAllReviews(festivalIdx);
         model.addAttribute("reviews", reviewList);
-        
+        //채팅방
         ChatRoomDTO chatRoom = chatService.getChatRoomById(id);
         model.addAttribute("chatRoom", chatRoom);
-
+        //좋아요 and 채팅방
         boolean exist = false;
         if (loginMember != null) {
             exist = favoriteService.existsFavoriteByMember(loginMember.getMember_idx(), festivalIdx);
@@ -73,6 +73,7 @@ public class FestivalController {
             model.addAttribute("loggedIn", false);
         }
         model.addAttribute("isFavorite", exist);
+
 
         return "festival/info";
     }

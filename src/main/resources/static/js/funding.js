@@ -72,6 +72,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const diff = Math.ceil((end - today) / (1000 * 60 * 60 * 24));
     const ddayTxt = card.querySelector(".dday-txt");
     if (ddayTxt) ddayTxt.textContent = diff > 0 ? diff : 0;
+    // D-day 끝난경우 리스트에서 안보이게
+    if (diff <= 0) {
+      card.style.display = "none";
+    }
   });
 
 

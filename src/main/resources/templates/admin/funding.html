@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>축제정보 관리 | FesLite</title>
+  <title>펀딩정보 관리 | FesLite</title>
   <base href="/">
   <link th:href="@{/css/adminStyle.css}" rel="stylesheet">
   <script defer th:src="@{/js/app.js}"></script>
@@ -105,7 +105,8 @@
             <th>펀딩명</th>
             <th>축제장소</th>
             <th>모금액</th>
-            <th>모금목표액</th>
+            <th>모금 목표액</th>
+            <th>모금 마감일</th>
             <th></th>
           </tr>
         </thead>
@@ -116,6 +117,7 @@
             <td th:text="${funding.festival_address}"></td>
             <td th:text="${funding.festival_amount}"></td>
             <td th:text="${funding.festival_total_amount}"></td>
+            <td th:text="${funding.funding_end_date}"></td>
             <td><a th:href="@{/funding/delete(id=${funding.funding_festival_idx})}"
                 class="btn btn-success btn-sm">삭제</a></td>
           </tr>

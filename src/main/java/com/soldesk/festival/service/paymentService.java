@@ -1,6 +1,7 @@
 package com.soldesk.festival.service;
 
 import java.sql.Date;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -60,9 +61,14 @@ public class paymentService {
             String orderId = paymentDTO.getOrder_id();
             return paymentDAO.selectFundingAmount(orderId);
         }
-
-
         return null;
     }
     
+    public List<PaymentDTO> selectFundingByCompany(int idx){
+        return paymentDAO.selectFundingByCompany(idx);
+    }
+
+    public int countPaymentByCompany(int idx){
+        return paymentDAO.countPaymentByCompany(idx);
+    }
 }

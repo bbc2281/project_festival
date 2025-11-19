@@ -17,7 +17,7 @@ public interface CommentMapper {
     @Insert("insert into comment (comment_content, comment_regDate, review_idx, member_idx ) values (#{comment_content}, now(), #{review_idx}, #{member_idx})")
     void writeProcess(CommentDTO commentDTO);
 
-    @Select("select c.comment_content, c.comment_regDate, c.comment_idx, c.review_idx, m.member_nickname " +
+    @Select("select c.comment_content, c.comment_regDate, c.comment_idx, c.review_idx, m.member_nickname, c.member_idx " +
             "from comment c join member m on c.member_idx = m.member_idx " +
             "where review_idx = #{review_idx} " + 
             "order by c.comment_regDate ")

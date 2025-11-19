@@ -17,7 +17,7 @@ public interface ReviewMapper {
         @Insert("insert into review (review_content, review_reg_date, review_img_path, festival_idx, member_idx ) values (#{review_content}, now(), #{review_img_path}, #{festival_idx}, #{member_idx})")
         void writeProcess(ReviewDTO reviewDTO);
 
-        @Select("select r.review_idx, r.review_content, r.review_reg_date, r.festival_idx, r.review_img_path, r.review_like, m.member_nickname "
+        @Select("select r.review_idx, r.review_content, r.review_reg_date, r.festival_idx, r.review_img_path, r.review_like, m.member_nickname, m.member_idx "
                 + " from review r LEFT join member m on r.member_idx = m.member_idx"
                 + " where festival_idx = #{festival_idx}")
         List<ReviewDTO> selectAllReviews(int festival_idx);

@@ -29,6 +29,7 @@ public class UserViewController {
     private final FavoriteService favoriteService;
     private final CommentService commentService;
     private final FundingFestivalService fundingFestivalService;
+    private final paymentService paymentService;
 
 
     // 로그인품
@@ -171,7 +172,7 @@ public class UserViewController {
         int segFestival = segFestivalService.countFestivalByCompany(idx);
         int favorite = favoriteService.countFavoriteByCompany(idx);
         int festival_funding = fundingFestivalService.countFundingByCompany(idx);
-        int payment = 0;
+        int payment = paymentService.countPaymentByCompany(idx);
 
         model.addAttribute("segFestival", segFestival);
         model.addAttribute("favorite", favorite);
@@ -179,8 +180,9 @@ public class UserViewController {
         model.addAttribute("payment", payment);
 
         List<FestivalDTO> commitFestivalList = segFestivalService.selectCommitFestival(idx);
-
+        List<PaymentDTO> paymentList = paymentService.selectFundingByCompany(idx);
         model.addAttribute("commitFestivalList", commitFestivalList);
+        model.addAttribute("paymentList", paymentList);
 
         return "company/mypage";
     }
@@ -224,9 +226,27 @@ public class UserViewController {
         return "company/festival";
     }
 
+    @GetMapping("/company/funding")
+    public String mypageFundingForCompany(Model model, HttpSession session){
+
+        CompanyDTO company = (CompanyDTO) session.getAttribute("companyMember");
+        int id = company.getCompany_idx();
+        List<FundingFestivalDTO> fundingList = fundingFestivalService.selectFundingByCompany(id);
+        model.addAttribute("fundingList", fundingList);
+
+        return "company/funding";
+    }
+
     // 기업회원 후원정보
     @GetMapping("/company/sponsor")
-    public String mypageSponsorForCompany() {
+    public String mypageSponsorForCompany(Model model, HttpSession session) {
+        CompanyDTO company = (CompanyDTO) session.getAttribute("companyMember");
+        int id = company.getCompany_idx();
+
+        List<PaymentDTO> payFundingList = paymentService.selectFundingByCompany(id);
+
+        model.addAttribute("payFundingList",payFundingList);
+
         return "company/sponsor";
     }
 
