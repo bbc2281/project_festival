@@ -15,11 +15,13 @@ import com.soldesk.festival.dto.BoardDTO;
 import com.soldesk.festival.dto.CompanyDTO;
 import com.soldesk.festival.dto.CountDTO;
 import com.soldesk.festival.dto.FestivalDTO;
+import com.soldesk.festival.dto.FundingFestivalDTO;
 import com.soldesk.festival.dto.InquiryDTO;
 import com.soldesk.festival.dto.MemberDTO;
 import com.soldesk.festival.service.BoardService;
 import com.soldesk.festival.service.CompanyService;
 import com.soldesk.festival.service.FestivalService;
+import com.soldesk.festival.service.FundingFestivalService;
 import com.soldesk.festival.service.InquiryService;
 import com.soldesk.festival.service.MemberService;
 import com.soldesk.festival.service.ReviewService;
@@ -39,6 +41,7 @@ public class AdminController {
     private final ReviewService reviewService;
     private final InquiryService inquiryService;
     private final CompanyService companyService;
+    private final FundingFestivalService fundingFestivalService;
 
     @GetMapping("/main")
     public String main(Model model) {
@@ -99,6 +102,32 @@ public class AdminController {
         model.addAttribute("keyword", keyword);
 
         return "/admin/festival";
+    }
+    // 수정필요
+    @GetMapping("/funding")
+    public String funding(@RequestParam(defaultValue = "1") int page, Model model) {
+        int pageSize = 10;
+        int totalCount = fundingFestivalService.countFunding();
+        List<FundingFestivalDTO> fundings = fundingFestivalService.getFestivalListPaged((page - 1) * pageSize, pageSize);
+        int totalPages = (int) Math.ceil((double) totalCount / pageSize);
+
+        int blockSize = 10; // 페이지 블록 크기
+        int currentBlock = (int) Math.ceil((double) page / blockSize);
+        int startPage = (currentBlock - 1) * blockSize + 1;
+        int endPage = Math.min(startPage + blockSize - 1, totalPages);
+
+        int prevBlockPage = Math.max(startPage - blockSize, 1);
+        int nextBlockPage = Math.min(startPage + blockSize, totalPages);
+
+        model.addAttribute("fundings", fundings);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+        model.addAttribute("prevBlockPage", prevBlockPage);
+        model.addAttribute("nextBlockPage", nextBlockPage);
+
+        return "/admin/funding";
     }
 
     @GetMapping("/inquiry")

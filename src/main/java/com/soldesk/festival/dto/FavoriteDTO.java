@@ -11,5 +11,6 @@ public class FavoriteDTO {
     private Integer member_idx;
     private Integer company_idx;
     private Integer festival_idx;
+    private Integer funding_festival_idx;
     
 }

@@ -4,9 +4,9 @@ const orderId = urlParams.get("orderId");
 const amount = urlParams.get("amount");
 
 async function confirm() {
-    console.log("페이먼트키 : "+paymentKey);
+    console.log("페이먼트키 : "+ paymentKey);
     console.log("orderID : " + orderId);
-    console.log("amout : " + amount)
+    console.log("amout : " + amount);
     
     const requestData = {
         paymentKey : paymentKey,

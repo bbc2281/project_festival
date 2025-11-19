@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.soldesk.festival.dto.CompanyDTO;
 import com.soldesk.festival.dto.FundingFestivalDTO;
+import com.soldesk.festival.dto.PaymentDTO;
 import com.soldesk.festival.mapper.FundingFestivalMapper;
 
 import lombok.RequiredArgsConstructor;
@@ -37,5 +38,21 @@ public class FundingFestivalService {
 
     public int countFundingByCompany(int company_idx){
         return fundingFestivalMapper.countFundingByCompany(company_idx);
+    }
+
+    public void insertFundingAmount(PaymentDTO amount){
+        fundingFestivalMapper.insertFundingAmount(amount);
+    }
+
+    public int countFunding(){
+        return fundingFestivalMapper.countFunding();
+    }
+
+    public List<FundingFestivalDTO> getFestivalListPaged(int offset, int limit) {
+        return fundingFestivalMapper.getFestivalListPaged(offset, limit);
+	}
+
+    public void deleteFunding(int idx){
+        fundingFestivalMapper.deleteFunding(idx);
     }
 }

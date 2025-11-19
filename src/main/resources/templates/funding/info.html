@@ -18,10 +18,17 @@
     <div class="container d-flex align-items-center gap-3 py-2">
       <a class="navbar-brand fw-bold" th:href="@{/funding/main}">FesLite Funding</a>
       <a class="text-muted d-none d-md-block" th:href="@{/}">축제 페이지</a>
-      <!-- <div class="ms-auto d-flex gap-2">
-        <button class="btn btn-outline-dark"><i class="bi bi-share"></i> 공유</button>
-        <button class="btn btn-outline-dark"><i class="bi bi-bookmark"></i> 찜</button>
-      </div> -->
+      <div class="ms-auto d-flex gap-2">
+        <!-- <button class="btn btn-outline-dark"><i class="bi bi-share"></i> 공유</button> -->
+        <button class="btn btn-outline-dark" 
+          id="btnFavorite"
+          data-festival-idx="0"
+          th:data-funding-idx="${funding.funding_festival_idx}"
+          th:data-member-id="${session.loginMember != null ? session.loginMember.member_idx : 0}"
+          th:data-company-id="${session.companyMember != null ? session.companyMember.company_idx : 0}">
+          <i class="bi" 
+                    th:classappend="${isFavorite} ? 'bi-heart-fill text-danger fs-4' : 'bi-heart fs-4'"></i>
+      </div>
     </div>
   </header>
 
@@ -86,7 +93,10 @@
                 <button id="btnApplyAmt" class="btn btn-outline-dark">적용</button>
               </div>
 
-              <button id="btnFund" class="btn btn-gradient w-100">이 프로젝트 후원하기</button>
+              <button id="btnFund" 
+              th:data-member-id="${session.loginMember != null ? session.loginMember.member_idx : 0}"
+              th:data-company-id="${session.companyMember != null ? session.companyMember.company_idx : 0}"
+              class="btn btn-gradient w-100">이 프로젝트 후원하기</button>
 
               <hr>
               <ul class="small text-muted list-unstyled vstack gap-1">

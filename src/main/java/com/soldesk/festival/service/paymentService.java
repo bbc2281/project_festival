@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
-import com.soldesk.festival.dao.paymentDAO;
+import com.soldesk.festival.dao.PaymentDAO;
 import com.soldesk.festival.dto.CompanyDTO;
 import com.soldesk.festival.dto.PaymentDTO;
 import com.soldesk.festival.dto.PaymentRequestDTO;
@@ -18,7 +18,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class paymentService {
 
-    private final paymentDAO paymentDAO;
+    private final PaymentDAO paymentDAO;
     private final FundingFestivalService fundingService;
 
     public String saveOrderAndReturnOrderId(PaymentRequestDTO requestDTO , CompanyDTO companyDTO){
@@ -35,6 +35,7 @@ public class paymentService {
         // 결국 개최자가 돈을 받는건 똑같기 때문에 연동 하는데 어려움이 있어 catch 칼럼은 삭제를 고려중입니다 .
         paymentDTO.setPayment_catch("임시용 123");
         paymentDTO.setPayment_date(new Date(System.currentTimeMillis()));
+        paymentDTO.setFunding_festival_idx(fundingFestivalDTO.getFunding_festival_idx());
         paymentDAO.InsertPayment(paymentDTO);
         return paymentDTO.getOrder_id();
     }
@@ -54,5 +55,14 @@ public class paymentService {
         return paymentDAO.infoProcess(orderId);
     }
     
+    public PaymentDTO selectFundingAmount(PaymentDTO paymentDTO){
+        if(paymentDTO != null){
+            String orderId = paymentDTO.getOrder_id();
+            return paymentDAO.selectFundingAmount(orderId);
+        }
+
+
+        return null;
+    }
     
 }

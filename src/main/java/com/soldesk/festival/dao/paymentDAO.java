@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 
 @Repository
 @RequiredArgsConstructor
-public class paymentDAO {
+public class PaymentDAO {
     
     private final PaymentMapper paymentMapper;
 
@@ -28,6 +28,10 @@ public class paymentDAO {
     public PaymentDTO infoProcess(String orderId){
 
         return paymentMapper.infoProcess(orderId);
+    }
+
+    public PaymentDTO selectFundingAmount(String orderId){
+        return paymentMapper.selectFundingAmount(orderId);
     }
     
 }
