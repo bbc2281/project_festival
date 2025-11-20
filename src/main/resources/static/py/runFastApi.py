@@ -21,8 +21,7 @@ weather_api_key = "JWVjDL8GTl2lYwy_Br5d0Q"
 moderate_api_key = 'AIzaSyAQ3GMnUAXXYelHFqnoxUnb2PcEPsjt51w'
 
 origins = [
-    "http://localhost:8080",
-    "http://localhost:3000"
+    "*"
 ]
 
 app.add_middleware(
