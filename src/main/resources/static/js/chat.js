@@ -1,6 +1,11 @@
 btnSendChat.addEventListener("click", async ()=>{
     if(!isLogin) return;
     let msg = chatInput.value.trim();
+    if(!msg) {
+        alert("빈칸 또는 공백은 보낼 수 없습니다")
+        chatInput.value = "";
+        return;
+    }
     chat_ok = await testMsg(msg);
     if(!chat_ok) return;
 
@@ -11,6 +16,11 @@ chatInput.addEventListener("keydown", async (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
         if(!isLogin) return;
         let msg = chatInput.value.trim();
+        if(!msg) {
+            alert("빈칸 또는 공백은 보낼 수 없습니다")
+            chatInput.value = "";
+            return;
+        }
         chat_ok = await testMsg(msg);
         if(!chat_ok) return;
         await sendMessage();
