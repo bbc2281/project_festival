@@ -479,3 +479,61 @@ a:hover{ text-decoration:underline }
 .naver-btn:hover {
   background-color: #02b150;
 }
+
+/* 공통 스타일 */
+.checkId-btn,
+.check-btn {
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all .18s ease-in-out;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* 중복확인 버튼 (보라톤) */
+.checkId-btn {
+  background: linear-gradient(135deg, #7a5af8 0%, #9d77ff 100%);
+  color: #fff;
+}
+
+.checkId-btn:hover {
+  transform: translateY(-2px);
+  background: linear-gradient(135deg, #6d4df0 0%, #8a63ff 100%);
+  box-shadow: 0 6px 16px rgba(122,90,248,0.25);
+}
+
+/* 사업자 확인 버튼 (민트/파랑) */
+.check-btn {
+  background: linear-gradient(135deg, #38d2d0 0%, #4ca8ff 100%);
+  color: #fff;
+}
+
+.check-btn:hover {
+  transform: translateY(-2px);
+  background: linear-gradient(135deg, #30c1bf 0%, #3e97f0 100%);
+  box-shadow: 0 6px 16px rgba(60,160,255,0.22);
+}
+
+/* 비활성화 시 */
+.checkId-btn:disabled,
+.check-btn:disabled {
+  background: #d6d6d6 !important;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+/* 버튼 옆 input 과 간격 조정 */
+#cop_check,
+#member_id + .checkId-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}

@@ -181,8 +181,10 @@ public class UserViewController {
 
         List<FestivalDTO> commitFestivalList = segFestivalService.selectCommitFestival(idx);
         List<PaymentDTO> paymentList = paymentService.selectFundingByCompany(idx);
-        model.addAttribute("commitFestivalList", commitFestivalList);
-        model.addAttribute("paymentList", paymentList);
+        model.addAttribute("commitFestivalList", 
+            commitFestivalList.stream().limit(5).toList());
+        model.addAttribute("paymentList", 
+            paymentList.stream().limit(5).toList());
 
         return "company/mypage";
     }

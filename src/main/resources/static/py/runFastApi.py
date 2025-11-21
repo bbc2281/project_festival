@@ -186,6 +186,7 @@ async def check_word(req: WordRequest):
 
         toxicity_score = response['attributeScores']['TOXICITY']['summaryScore']['value']
 
+        print(toxicity_score)
         if toxicity_score >= 0.6:
             raise HTTPException(status_code=400, detail='경고 : 욕설은 사용할 수 없습니다')
         return {'message': 'Success'}
