@@ -1,15 +1,14 @@
 package com.soldesk.festival.service;
 
-import java.lang.StackWalker.Option;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.soldesk.festival.config.AuthUtil;
 import com.soldesk.festival.config.MemberRole;
 import com.soldesk.festival.dto.CompanyDTO;
 import com.soldesk.festival.dto.CompanyDetailDTO;
@@ -25,7 +24,21 @@ import lombok.RequiredArgsConstructor;
 public class CompanyService {
 	
 	private final CompanyMapper companyMapper;
-	private final AuthUtil authUtil;
+	private final PasswordEncoder passwordEncoder;
+
+		
+	/*public boolean checkPassword(String raw, String encoded) {
+		
+		 return raw != null && encoded != null && passwordEncoder.matches(raw, encoded);
+	}*/
+	
+	public String encodedPassword(String rawPassword){
+		if(rawPassword == null) {
+			throw new IllegalArgumentException("비밀번호가 비어있을 수 없습니다");
+		}
+		return passwordEncoder.encode(rawPassword);
+	}
+	
 
     //내부 시스템 조회용 
 	public Optional<CompanyDTO> findCompanyUserById(String companyId){
@@ -49,7 +62,7 @@ public class CompanyService {
     @Transactional(rollbackFor= com.soldesk.festival.exception.UserException.class)
 	public void join(CompanyJoinDTO joinCompany){
 
-		joinCompany.setMember_pass(authUtil.encodedPassword(joinCompany.getMember_pass()));
+		joinCompany.setMember_pass(encodedPassword(joinCompany.getMember_pass()));
 		if(joinCompany.getRole().name().isBlank() || !joinCompany.getRole().isCompany()){
 				joinCompany.setRole(MemberRole.COMPANY);
 		}
@@ -86,7 +99,7 @@ public class CompanyService {
 	
 	public void deleteCompany(String companyId, String password) {
 		
-		CompanyDTO thisCompany = findCompanyUserById(companyId).filter(company -> authUtil.checkPassword(password, company.getMember_pass()))
+		CompanyDTO thisCompany = findCompanyUserById(companyId).filter(company -> checkPassword(password, company.getMember_pass()))
 				.orElseThrow(()-> new UserException("아이디나 비밀번호가 일치하지 않습니다"));
 		
 		
@@ -136,7 +149,7 @@ public class CompanyService {
 		CompanyDTO company = opCom.get();
 		String password = company.getMember_pass();
 
-		return authUtil.checkPassword(pass, password);
+		return checkPassword(pass, password);
 
 	}
 
@@ -149,16 +162,12 @@ public class CompanyService {
 			updateUser.setMember_pass(existingMember.getMember_pass());
 		}else{
 		    		
-			updateUser.setMember_pass(authUtil.encodedPassword(updateUser.getMember_pass()));
+			updateUser.setMember_pass(encodedPassword(updateUser.getMember_pass()));
 		}
 		companyMapper.updateCompany(updateUser);
 
 	}
     
-
-    
-    
-
 
 	
 }

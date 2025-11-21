@@ -28,6 +28,7 @@ import com.soldesk.festival.dto.CompanyUpdateDTO;
 import com.soldesk.festival.dto.LoginDTO;
 import com.soldesk.festival.dto.MemberJoinDTO;
 import com.soldesk.festival.dto.MemberUpdateDTO;
+
 import com.soldesk.festival.dto.PasswordVerifyDTO;
 import com.soldesk.festival.dto.SecurityAllUsersDTO;
 import com.soldesk.festival.dto.UserResponse;
@@ -100,6 +101,7 @@ public class UserRestController {
 		}
 			
 	}
+    
 
     @PostMapping("/logout")
 	public ResponseEntity<UserResponse> logout(HttpServletRequest request, HttpServletResponse res){

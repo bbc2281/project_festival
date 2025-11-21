@@ -70,6 +70,8 @@ public interface MemberMapper {
 	@Select("select * from member where member_email=#{member_email}")
 	@Results({
 		@Result(property="member_email", column="member_email"),
+		@Result(property="member_name", column="member_name"),
+		@Result(property="member_id", column="member_id"),
 		@Result(property="role", column="role", typeHandler=MemberRoleTypeHandler.class)
 	})
 	Optional<MemberDTO> selectUserByEmail(@Param("member_email")String userEmail);
@@ -92,7 +94,11 @@ public interface MemberMapper {
 	MemberDTO deleteMember(MemberDTO deleteMember);
 	
 	
-	
+	@Options(useGeneratedKeys=true, keyProperty="member_idx")
+	@Insert("insert into member(member_id, member_name, member_pass, member_nickname, member_email, member_phone, member_address,"
+            + "member_gender, member_job, member_birth, role, member_point) values(#{member_id}, #{member_name}, #{member_pass}, #{member_nickname}, #{member_email},"
+            + " #{member_phone}, #{member_address}, #{member_gender}, #{member_job}, #{member_birth}, #{role}, #{member_point})")	
+	void saveOAuth2(MemberDTO oauth2);
 	
 
 

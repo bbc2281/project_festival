@@ -1,14 +1,17 @@
 package com.soldesk.festival.service;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.soldesk.festival.config.AuthUtil;
 import com.soldesk.festival.config.MemberRole;
 import com.soldesk.festival.dto.LoginDTO;
 import com.soldesk.festival.dto.MemberDTO;
@@ -18,14 +21,31 @@ import com.soldesk.festival.dto.MemberUpdateDTO;
 import com.soldesk.festival.exception.UserException;
 import com.soldesk.festival.mapper.MemberMapper;
 
-import lombok.RequiredArgsConstructor;
 
 @Service
-@RequiredArgsConstructor
 public class MemberService {
 	
 	private final MemberMapper memberMapper;
-	private final AuthUtil authUtil;
+	private final PasswordEncoder passwordEncoder;
+
+	public MemberService(MemberMapper memberMapper, PasswordEncoder passwordEncoder){
+		this.memberMapper = memberMapper;
+		this.passwordEncoder = passwordEncoder;
+	}
+    
+    
+	public boolean checkPassword(String raw, String encoded) {
+		
+		 return raw != null && encoded != null && passwordEncoder.matches(raw, encoded);
+	}
+	
+	public String encodedPassword(String rawPassword){
+		if(rawPassword == null) {
+			throw new IllegalArgumentException("비밀번호가 비어있을 수 없습니다");
+		}
+		return passwordEncoder.encode(rawPassword);
+	}
+	
 
 
 	public Optional<MemberDTO> findUserbyId(String userId){
@@ -37,6 +57,7 @@ public class MemberService {
 		return memberMapper.findUserDetailAllById(userId);
 	} //시스템용
 
+
     
 	@Transactional(rollbackFor= com.soldesk.festival.exception.UserException.class)
 	public void join(MemberJoinDTO joinMember) {
@@ -47,12 +68,13 @@ public class MemberService {
         }
 		   */
         
-        joinMember.setMember_pass(authUtil.encodedPassword(joinMember.getMember_pass()));
+        joinMember.setMember_pass(encodedPassword(joinMember.getMember_pass()));
 		joinMember.setRole(MemberRole.USER);
 		joinMember.setMember_point(0); 
 		memberMapper.insertMember(joinMember);
 		
 	}
+    
 	
 	public boolean checkMemberIdExists(String userId) {
 		
@@ -95,7 +117,7 @@ public class MemberService {
 
 		MemberDTO existingMember = findUserbyId(updateUser.getMember_id()).orElseThrow(()-> new UserException("아이디나 비밀번호가 일치하지 않습니다."));
         if(updateUser.getMember_pass() != null && !updateUser.getMember_pass().isBlank()){
-			updateUser.setMember_pass(authUtil.encodedPassword(updateUser.getMember_pass()));
+			updateUser.setMember_pass(encodedPassword(updateUser.getMember_pass()));
 		}else {
 			updateUser.setMember_pass(existingMember.getMember_pass());
 		}
@@ -109,7 +131,7 @@ public class MemberService {
 		String id = deleteUser.getMember_id();
 		String pass = deleteUser.getMember_pass();
 
-		MemberDTO currentMember = findUserbyId(id).filter(member -> authUtil.checkPassword(pass, member.getMember_pass()))
+		MemberDTO currentMember = findUserbyId(id).filter(member -> checkPassword(pass, member.getMember_pass()))
 				.orElseThrow(()-> new UserException("아이디나 비밀번호가 일치하지 않습니다"));
 		
         				
@@ -155,7 +177,7 @@ public class MemberService {
 		MemberDTO member = opMember.get();
 		String password = member.getMember_pass();
 
-		return authUtil.checkPassword(rawpass, password);
+		return checkPassword(rawpass, password);
 	}
     
 
@@ -187,8 +209,6 @@ public class MemberService {
       
 		
 	}
-
-
 
 	
 		

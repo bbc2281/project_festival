@@ -2,11 +2,17 @@ package com.soldesk.festival.dto;
 
 import com.soldesk.festival.config.MemberRole;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class MemberDTO { 
     //DB 연결용 MemberDTO
 	//일반회원 &  관리자
@@ -42,7 +48,6 @@ public class MemberDTO {
 	
 	//private boolean deleted;
 	//private LocalDateTime deletedAt;
-
 
 
 

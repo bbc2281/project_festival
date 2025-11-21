@@ -1,4 +1,4 @@
-const GOOGLE_CLIENT_ID = "425343923027-pvj5ai4vmc6r8l2fqj39hj9ct5a7i7i0.apps.googleusercontent.com";
+const GOOGLE_CLIENT_ID = "521659150531-5t1fekikuql7qalfg9h9pcea363i10jr.apps.googleusercontent.com";
 
 window.onload = function () {
     google.accounts.id.initialize({

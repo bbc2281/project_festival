@@ -9,8 +9,9 @@ public enum MemberRole {
 	GUEST,
 	USER,
 	COMPANY,
-	ADMIN;
+	ADMIN, getMemberRole;
 	
+
 	public String getMemberRole() {
 		return "ROLE_"+ this.name();
 	}
