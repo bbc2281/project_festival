@@ -24,14 +24,14 @@ btn.addEventListener('click', () => {
 
     
 
-    if (reviewBox.querySelector(".comment-input")) return;
+    if (reviewBox.querySelector(".comment-input") || !isLogin) return;
     const input = document.createElement("input");
     input.type = "text";
     input.className = "form-control mt-2 comment-input";
     input.placeholder = "댓글을 입력하세요";
     reviewBox.appendChild(input); 
 
-    if(reviewBox.querySelector(".comment-save-btn")) return;
+    if(reviewBox.querySelector(".comment-save-btn") || !isLogin) return;
     const saveBtn = document.createElement("button");
     saveBtn.textContent = "저장";
     saveBtn.className = "btn btn-sm btn-primary mt-2 comment-save-btn";

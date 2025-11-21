@@ -438,7 +438,7 @@ document.addEventListener("DOMContentLoaded", () => {
 <script>
     const loginId = [[${session.loginMember != null ? session.loginMember.member_idx : 0}]];
     console.log(loginId);
-    document.querySelectorAll(".btnModifyReview, .btnDeleteReview, .commentBtn").forEach(btn => {
+    document.querySelectorAll(".btnModifyReview, .btnDeleteReview").forEach(btn => {
     if (btn.dataset.writerId != loginId) {
         btn.style.display = "none";
         console.log(btn.dataset.writerId);
