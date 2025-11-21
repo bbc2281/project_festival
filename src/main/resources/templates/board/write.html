@@ -74,7 +74,7 @@
         <div class="row mb-3">
           <div class="col-md-6">
             <label for="member_nickname" class="form-label">작성자</label>
-           <input type="text" name="member_nickname" class="form-control" value="${loginMember.member_nickname}" readonly> <!--맴버 세션 연동 하면 교체 예정-->
+           <input type="text" name="member_nickname" class="form-control" th:value="${loginMember.member_nickname}" readonly> <!--맴버 세션 연동 하면 교체 예정-->
           </div>
           <div class="col-md-6">
             <label for="board_category" class="form-label">카테고리</label>
@@ -104,7 +104,7 @@
   <script src="https://uicdn.toast.com/editor/latest/i18n/ko-kr.js"></script>
 
 
-  <script>
+  <!-- <script>
     document.getElementById('submit-btn').addEventListener('click', async (e) => {
       e.preventDefault();
         let board_title = document.getElementById(`board_title`);
@@ -123,7 +123,7 @@
 
         e.target.closest('form').submit();
     });
-  </script>
+  </script> -->
 
   <!-- Footer -->
   <div th:replace="~{common/footer :: footer}"></div>
