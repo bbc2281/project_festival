@@ -52,6 +52,8 @@ public class AdminController {
         int countBoard = boardService.countBoard();
         model.addAttribute("countBoard", countBoard);
 
+        //int countReview = reviewService.countReviewNow(date);
+
         List<BoardDTO> boardList = boardService.selectAllBoard(1);
         model.addAttribute("boardList", boardList.stream().limit(5).toList());
 
@@ -103,7 +105,7 @@ public class AdminController {
 
         return "/admin/festival";
     }
-    // 수정필요
+
     @GetMapping("/funding")
     public String funding(@RequestParam(defaultValue = "1") int page, Model model) {
         int pageSize = 10;
