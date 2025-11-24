@@ -104,8 +104,8 @@
       </tr>
       <tr th:each="funding : ${fundingList}" class="festival-row">
         <td th:text="${funding.festival_name}"></td>
-        <td th:text="${funding.festival_amount + '원'}"></td>
-        <td th:text="${funding.festival_total_amount + '원'}"></td>
+        <td th:text="${#numbers.formatInteger(funding.festival_amount, 3, 'COMMA') + '원'}"></td>
+        <td th:text="${#numbers.formatInteger(funding.festival_total_amount, 3, 'COMMA') + '원'}"></td>
         <td th:text="${funding.funding_end_date}"></td>
       </tr>
     </table>

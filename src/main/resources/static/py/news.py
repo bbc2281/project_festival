@@ -13,7 +13,7 @@ response = requests.get(url, headers=headers)
 
 soup = BeautifulSoup(response.content, 'html.parser')
 # 발표당일 클래스명 확인(확인위치 최하단 a링크)
-elements = soup.select('.MhHMvACwlVBbjWsd7yi3')
+elements = soup.select('.SR2LrlI9g02spd3asYd0')
 
 print(elements)
 

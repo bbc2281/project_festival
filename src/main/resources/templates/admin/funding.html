@@ -115,8 +115,8 @@
             <td><a class="festival-link" th:href="@{/funding/info(id=${funding.funding_festival_idx})}"
                 th:text="${funding.festival_name}"></a></td>
             <td th:text="${funding.festival_address}"></td>
-            <td th:text="${funding.festival_amount}"></td>
-            <td th:text="${funding.festival_total_amount}"></td>
+            <td th:text="${#numbers.formatInteger(funding.festival_amount, 3, 'COMMA') + '원'}"></td>
+            <td th:text="${#numbers.formatInteger(funding.festival_total_amount, 3, 'COMMA') + '원'}"></td>
             <td th:text="${funding.funding_end_date}"></td>
             <td><a th:href="@{/funding/delete(id=${funding.funding_festival_idx})}"
                 class="btn btn-success btn-sm">삭제</a></td>
