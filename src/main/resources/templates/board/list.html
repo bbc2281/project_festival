@@ -176,10 +176,10 @@
         <div class="board-search mt-2 mt-md-0">
           <select class="form-select" style="width: 150px;" name="board_category">
             <option value="">전체</option>
-            <option th:each="category : ${categories}" th:value="${category}" th:text="${category}"></option>
+            <option id="searchCategory" th:each="category : ${categories}" th:value="${category}" th:text="${category}"></option>
           </select>
-          <input type="text" class="form-control" placeholder="제목 검색..." style="width: 200px;">
-          <button class="btn-gradient">검색</button>
+          <input type="text" id="searchKeyword" class="form-control" placeholder="제목 검색..." style="width: 200px;">
+          <button class="btn-gradient" onclick="search()">검색</button>
         </div>
       </div>
 
@@ -233,5 +233,13 @@
   </main>
 
   <div th:replace="~{common/footer :: footer}"></div>
+
+  <script>
+      function search() {
+        const keyword = document.getElementById("searchKeyword").value;
+        const searchCategory = document.getElementById("searchCategory").value;
+        window.location.href = `/board/search?keyword=${encodeURIComponent(keyword)}&searchcategory=${encodeURIComponent(searchCategory)}`;
+    }
+  </script>
 </body>
 </html>
