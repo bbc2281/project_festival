@@ -187,7 +187,7 @@ public class BoardController {
     }
 
     @GetMapping("/search")
-    public String searchForm(@RequestParam("keyword")String keyword, @RequestParam("searchcategory")String category, Model model ,
+    public String searchForm(@RequestParam("keyword")String keyword, @RequestParam(name = "searchcategory", defaultValue = "전체")String category, Model model ,
     @RequestParam(name = "page" , defaultValue = "1") int page){
         List<BoardDTO> searchList = boardService.searchProcess(keyword, category,page);
         System.out.println("서치 리스트 " + searchList);
