@@ -174,8 +174,8 @@
               <a th:unless="${proposal.festival_reg_log} == 1"
                 th:href="@{/festival/permit(festival_idx=${proposal.seg_festival_idx})}"
                 class="btn btn-success btn-sm">승인</a>
-              <a th:href="@{/festival/refuse(festival_idx=${proposal.seg_festival_idx})}"
-                class="btn btn-secondary btn-sm">삭제</a>
+              <!-- <a th:href="@{/festival/refuse(festival_idx=${proposal.seg_festival_idx})}"
+                class="btn btn-secondary btn-sm">삭제</a> -->
             </td>
           </tr>
         </tbody>
