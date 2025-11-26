@@ -112,7 +112,7 @@ public class UserRestController {
 								System.out.println("companyMember 세션 저장: " + company);
 							},
 							() -> System.out.println("companyMember 없음"));
-			session.setMaxInactiveInterval(30 * 60);
+			session.setMaxInactiveInterval(60 * 60);
 
 			SecurityAllUsersDTO user = (SecurityAllUsersDTO) authentication.getPrincipal();
 			SavedRequest savedRequest = new HttpSessionRequestCache().getRequest(request, res);
