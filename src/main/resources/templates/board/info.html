@@ -106,7 +106,7 @@
       <div class="board-title" th:text="${board.board_title}">게시글 제목</div>
       <div class="board-meta">
         <span>작성자: <span th:text="${board.member_nickname}"></span></span>
-        <span th:text="${#dates.format(board.board_regDate, 'yyyy-MM-dd HH:mm')}"></span>
+        <span th:text="${#dates.format(board.board_regDate, 'yyyy-MM-dd')}"></span>
         <span>조회수: <span th:text="${board.board_views}"></span></span>
         <span>카테고리: <span th:text="${board.board_category}"></span></span>
       </div>

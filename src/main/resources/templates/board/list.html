@@ -174,9 +174,9 @@
         </div>
 
         <div class="board-search mt-2 mt-md-0">
-          <select class="form-select" style="width: 150px;" name="board_category">
+          <select class="form-select" id="searchCategory" style="width: 150px;" name="board_category">
             <option value="">전체</option>
-            <option id="searchCategory" th:each="category : ${categories}" th:value="${category}" th:text="${category}"></option>
+            <option th:each="category : ${categories}" th:value="${category}" th:text="${category}"></option>
           </select>
           <input type="text" id="searchKeyword" class="form-control" placeholder="제목 검색..." style="width: 200px;">
           <button class="btn-gradient" onclick="search()">검색</button>
