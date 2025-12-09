@@ -1,52 +1,57 @@
-All commits under the local username annabel and the GitHub account Bell-alt represent my individual contributions.
-
 🎉 Festival Management Platform
-Full-stack Java · Spring Boot · MVC Architecture · MySQL · Team Project
 
-This project is a festival/event management platform built as a team project during the K-Digital Training program (6-month intensive software engineering course).
-Users can browse festivals, register accounts, manage profiles, write reviews, and interact with event-related content.
+Full-stack Java · Spring Boot · MVC Architecture · Security · MySQL
+
+A full-featured festival & event management platform built using Java/Spring during a 6-month K-Digital Training program.
+Users can register, log in, browse festivals, manage profiles, write reviews, and interact with event content.
+The system includes role-based pages and an integrated login for three user types: User, Company, and Admin.
+
+All commits under the local username annabel and GitHub account Bell-alt represent my individual contributions.
 
 🚀 Features
 
-User registration & login (Session-based authentication)
+User registration & login (session-based Spring Security authentication)
 
-Festival listing & detail view
+Role-based UI rendering (User / Company / Admin)
 
-User Mypage (profile management, update, delete)
+MyPage module — full profile management (update, delete, password change)
 
-Review/Comment functionality
+Festival listing & detail pages
 
-Admin features (role-based)
+Review/Comment module
 
-MVC + REST hybrid architecture
+Admin features
+
+Hybrid architecture (MVC + REST)
 
 🛠 Tech Stack
-
 Backend
 
 Java 17
 
-Spring Boot & Spring Legacy
+Spring Boot
 
 Spring MVC
 
-Spring Security (basic session auth)
+Spring Security (session authentication)
 
-MyBatis / JPA (if applicable)
+MyBatis
+
+JPA (if applicable in parts)
 
 Database
 
-MySQL (DBeaver)
+MySQL (with DBeaver)
 
 Oracle SQL Developer
 
 Frontend
 
-HTML5, CSS3
+HTML5, CSS3, JavaScript
 
-JavaScript
+Thymeleaf
 
-Thymeleaf / JSP
+JSP (legacy parts)
 
 Tools
 
@@ -54,85 +59,104 @@ Git / GitHub
 
 IntelliJ IDEA
 
-Linux (Ubuntu) local dev environment
+Linux (Ubuntu)
 
-Windows environment (later commits)
+Windows (later development environment)
 
 ✨ My Role & Contributions
-
-Below is a clear summary of the tasks I personally implemented.
-Commits under the local username annabel and GitHub account Bell-alt represent my work.
-
 🔹 Backend Development
 
-Designed and reorganized DTO structures
+Designed & optimized DTO structures
 
-Example: MemberDTO → JoinDTO, LoginDTO, and MemberRole updates
+e.g., split MemberDTO into JoinDTO, LoginDTO, and reorganized MemberRole
 
-Implemented REST endpoints
+Implemented REST API endpoints
 
-Added methods in MemberRestController
+Added new controller methods (MemberRestController)
 
-Controller refactoring
+Refactored controllers for cleaner separation
 
-Renamed: MemberController → MemberViewController for better separation of concerns
+MemberController → MemberViewController
 
-Connected Java services to MySQL/Oracle
+Implemented session-based login & validation
 
-Session-based login logic & validation
+Connected service layer to MySQL/Oracle
 
-🔹 Mypage Module (My main feature)
+Fixed & improved Security configuration
 
-Implemented full CRUD for user profiles
+🔹 MyPage Module (My primary ownership)
 
-Added password update + validation logic
+Built the entire MyPage feature end-to-end
 
-Designed MyPage service architecture
+CRUD for user profiles
 
-Built responsive UI with HTML/CSS/JS
+Password update workflow (+ secure hashing)
 
-🔹 Other Contributions
+Phone/email update, nickname changes
 
-Participated in architecture design
+Error handling + validations
 
-Assisted in Spring Boot environment setup
+Developed responsive UI for MyPage (HTML/CSS/JS)
 
-Helped integrate team branches & merge conflict resolution
+🔹 Database Design
 
-📸 Screenshots / Demo (You can add GIFs later)
+Performed DB normalization and table unification
 
-(Leave space — I can help you produce GIF demo files later.)
+Unified Company/User tables → shared login system
+
+Executed migrations using:
+
+ALTER TABLE ... MODIFY COLUMN ...
+
+
+Ensured login compatibility for all user types (User, Company, Admin)
+
+🔹 Additional Contributions
+
+Took part in initial system architecture design
+
+Helped set up Spring Boot project structure
+
+Resolved merge conflicts during team integration
+
+Maintained two branches after moving development from Linux → Windows
 
 📂 Branch Information
 
-My main development branches:
+MemberBforlater – early user module development
 
-MemberBforlater – user module + experimental features
+mypage – main branch for MyPage implementation
 
-mypage – main implementation branch for MyPage feature
+annabel (local) – Linux-based development
 
-annabel (local commits) – original Linux-based development environment
+Bell-alt – Windows-based commits after laptop failure
 
-Bell-alt – later Windows-based commits after hardware failure
+📸 Screenshots / Demo
 
-📌 How to Run
+(You can add GIFs later — I can help you create them.)
+
+▶ How to Run
 git clone https://github.com/bbc2281/project_festival
 cd project_festival
 ./gradlew bootRun
 
+Database Setup
 
-Database setup required:
+Create MySQL schema: festival_db
 
-MySQL schema: festival_db
+Update application.properties:
 
-Update application.properties with your credentials
+spring.datasource.username=YOUR_USERNAME
+spring.datasource.password=YOUR_PASSWORD
 
 🧾 About Me
 
-I am a backend developer focused on Java + Spring Boot, clean architecture, and scalable backend structures.
-I enjoy building reliable server-side logic and designing maintainable codebases.
+I am a backend developer focused on Java, Spring Boot, clean architecture, and building scalable, maintainable systems.
+My strengths include authentication design, service architecture, and data modeling.
 
 📬 Contact
 
 GitHub: https://github.com/Bell-alt
-e-mail: uupittee@naver.com
+
+Email: uupittee@naver.com
+
