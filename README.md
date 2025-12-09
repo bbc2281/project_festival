@@ -135,3 +135,4 @@ I enjoy building reliable server-side logic and designing maintainable codebases
 📬 Contact
 
 GitHub: https://github.com/Bell-alt
+e-mail: uupittee@naver.com
