@@ -128,10 +128,7 @@ public class UserRestController {
 			UserResponse response = UserResponse.error(errorMessage);
 
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
-			// 로그인 페이지(login.html)에 아이디/ 비번찾기 기능 추가해야함
-
 		}
-
 	}
 
 	@PostMapping("/logout")
